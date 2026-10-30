@@ -340,7 +340,7 @@
         </div>
       </div>
 
-      <!-- PANEL 3: MARCO Y TARJETA CONTENEDORA QUE ABARCA TODOS LOS ELEMENTOS -->
+      <!-- PANEL 3: MARCO Y TARJETA CONTENEDORA -->
       <div id="tab-shapes" class="tab-panel hidden space-y-4">
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Marcos de Líneas & Personalización Completa</h2>
 
@@ -419,7 +419,7 @@
         </div>
       </div>
 
-      <!-- PANEL 4: SELLO DE CAMPAÑA Y PERSONALIZACIÓN DE FUENTE / COLOR / SOMBRAS -->
+      <!-- PANEL 4: SELLO DE CAMPAÑA -->
       <div id="tab-stamp" class="tab-panel hidden space-y-3">
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Sello de Campaña</h2>
         
@@ -510,7 +510,7 @@
         </div>
       </div>
 
-      <!-- PANEL 5: LOGO Y MARCA (CON CONTROL DE POSICIÓN VERTICAL / OFFSET Y) -->
+      <!-- PANEL 5: LOGO Y MARCA (CON CONTROL DE POSICIÓN VERTICAL OFFSET Y) -->
       <div id="tab-logo" class="tab-panel hidden space-y-3">
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Personalización de Logo</h2>
 
@@ -537,14 +537,14 @@
           <input type="range" id="sliderLogoScale" min="10" max="60" value="18" class="w-full accent-cyan-500" oninput="document.getElementById('labelLogoScale').innerText=this.value+'px'; safeUpdateCanvas();">
         </div>
 
-        <!-- NEW: LOGO VERTICAL POSITION (OFFSET Y) CONTROL -->
+        <!-- LOGO VERTICAL POSITION (OFFSET Y) CONTROL -->
         <div class="space-y-1 pt-1 border-t border-slate-800">
           <div class="flex justify-between text-[10px]">
-            <span class="text-slate-400">Posición Vertical (Offset Y Logo):</span>
+            <span class="text-slate-400">Posición Vertical Y del Logo:</span>
             <span id="labelLogoOffsetY" class="text-cyan-400 font-bold font-mono">0px</span>
           </div>
           <div class="flex items-center gap-2">
-            <input type="range" id="sliderLogoOffsetY" min="-150" max="150" value="0" class="flex-1 accent-cyan-500" oninput="document.getElementById('labelLogoOffsetY').innerText=this.value+'px'; safeUpdateCanvas();">
+            <input type="range" id="sliderLogoOffsetY" min="-200" max="200" value="0" class="flex-1 accent-cyan-500" oninput="document.getElementById('labelLogoOffsetY').innerText=this.value+'px'; safeUpdateCanvas();">
             <button onclick="document.getElementById('sliderLogoOffsetY').value=0; document.getElementById('labelLogoOffsetY').innerText='0px'; safeUpdateCanvas();" class="text-[9px] bg-slate-800 px-2 py-1 rounded text-slate-300 hover:text-cyan-400 transition">Reset</button>
           </div>
         </div>
@@ -588,7 +588,7 @@
           </div>
         </div>
 
-        <!-- Optional Dark Overlay Adjustment Slider -->
+        <!-- Dark Overlay Adjustment Slider (Default 0% natural brightness) -->
         <div class="space-y-1 bg-slate-800/60 p-2 rounded-lg border border-slate-700/60">
           <div class="flex justify-between text-[10px]">
             <span class="text-slate-300 font-semibold">Capa Oscura Sobre Fondo:</span>
@@ -1073,7 +1073,7 @@
         const fontHandle = document.getElementById('selectFontHandle').value;
         const handleColor = document.getElementById('pickerHandleColor').value || '#cbd5e1';
         const showHandleShadow = document.getElementById('chkHandleShadow') ? document.getElementById('chkHandleShadow').checked : true;
-        const handleShadowColor = document.getElementById('pickerHandleShadowColor').value || '#000000';
+        const handleShadowColor = document.getElementById('pickerHandleShadowColor') ? document.getElementById('pickerHandleShadowColor').value : '#000000';
         const handleSize = parseInt(document.getElementById('sliderHandleSize').value, 10);
 
         // Logo Style & Vertical Offset
@@ -1326,7 +1326,7 @@
           ctx.shadowColor = opts.phraseShadowColor || '#000000';
           ctx.shadowBlur = 12;
           ctx.shadowOffsetX = 2;
-          ctx.shadowOffsetY = 2;
+          ctx.shadowOffsetY = 4;
         } else {
           ctx.shadowColor = 'transparent';
           ctx.shadowBlur = 0;
@@ -1383,9 +1383,9 @@
         if (opts.citation && pCitation > 0.01) {
           if (opts.showCitationShadow) {
             ctx.shadowColor = opts.citationShadowColor || '#000000';
-            ctx.shadowBlur = 8;
+            ctx.shadowBlur = 12;
             ctx.shadowOffsetX = 2;
-            ctx.shadowOffsetY = 2;
+            ctx.shadowOffsetY = 4;
           } else {
             ctx.shadowColor = 'transparent';
             ctx.shadowBlur = 0;
@@ -1417,9 +1417,9 @@
         // STAMP TITLE SHADOW
         if (opts.showStampTitleShadow) {
           ctx.shadowColor = opts.stampTitleShadowColor || '#000000';
-          ctx.shadowBlur = 10;
+          ctx.shadowBlur = 12;
           ctx.shadowOffsetX = 2;
-          ctx.shadowOffsetY = 2;
+          ctx.shadowOffsetY = 4;
         } else {
           ctx.shadowColor = 'transparent';
           ctx.shadowBlur = 0;
@@ -1437,9 +1437,9 @@
 
           if (opts.showStampSubShadow) {
             ctx.shadowColor = opts.stampSubShadowColor || '#000000';
-            ctx.shadowBlur = 8;
-            ctx.shadowOffsetX = 1;
-            ctx.shadowOffsetY = 1;
+            ctx.shadowBlur = 12;
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 4;
           } else {
             ctx.shadowColor = 'transparent';
             ctx.shadowBlur = 0;
@@ -1466,9 +1466,9 @@
 
         if (opts.showHandleShadow) {
           ctx.shadowColor = opts.handleShadowColor || '#000000';
-          ctx.shadowBlur = 8;
+          ctx.shadowBlur = 12;
           ctx.shadowOffsetX = 2;
-          ctx.shadowOffsetY = 2;
+          ctx.shadowOffsetY = 4;
         } else {
           ctx.shadowColor = 'transparent';
           ctx.shadowBlur = 0;
