@@ -534,10 +534,11 @@
     <!-- MAIN CENTER STAGE AREA -->
     <main class="flex-1 canvas-stage-bg relative overflow-hidden flex flex-col items-center justify-between p-4">
       
-      <!-- Center Canvas Container -->
-      <div id="canvasViewportWrapper" class="flex-1 flex items-center justify-center w-full relative overflow-hidden">
-        <div id="canvasContainerBox" class="relative shadow-2xl rounded-lg overflow-hidden border border-slate-800 transition-all duration-200">
-          <canvas id="mainCanvas"></canvas>
+      <!-- Center Canvas Container Wrapper -->
+      <div id="canvasViewportWrapper" class="flex-1 flex items-center justify-center w-full h-full relative overflow-hidden">
+        <!-- Exact aspect-scaled box with transform scale -->
+        <div id="canvasContainerBox" class="relative shadow-2xl rounded-lg overflow-hidden border border-slate-800 bg-slate-950 transition-transform duration-100 ease-out flex items-center justify-center">
+          <canvas id="mainCanvas" class="block w-full h-full object-contain"></canvas>
         </div>
       </div>
 
@@ -606,7 +607,7 @@
       </div>
 
       <div class="rounded-xl overflow-hidden bg-black aspect-video flex items-center justify-center border border-slate-800">
-        <video id="modalVideoPlayer" class="w-full h-full object-contain" controls autoplay loop muted playsinline></video>
+        <video id="modalVideoPlayer" class="w-full h-full object-contain" controls autoplay loop muted playsinline crossOrigin="anonymous"></video>
       </div>
 
       <div class="pt-2 flex gap-2">
@@ -720,7 +721,7 @@
       { id: 'video_proc_soft_smoke', title: '20. Incienso Místico' }
     ];
 
-    // FREE ROYALTY-FREE REAL MP4 STOCK VIDEOS LIBRARY
+    // FREE ROYALTY-FREE REAL MP4 STOCK VIDEOS LIBRARY WITH VERIFIED CDN LINKS
     const STOCK_VIDEOS_LIBRARY = [
       { id: 'vid_forest_sun', title: 'Bosque y Sol Radiante', cat: 'Naturaleza', url: 'https://assets.mixkit.co/videos/preview/mixkit-forest-stream-in-the-sunlight-529-large.mp4' },
       { id: 'vid_ocean_dark', title: 'Océano Pacífico Nocturno', cat: 'Mar', url: 'https://assets.mixkit.co/videos/preview/mixkit-dramatic-dark-clouds-over-a-calm-ocean-43015-large.mp4' },
@@ -818,8 +819,8 @@
         renderFxOverlayList();
         setBgMode('videos');
         stopTimelinePlay(); // Force initial static composition mode
-        safeUpdateCanvas();
         fitStageZoom();
+        safeUpdateCanvas();
         startContinuousBgLoop();
         window.addEventListener('resize', fitStageZoom);
       } catch (e) {
@@ -909,21 +910,15 @@
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      // 1. DYNAMIC CANVAS DIMENSIONS
+      // 1. DYNAMIC CANVAS RESOLUTION BASED ON SELECTED RATIO
       let targetW = 1080, targetH = 1350; // Default 4:5
       if (opts.ratio === '9:16') { targetW = 1080; targetH = 1920; }
       else if (opts.ratio === '1:1') { targetW = 1080; targetH = 1080; }
       else if (opts.ratio === '16:9') { targetW = 1920; targetH = 1080; }
 
-      canvas.width = targetW;
-      canvas.height = targetH;
-
-      const box = document.getElementById('canvasContainerBox');
-      if (box) {
-        if (opts.ratio === '9:16') box.style.aspectRatio = '9 / 16';
-        else if (opts.ratio === '1:1') box.style.aspectRatio = '1 / 1';
-        else if (opts.ratio === '16:9') box.style.aspectRatio = '16 / 9';
-        else box.style.aspectRatio = '4 / 5';
+      if (canvas.width !== targetW || canvas.height !== targetH) {
+        canvas.width = targetW;
+        canvas.height = targetH;
       }
 
       const realTime = Date.now() / 1000;
@@ -1268,7 +1263,7 @@
       }
     }
 
-    // REAL MP4 STOCK VIDEOS GALLERY WITH MODAL PREVIEW & LOCAL LOADER
+    // REAL MP4 STOCK VIDEOS GALLERY WITH MODAL PREVIEW & LOCAL BLOB LOADER
     function searchStockVideos() {
       const query = document.getElementById('mediaSearchInput').value.toLowerCase().trim();
       const container = document.getElementById('bgThumbnailGridContainer');
@@ -1289,8 +1284,10 @@
         if (!window.stockVideoElements[key]) {
           const vid = document.createElement('video');
           vid.crossOrigin = 'anonymous';
+          vid.setAttribute('playsinline', '');
+          vid.setAttribute('webkit-playsinline', '');
           vid.src = v.url;
-          vid.loop = true; vid.muted = true; vid.playsInline = true;
+          vid.loop = true; vid.muted = true;
           vid.play().catch(e => {});
           window.stockVideoElements[key] = vid;
         }
@@ -1299,8 +1296,11 @@
         card.className = `p-1 rounded-lg border text-left flex flex-col gap-1 transition overflow-hidden bg-slate-900 group cursor-pointer ${selectedBgKey === key ? 'border-cyan-400 ring-2 ring-cyan-500/50' : 'border-slate-800 hover:border-slate-700'}`;
         
         const previewVideo = document.createElement('video');
+        previewVideo.crossOrigin = 'anonymous';
+        previewVideo.setAttribute('playsinline', '');
+        previewVideo.setAttribute('webkit-playsinline', '');
         previewVideo.src = v.url;
-        previewVideo.muted = true; previewVideo.loop = true; previewVideo.playsInline = true; previewVideo.autoplay = true;
+        previewVideo.muted = true; previewVideo.loop = true; previewVideo.autoplay = true;
         previewVideo.className = 'w-full h-20 rounded bg-slate-950 object-cover pointer-events-none';
         previewVideo.play().catch(e => {});
 
@@ -1351,20 +1351,30 @@
       const btn = document.getElementById('btnModalUseVideo');
       const origHTML = btn.innerHTML;
       btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Cargando video...`;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Cargando video...`;
 
       try {
-        const response = await fetch(pendingModalVideo.url);
-        const blob = await response.blob();
-        const localBlobUrl = URL.createObjectURL(blob);
-
         const vid = document.createElement('video');
         vid.crossOrigin = 'anonymous';
-        vid.src = localBlobUrl;
-        vid.loop = true; vid.muted = true; vid.playsInline = true;
+        vid.setAttribute('playsinline', '');
+        vid.setAttribute('webkit-playsinline', '');
+        vid.muted = true;
+        vid.loop = true;
+
+        try {
+          const response = await fetch(pendingModalVideo.url);
+          if (response.ok) {
+            const blob = await response.blob();
+            vid.src = URL.createObjectURL(blob);
+          } else {
+            vid.src = pendingModalVideo.url;
+          }
+        } catch (fetchErr) {
+          vid.src = pendingModalVideo.url;
+        }
 
         await new Promise((resolve) => {
-          vid.onloadeddata = () => { vid.play().catch(e=>{}); resolve(); };
+          vid.onloadeddata = () => { vid.play().then(resolve).catch(resolve); };
           vid.onerror = () => resolve();
           setTimeout(resolve, 3000);
         });
@@ -1375,15 +1385,7 @@
         closeVideoPreviewModal();
         safeUpdateCanvas();
       } catch (err) {
-        console.error("Error loading local video copy:", err);
-        const vid = document.createElement('video');
-        vid.crossOrigin = 'anonymous';
-        vid.src = pendingModalVideo.url;
-        vid.loop = true; vid.muted = true; vid.playsInline = true; vid.play().catch(e=>{});
-        userCustomBgVideo = vid;
-        selectedBgKey = 'user_custom_video';
-        closeVideoPreviewModal();
-        safeUpdateCanvas();
+        console.error("Error loading video canvas source:", err);
       } finally {
         btn.disabled = false;
         btn.innerHTML = origHTML;
@@ -1807,9 +1809,11 @@
 
     function drawCoverImage(ctx, img, targetW, targetH) {
       if (!img) return;
-      const scale = Math.max(targetW / (img.videoWidth || img.width || targetW), targetH / (img.videoHeight || img.height || targetH));
-      const w = (img.videoWidth || img.width || targetW) * scale;
-      const h = (img.videoHeight || img.height || targetH) * scale;
+      const srcW = img.videoWidth || img.width || targetW;
+      const srcH = img.videoHeight || img.height || targetH;
+      const scale = Math.max(targetW / srcW, targetH / srcH);
+      const w = srcW * scale;
+      const h = srcH * scale;
       ctx.drawImage(img, (targetW - w) / 2, (targetH - h) / 2, w, h);
     }
 
@@ -1918,7 +1922,7 @@
         stopAudioPlayback();
         if (audioCtx) { try { audioCtx.close(); } catch(e){} }
 
-        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Procesando...`;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Procesando...`;
         const rawBlob = new Blob(chunks, { type: mediaRecorder.mimeType || 'video/webm' });
 
         const fixedBlob = await new Promise((resolve) => {
@@ -1947,7 +1951,7 @@
         const elapsedSec = (now - startTime) / 1000;
         const pct = Math.min(Math.round((elapsedSec / durationSec) * 100), 100);
 
-        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Grabando (${pct}%)...`;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Grabando (${pct}%)...`;
         safeUpdateCanvas(Math.min(elapsedSec, durationSec));
 
         if (elapsedSec < durationSec) requestAnimationFrame(renderFrame);
@@ -2042,6 +2046,8 @@
         if (file.type.startsWith('video/')) {
           const vid = document.createElement('video');
           vid.crossOrigin = 'anonymous';
+          vid.setAttribute('playsinline', '');
+          vid.setAttribute('webkit-playsinline', '');
           vid.src = URL.createObjectURL(file);
           vid.loop = true; vid.muted = true; vid.play();
           userCustomBgVideo = vid;
@@ -2061,35 +2067,45 @@
       safeUpdateCanvas();
     }
 
+    // ACCURATE ZOOM & ASPECT RATIO DISPLAY ENGINE FOR CANVAS STAGE
     function fitStageZoom() {
       const wrapper = document.getElementById('canvasViewportWrapper');
       const box = document.getElementById('canvasContainerBox');
-      if (!wrapper || !box) return;
-
-      const pad = 30;
-      const maxW = wrapper.clientWidth - pad;
-      const maxH = wrapper.clientHeight - pad;
+      const canvas = document.getElementById('mainCanvas');
+      if (!wrapper || !box || !canvas) return;
 
       const ratioVal = document.getElementById('selectRatio').value;
       let targetW = 1080, targetH = 1350; // Default 4:5
-      if (ratioVal === '9:16') targetH = 1920;
-      if (ratioVal === '1:1') targetH = 1080;
-      if (ratioVal === '16:9') { targetW = 1920; targetH = 1080; }
+      if (ratioVal === '9:16') { targetW = 1080; targetH = 1920; }
+      else if (ratioVal === '1:1') { targetW = 1080; targetH = 1080; }
+      else if (ratioVal === '16:9') { targetW = 1920; targetH = 1080; }
+
+      canvas.width = targetW;
+      canvas.height = targetH;
+
+      const pad = 40;
+      const maxW = Math.max(200, wrapper.clientWidth - pad);
+      const maxH = Math.max(200, wrapper.clientHeight - pad);
 
       const scaleX = maxW / targetW;
       const scaleY = maxH / targetH;
       currentZoom = Math.min(scaleX, scaleY, 1.0);
 
+      box.style.width = `${targetW}px`;
+      box.style.height = `${targetH}px`;
       box.style.transform = `scale(${currentZoom})`;
       box.style.transformOrigin = 'center center';
-      document.getElementById('zoomLabel').innerText = `${Math.round(currentZoom * 100)}%`;
+
+      const zoomLabel = document.getElementById('zoomLabel');
+      if (zoomLabel) zoomLabel.innerText = `${Math.round(currentZoom * 100)}%`;
     }
 
     function adjustZoom(delta) {
       currentZoom = Math.max(0.15, Math.min(2.0, currentZoom + delta));
       const box = document.getElementById('canvasContainerBox');
       if (box) box.style.transform = `scale(${currentZoom})`;
-      document.getElementById('zoomLabel').innerText = `${Math.round(currentZoom * 100)}%`;
+      const zoomLabel = document.getElementById('zoomLabel');
+      if (zoomLabel) zoomLabel.innerText = `${Math.round(currentZoom * 100)}%`;
     }
 
     function resetZoomFit() { fitStageZoom(); }
