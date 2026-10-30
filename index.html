@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudioCraft Motion Pro - Graphic, Banner & Video Status Studio</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts Loader -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Anton&family=Bebas+Neue&family=Caveat:wght@600;700&family=Cinzel:wght@700;900&family=Cormorant+Garamond:ital,wght@0,700;1,600&family=Inter:wght@300;400;600;800&family=Lora:ital,wght@0,600;1,500&family=Merriweather:ital,wght@0,700;1,400&family=Montserrat:ital,wght@0,700;0,900;1,500;1,600&family=Oswald:wght@600&family=Outfit:wght@600;700;900&family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,600&family=Poppins:wght@400;500;600;700;900&family=Quicksand:wght@600;700&family=Righteous&family=Satisfy&display=swap" rel="stylesheet">
+
+  <!-- fix-webm-duration CDN for WebM Video Metadata Injection -->
+  <script src="https://cdn.jsdelivr.net/npm/fix-webm-duration@1.0.5/fix-webm-duration.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f6ff',
+              400: '#38bdf8',
+              500: '#00838f',
+              600: '#006064',
+              900: '#0f172a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    .canvas-stage-bg {
+      background-color: #080c14;
+      background-image: 
+        radial-gradient(#1e293b 1px, transparent 1px),
+        radial-gradient(#1e293b 1px, #080c14 1px);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+    }
+
+    .sidebar-tab.active {
+      background-color: rgba(0, 131, 143, 0.25);
+      color: #38bdf8;
+      border-left: 3px solid #00838f;
+    }
+
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans h-screen flex flex-col overflow-hidden selection:bg-cyan-600 selection:text-white">
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- TOP HEADER / STUDIO CONTROL BAR -->
+  <header class="h-14 bg-slate-900 border-b border-slate-800 px-4 flex items-center justify-between shrink-0 z-30 shadow-lg">
+    <!-- Brand Title -->
+    <div class="flex items-center space-x-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-600 to-teal-400 flex items-center justify-center text-white font-black shadow-md shadow-cyan-500/20">
+        <i class="fa-solid fa-clapperboard text-sm"></i>
+      </div>
+      <div>
+        <h1 class="font-extrabold text-sm tracking-tight text-white leading-none">StudioCraft Motion Pro</h1>
+        <p class="text-[10px] text-slate-400 font-medium">Graphic, Banner & Motion Video Studio</p>
+      </div>
+    </div>
+
+    <!-- Format Aspect Ratio Selector -->
+    <div class="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-3 py-1 rounded-lg">
+      <i class="fa-solid fa-vector-square text-cyan-400 text-xs"></i>
+      <span class="text-xs font-semibold text-slate-400">Formato:</span>
+      <select id="selectRatio" class="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer" onchange="handleRatioChange()">
+        <option value="4:5" selected>4:5 Feed Post (1080 × 1350)</option>
+        <option value="9:16">9:16 Story / Reel (1080 × 1920)</option>
+        <option value="1:1">1:1 Cuadrado (1080 × 1080)</option>
+        <option value="16:9">16:9 Banner Header (1920 × 1080)</option>
+      </select>
+    </div>
+
+    <!-- Stage Zoom Controls & History -->
+    <div class="flex items-center space-x-3">
+      <!-- Undo / Redo -->
+      <div class="flex items-center space-x-1 bg-slate-800 rounded-lg p-0.5 border border-slate-700">
+        <button onclick="undo()" class="p-1.5 hover:bg-slate-700 rounded text-slate-300 hover:text-white transition" title="Deshacer (Ctrl+Z)"><i class="fa-solid fa-rotate-left text-xs"></i></button>
+        <button onclick="redo()" class="p-1.5 hover:bg-slate-700 rounded text-slate-300 hover:text-white transition" title="Rehacer (Ctrl+Y)"><i class="fa-solid fa-rotate-right text-xs"></i></button>
+      </div>
+
+      <!-- Zoom -->
+      <div class="flex items-center space-x-1 bg-slate-800 rounded-lg p-1 border border-slate-700">
+        <span class="text-[11px] text-slate-400 font-semibold px-1">Zoom:</span>
+        <button onclick="adjustZoom(-0.1)" class="px-1.5 py-0.5 hover:bg-slate-700 rounded text-xs text-slate-300"><i class="fa-solid fa-minus"></i></button>
+        <span id="zoomLabel" class="text-xs font-mono font-bold text-cyan-400 w-10 text-center">100%</span>
+        <button onclick="adjustZoom(0.1)" class="px-1.5 py-0.5 hover:bg-slate-700 rounded text-xs text-slate-300"><i class="fa-solid fa-plus"></i></button>
+        <button onclick="resetZoomFit()" class="px-2 py-0.5 bg-slate-700 hover:bg-slate-600 rounded text-[10px] font-bold text-slate-200">Ajustar</button>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex items-center space-x-2">
+      <!-- JSON Save / Load -->
+      <button onclick="exportProjectJSON()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-slate-300 transition flex items-center gap-1.5" title="Guardar Proyecto en Archivo JSON">
+        <i class="fa-solid fa-floppy-disk text-amber-400"></i> Guardar
+      </button>
+      <button onclick="document.getElementById('inputLoadJSON').click()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-slate-300 transition flex items-center gap-1.5" title="Cargar Proyecto JSON">
+        <i class="fa-solid fa-folder-open text-blue-400"></i> Cargar
+      </button>
+      <input type="file" id="inputLoadJSON" accept=".json" class="hidden" onchange="importProjectJSON(event)">
+
+      <!-- Share & Downloads -->
+      <button onclick="shareStudioCanvas()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-slate-200 transition flex items-center gap-1.5">
+        <i class="fa-solid fa-share-nodes text-cyan-400"></i> Compartir
+      </button>
+      <button onclick="openExportImageModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-slate-200 transition flex items-center gap-1.5">
+        <i class="fa-solid fa-image text-emerald-400"></i> Imagen HD
+      </button>
+      <button id="btnExportVideo" onclick="generarVideoAnimado()" class="px-4 py-1.5 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 rounded-lg text-xs font-extrabold text-white shadow-md shadow-cyan-500/20 transition flex items-center gap-1.5">
+        <i class="fa-solid fa-film"></i> Exportar Video Status
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN APP WORKSPACE -->
+  <div class="flex flex-1 h-full overflow-hidden">
+
+    <!-- LEFT VERTICAL ICON SIDEBAR (10 TABS) -->
+    <aside class="w-16 bg-slate-900 border-r border-slate-800 flex flex-col items-center py-2 space-y-2 shrink-0 z-20 overflow-y-auto">
+      <button data-tab="tab-templates" onclick="switchSidebarTab('tab-templates')" class="sidebar-tab active w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-layer-group text-sm mb-0.5"></i>
+        <span>Plantillas</span>
+      </button>
+      <button data-tab="tab-text" onclick="switchSidebarTab('tab-text')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-font text-sm mb-0.5"></i>
+        <span>Texto</span>
+      </button>
+      <button data-tab="tab-quotes" onclick="switchSidebarTab('tab-quotes')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-quote-left text-sm mb-0.5"></i>
+        <span>Frases</span>
+      </button>
+      <button data-tab="tab-shapes" onclick="switchSidebarTab('tab-shapes')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-shapes text-sm mb-0.5"></i>
+        <span>Formas</span>
+      </button>
+      <button data-tab="tab-photos" onclick="switchSidebarTab('tab-photos')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-images text-sm mb-0.5"></i>
+        <span>Fotos</span>
+      </button>
+      <button data-tab="tab-motion" onclick="switchSidebarTab('tab-motion')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-wand-magic-sparkles text-sm mb-0.5"></i>
+        <span>Animación</span>
+      </button>
+      <button data-tab="tab-fx" onclick="switchSidebarTab('tab-fx')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-meteor text-sm mb-0.5"></i>
+        <span>Efectos</span>
+      </button>
+      <button data-tab="tab-background" onclick="switchSidebarTab('tab-background')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-fill-drip text-sm mb-0.5"></i>
+        <span>Fondo</span>
+      </button>
+      <button data-tab="tab-audio" onclick="switchSidebarTab('tab-audio')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-music text-sm mb-0.5"></i>
+        <span>Música</span>
+      </button>
+      <button data-tab="tab-branding" onclick="switchSidebarTab('tab-branding')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-certificate text-sm mb-0.5"></i>
+        <span>Sello/Logo</span>
+      </button>
+    </aside>
+
+    <!-- SIDEBAR EXPANDABLE CONTROL SUBPANEL -->
+    <div class="w-80 bg-slate-900/95 border-r border-slate-800 flex flex-col shrink-0 overflow-y-auto p-4 space-y-4 z-10">
+      
+      <!-- PANEL 1: PLANTILLAS RÁPIDAS (TEMPLATES) -->
+      <div id="tab-templates" class="tab-panel space-y-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Plantillas Prediseñadas</h2>
+        <div class="grid grid-cols-1 gap-2">
+          <button onclick="loadPresetTemplate('corporate')" class="p-3 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-xl text-left transition space-y-1">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-cyan-400 block">Corporativo / Tecnología</span>
+            <div class="text-xs font-bold text-white">Tech Summit 2026</div>
+            <p class="text-[10px] text-slate-400">Aurora Boreal, fuente Montserrat y sello de innovación.</p>
+          </button>
+          <button onclick="loadPresetTemplate('minimal')" class="p-3 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-xl text-left transition space-y-1">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 block">Editorial / Filosofía</span>
+            <div class="text-xs font-bold text-white">Reflexión de Liderazgo</div>
+            <p class="text-[10px] text-slate-400">Fondo degradado oscuro con fuente Playfair Display y cita Lora.</p>
+          </button>
+          <button onclick="loadPresetTemplate('neon')" class="p-3 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-xl text-left transition space-y-1">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 block">Evento / Motivación</span>
+            <div class="text-xs font-bold text-white">Crecimiento Constante</div>
+            <p class="text-[10px] text-slate-400">Malla geométrica neón, fuente Bebas Neue y destellos FX.</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- PANEL 2: TEXTO Y CONTENIDO -->
+      <div id="tab-text" class="tab-panel hidden space-y-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Configuración de Texto</h2>
+        
+        <div>
+          <label class="text-[10px] font-semibold text-slate-400 block mb-1">Frase Principal</label>
+          <textarea id="inputPhrase" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="pushHistoryState(); safeUpdateCanvas()">EL ÉXITO ES LA SUMA DE PEQUEÑOS ESFUERZOS REPETIDOS DÍA TRAS DÍA.</textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Fuente Frase</label>
+            <select id="selectFontPhrase" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-xs text-white focus:outline-none" onchange="pushHistoryState(); safeUpdateCanvas()">
+              <option value="Montserrat" selected>Montserrat</option>
+              <option value="Bebas Neue">Bebas Neue</option>
+              <option value="Playfair Display">Playfair Display</option>
+              <option value="Cinzel">Cinzel</option>
+              <option value="Oswald">Oswald</option>
+              <option value="Outfit">Outfit</option>
+              <option value="Poppins">Poppins</option>
+              <option value="Pacifico">Pacifico</option>
+              <option value="Anton">Anton</option>
+              <option value="Caveat">Caveat</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Color Frase</label>
+            <input type="color" id="colorPhrase" value="#ffffff" class="w-full h-8 bg-slate-800 border border-slate-700 rounded-lg p-0.5 cursor-pointer" oninput="safeUpdateCanvas()">
+          </div>
+        </div>
+
+        <div>
+          <label class="text-[10px] font-semibold text-slate-400 block mb-1">Cita / Autor / Referencia</label>
+          <input type="text" id="inputCitation" value="Robert Collier" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="pushHistoryState(); safeUpdateCanvas()">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Fuente Cita</label>
+            <select id="selectFontCitation" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-xs text-white focus:outline-none" onchange="pushHistoryState(); safeUpdateCanvas()">
+              <option value="Lora" selected>Lora</option>
+              <option value="Merriweather">Merriweather</option>
+              <option value="Quicksand">Quicksand</option>
+              <option value="Montserrat">Montserrat</option>
+              <option value="Poppins">Poppins</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Color Cita</label>
+            <input type="color" id="colorCitation" value="#38bdf8" class="w-full h-8 bg-slate-800 border border-slate-700 rounded-lg p-0.5 cursor-pointer" oninput="safeUpdateCanvas()">
+          </div>
+        </div>
+
+        <div>
+          <label class="text-[10px] font-semibold text-slate-400 block mb-1">Usuario / Handle (@redes)</label>
+          <input type="text" id="inputHandle" value="@studiocraft.pro" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="pushHistoryState(); safeUpdateCanvas()">
+        </div>
+      </div>
+
+      <!-- PANEL 3: BANCO DE FRASES (40+) -->
+      <div id="tab-quotes" class="tab-panel hidden space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200">Banco de Frases Seculares</h2>
+          <span id="phraseBankCount" class="text-[10px] font-mono text-cyan-400 font-bold">15 de 40</span>
+        </div>
+        <p class="text-[11px] text-slate-400">Selecciona citas inspiradoras de motivación, liderazgo y tecnología:</p>
+        <select id="selectPhraseBank" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" onchange="onSelectPhraseFromBank(this)">
+          <option value="" disabled selected>-- Elige una frase predefinida --</option>
+        </select>
+        <button onclick="loadMorePhrasesToBank()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 text-cyan-300 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-plus text-[10px]"></i> Cargar 15 frases más
+        </button>
+      </div>
+
+      <!-- PANEL 4: FORMAS Y MARCOS (SHAPES) -->
+      <div id="tab-shapes" class="tab-panel hidden space-y-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Formas Vectoriales & Marcos</h2>
+        
+        <div>
+          <label class="text-[10px] font-semibold text-slate-400 block mb-1">Estilo de Marco / Separador</label>
+          <select id="selectShapeStyle" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none" onchange="pushHistoryState(); safeUpdateCanvas()">
+            <option value="none" selected>Sin Formas (Limpio)</option>
+            <option value="frame_thin">Marco Fino Elegante</option>
+            <option value="frame_double">Marco Doble Dorado/Neón</option>
+            <option value="divider_line">Línea Separadora Inferior</option>
+            <option value="box_glass">Tarjeta Translúcida de Cristal</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Color de Forma</label>
+            <input type="color" id="colorShape" value="#00838f" class="w-full h-8 bg-slate-800 border border-slate-700 rounded-lg p-0.5 cursor-pointer" oninput="safeUpdateCanvas()">
+          </div>
+          <div>
+            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Opacidad</label>
+            <input type="range" id="rangeShapeOpacity" min="0.1" max="1.0" step="0.05" value="0.6" class="w-full accent-cyan-500 cursor-pointer" oninput="safeUpdateCanvas()">
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 5: BUSCADOR DE FOTOS UN SPLASH/PICSUM -->
+      <div id="tab-photos" class="tab-panel hidden space-y-4">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Buscador de Fotos de Stock</h2>
+
+        <!-- Stock Photo Search Input + Explicit Search Button -->
+        <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/80 space-y-2">
+          <label class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block">Buscar Imágenes por Palabra Clave</label>
+          <div class="flex gap-1.5">
+            <input type="text" id="photoSearchInput" value="tecnologia, ciudad, futuro" placeholder="ej. arquitectura, neon, naturaleza..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500" onkeyup="if(event.key==='Enter') searchPhotos()">
+            <button onclick="searchPhotos()" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 font-bold text-xs text-white rounded-lg transition flex items-center gap-1 shrink-0">
+              <i class="fa-solid fa-magnifying-glass"></i> Buscar Fotos
+            </button>
+          </div>
+        </div>
+
+        <!-- Custom Upload -->
+        <div>
+          <label class="text-[10px] font-semibold text-slate-400 block mb-1">Subir Foto Local</label>
+          <input type="file" id="inputCustomBg" accept="image/*" class="w-full text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer" onchange="handleUserBgUpload(event)">
+        </div>
+
+        <!-- Photos Thumbnails Container -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="text-[10px] font-bold text-slate-300 uppercase">Galería de Fotos de Stock</label>
+            <button onclick="searchPhotos()" class="text-[10px] text-cyan-400 hover:underline">Recargar</button>
+          </div>
+          <div id="photoGridContainer" class="grid grid-cols-3 gap-1.5 max-h-72 overflow-y-auto p-1 bg-slate-950 border border-slate-800 rounded-lg"></div>
+        </div>
+      </div>
+
+      <!-- PANEL 6: TRANSICIONES DE ENTRADA (MOTION 18) -->
+      <div id="tab-motion" class="tab-panel hidden space-y-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Transiciones de Entrada (18)</h2>
+        <div id="motionAnimList" class="space-y-1.5 max-h-96 overflow-y-auto pr-1"></div>
+      </div>
+
+      <!-- PANEL 7: EFECTOS Y OVERLAYS DE PARTÍCULAS (28) -->
+      <div id="tab-fx" class="tab-panel hidden space-y-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Efectos y Partículas FX (28)</h2>
+        <div id="fxOverlayList" class="space-y-1.5 max-h-96 overflow-y-auto pr-1"></div>
+      </div>
+
+      <!-- PANEL 8: MOTOR DE FONDOS (20 PROCEDURALES + DEGRADADOS) -->
+      <div id="tab-background" class="tab-panel hidden space-y-4">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Fondos Procedurales & Degradados</h2>
+
+        <!-- Procedural Code Backgrounds List -->
+        <div>
+          <label class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block mb-1.5">20 Fondos Animados por Código Canvas</label>
+          <div id="proceduralBgGrid" class="grid grid-cols-2 gap-1.5 max-h-56 overflow-y-auto p-1 bg-slate-950 border border-slate-800 rounded-lg"></div>
+        </div>
+
+        <!-- Two-Color Editable Gradient Generator -->
+        <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/80 space-y-2">
+          <label class="text-[10px] font-bold text-amber-400 uppercase tracking-wider block">Generador de Degradado Elegante</label>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[9px] text-slate-400 block">Color 1</label>
+              <input type="color" id="colorGrad1" value="#0f172a" class="w-full h-7 bg-slate-900 border border-slate-700 rounded p-0.5 cursor-pointer" oninput="selectGradientMode()">
+            </div>
+            <div>
+              <label class="text-[9px] text-slate-400 block">Color 2</label>
+              <input type="color" id="colorGrad2" value="#1e293b" class="w-full h-7 bg-slate-900 border border-slate-700 rounded p-0.5 cursor-pointer" oninput="selectGradientMode()">
+            </div>
+          </div>
+          <button onclick="selectGradientMode()" class="w-full py-1.5 bg-slate-700 hover:bg-slate-600 font-bold text-xs text-white rounded-lg transition">Aplicar Degradado</button>
+        </div>
+      </div>
+
+      <!-- PANEL 9: BUSCADOR DE MÚSICA ITUNES & AUDIO MIXER -->
+      <div id="tab-audio" class="tab-panel hidden space-y-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Música & Audio Instrumental</h2>
+
+        <!-- Search Bar -->
+        <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/80 space-y-2">
+          <label class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block">Buscador iTunes en Tiempo Real</label>
+          <div class="flex gap-1.5">
+            <input type="text" id="musicSearchInput" value="ambient piano" placeholder="Escribe artista o género..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500" onkeyup="if(event.key==='Enter') searchMusic()">
+            <button onclick="searchMusic()" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 font-bold text-xs text-white rounded-lg transition flex items-center gap-1 shrink-0">
+              <i class="fa-solid fa-magnifying-glass"></i> Buscar
+            </button>
+          </div>
+        </div>
+
+        <!-- Category Pills -->
+        <div class="flex gap-1.5 overflow-x-auto pb-1 text-[10px]">
+          <button onclick="setMusicCategoryPill('ambient', this)" class="music-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold whitespace-nowrap">Ambient</button>
+          <button onclick="setMusicCategoryPill('instrumental', this)" class="music-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold whitespace-nowrap">Instrumental</button>
+          <button onclick="setMusicCategoryPill('piano', this)" class="music-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold whitespace-nowrap">Piano</button>
+          <button onclick="setMusicCategoryPill('corporativo', this)" class="music-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold whitespace-nowrap">Corporativo</button>
+          <button onclick="setMusicCategoryPill('chill', this)" class="music-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold whitespace-nowrap">Chill</button>
+          <button onclick="setMusicCategoryPill('acustico', this)" class="music-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold whitespace-nowrap">Acústico</button>
+        </div>
+
+        <!-- Local MP3 Upload -->
+        <button onclick="document.getElementById('inputLocalMp3').click()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-slate-200 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-folder-open text-amber-400"></i> Subir MP3 Local
+        </button>
+        <input type="file" id="inputLocalMp3" accept="audio/*" class="hidden" onchange="handleUserMp3Upload(event)">
+
+        <!-- Active Selected Track Indicator -->
+        <div id="activeTrackCard" class="p-2.5 bg-slate-950 border border-cyan-500/40 rounded-xl flex items-center justify-between">
+          <div class="overflow-hidden">
+            <span class="text-[9px] font-bold text-cyan-400 uppercase tracking-wider block">Pista Seleccionada:</span>
+            <div id="activeTrackTitle" class="text-xs font-bold text-white truncate">Sin Audio Seleccionado</div>
+          </div>
+          <button onclick="stopAudioPlayback()" class="p-1.5 text-slate-400 hover:text-rose-400 text-xs" title="Detener audio"><i class="fa-solid fa-stop"></i></button>
+        </div>
+
+        <!-- Results List -->
+        <div id="musicSearchResultsContainer" class="space-y-1.5 max-h-60 overflow-y-auto pr-1"></div>
+      </div>
+
+      <!-- PANEL 10: BRANDING, SELLO DE CAMPAÑA & LOGO -->
+      <div id="tab-branding" class="tab-panel hidden space-y-4">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Sello de Campaña & Logo</h2>
+
+        <!-- SELLO DE CAMPAÑA CONTROLS -->
+        <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/80 space-y-3">
+          <label class="flex items-center space-x-2 cursor-pointer">
+            <input type="checkbox" id="chkShowStamp" class="rounded accent-cyan-500 w-4 h-4 cursor-pointer" onchange="toggleStampInputs(); pushHistoryState(); safeUpdateCanvas();">
+            <span class="text-xs font-bold text-white">Activar Sello / Marca de Campaña</span>
+          </label>
+
+          <div id="stampInputsContainer" class="space-y-2 pt-1">
+            <div>
+              <label class="text-[10px] font-semibold text-slate-400 block mb-1">Título del Sello (ej. SUMMIT2026)</label>
+              <input type="text" id="inputStampText" value="SUMMIT2026" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()">
+            </div>
+            <div>
+              <label class="text-[10px] font-semibold text-slate-400 block mb-1">Subtítulo del Sello (ej. INNOVACIÓN Y FUTURO)</label>
+              <input type="text" id="inputStampSub" value="INNOVACIÓN Y FUTURO" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()">
+            </div>
+            <div>
+              <label class="text-[10px] font-semibold text-slate-400 block mb-1">Color de Resplandor Sello</label>
+              <input type="color" id="colorStampGlow" value="#00838f" class="w-full h-7 bg-slate-900 border border-slate-700 rounded p-0.5 cursor-pointer" oninput="safeUpdateCanvas()">
+            </div>
+          </div>
+        </div>
+
+        <!-- LOGO CONTROLS -->
+        <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/80 space-y-3">
+          <label class="flex items-center space-x-2 cursor-pointer">
+            <input type="checkbox" id="chkShowLogo" checked class="rounded accent-cyan-500 w-4 h-4 cursor-pointer" onchange="pushHistoryState(); safeUpdateCanvas();">
+            <span class="text-xs font-bold text-white">Mostrar Logo Isotipo</span>
+          </label>
+
+          <div>
+            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Estilo de Logo</label>
+            <select id="selectLogo" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none" onchange="handleLogoSelectChange()">
+              <option value="blanco" selected>Isotipo Texto Blanco</option>
+              <option value="negro">Isotipo Texto Negro</option>
+              <option value="turquesa">Isotipo Turquesa StudioCraft</option>
+              <option value="custom">Subir Logo Personalizado (PNG/JPG)</option>
+            </select>
+          </div>
+
+          <div id="customLogoUploadWrapper" class="hidden">
+            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Subir Archivo de Logo Transparente</label>
+            <input type="file" id="inputCustomLogo" accept="image/*" class="w-full text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-900 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer" onchange="handleUserLogoUpload(event)">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MAIN CENTER STAGE AREA -->
+    <main class="flex-1 canvas-stage-bg relative overflow-hidden flex flex-col items-center justify-between p-4">
+      
+      <!-- Center Canvas Container Wrapper -->
+      <div id="canvasViewportWrapper" class="flex-1 flex items-center justify-center w-full relative overflow-hidden">
+        <div id="canvasContainerBox" class="relative shadow-2xl rounded-xl overflow-hidden border border-slate-800 transition-all duration-200">
+          <canvas id="mainCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- BOTTOM ANIMATION TIMELINE PLAYBACK BAR -->
+      <div class="w-full max-w-3xl glass-panel border border-slate-800 rounded-2xl p-2.5 px-4 flex items-center space-x-4 shadow-2xl z-10 shrink-0">
+        <!-- Play / Stop Toggle -->
+        <button id="btnTimelinePlay" onclick="toggleTimelinePlay()" class="w-9 h-9 rounded-full bg-cyan-600 hover:bg-cyan-500 text-white flex items-center justify-center transition shadow-md shadow-cyan-500/30 shrink-0">
+          <i id="timelinePlayIcon" class="fa-solid fa-play text-xs ml-0.5"></i>
+        </button>
+
+        <!-- Time Scrubbing Slider -->
+        <div class="flex-1 space-y-1">
+          <div class="flex justify-between text-[10px] font-mono text-slate-400 font-bold">
+            <span id="currentTimeLabel">0.0s</span>
+            <span id="totalTimeLabel">15.0s</span>
+          </div>
+          <input type="range" id="timelineScrubber" min="0" max="15" step="0.05" value="0" class="w-full accent-cyan-500 cursor-pointer" oninput="onTimelineScrub(this.value)">
+        </div>
+
+        <!-- Duration Selector -->
+        <div class="flex items-center space-x-1.5 shrink-0">
+          <span class="text-xs text-slate-400 font-semibold">Duración:</span>
+          <select id="selectDuration" class="bg-slate-800 border border-slate-700 text-xs font-bold text-white rounded-lg p-1.5 focus:outline-none cursor-pointer" onchange="onDurationChange()">
+            <option value="5">5s</option>
+            <option value="10">10s</option>
+            <option value="15" selected>15s</option>
+            <option value="30">30s</option>
+          </select>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- EXPORT IMAGE MODAL -->
+  <div id="exportImageModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white">Descargar Imagen Estática HD</h3>
+        <button onclick="closeExportImageModal()" class="text-slate-400 hover:text-white text-base">✕</button>
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold text-slate-400 block mb-1">Formato de Archivo</label>
+        <select id="modalFileFormat" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none">
+          <option value="webp" selected>WebP (Optimizado - Mínimo Tamaño)</option>
+          <option value="png">PNG (Calidad Máxima Transparente)</option>
+          <option value="jpg">JPG (Estándar Alta Legibilidad)</option>
+        </select>
+      </div>
+
+      <div class="pt-2 flex gap-2">
+        <button onclick="closeExportImageModal()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-bold text-slate-300">Cancelar</button>
+        <button onclick="triggerImageDownload()" class="flex-1 py-2 bg-cyan-600 hover:bg-cyan-500 rounded-lg text-xs font-extrabold text-white">Descargar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT ENGINE -->
+  <script>
+    // SECULAR QUOTES DATABASE (40+)
+    const SECULAR_QUOTES = [
+      { frase: "EL ÉXITO ES LA SUMA DE PEQUEÑOS ESFUERZOS REPETIDOS DÍA TRAS DÍA.", cita: "Robert Collier" },
+      { frase: "LA SIMPLICIDAD ES LA MÁXIMA SOFISTICACIÓN EN TODO LO QUE CREAMOS.", cita: "Leonardo da Vinci" },
+      { frase: "LA MEJOR MANERA DE PREDECIR EL FUTURO ES INVENTARLO.", cita: "Alan Kay" },
+      { frase: "CADA DÍA ES UNA OPORTUNIDAD PARA APRENDER Y SUPERAR TUS LÍMITES.", cita: "Crecimiento Personal" },
+      { frase: "LA DISCIPLINA ES EL PUENTE ENTRE LAS METAS Y LOS LOGROS.", cita: "Jim Rohn" },
+      { frase: "NO CONTESIS LOS DÍAS, HAZ QUE LOS DÍAS CUENTEN.", cita: "Muhammad Ali" },
+      { frase: "LA INNOVACIÓN ES LO QUE DISTINGUE A UN LÍDER DE UN SEGUIDOR.", cita: "Steve Jobs" },
+      { frase: "EL ÚNICO MODO DE HACER UN GRAN TRABAJO ES AMAR LO QUE HACES.", cita: "Steve Jobs" },
+      { frase: "LA LÓGICA TE LLEVARÁ DE A A B. LA IMAGINACIÓN TE LLEVARÁ A CUALQUIER PARTE.", cita: "Albert Einstein" },
+      { frase: "EL CONOCIMIENTO ES ENERGÍA; LA ACCIÓN ES PODER.", cita: "Proverbio Digital" },
+      { frase: "EL FRACASO ES SIMPLEMENTE LA OPORTUNIDAD DE COMENZAR DE NUEVO CON MÁS INTELIGENCIA.", cita: "Henry Ford" },
+      { frase: "CUANDO CAMBIAS LA FORMA DE VER LAS COSAS, LAS COSAS QUE VES CAMBIAN.", cita: "Wayne Dyer" },
+      { frase: "LA CREATIVIDAD ES LA INTELIGENCIA DIVIRTIÉNDOSE.", cita: "Albert Einstein" },
+      { frase: "NUNCA ES TARDE PARA SER LO QUE PODRÍAS HABER SIDO.", cita: "George Eliot" },
+      { frase: "LA CONSISTENCIA VENCE AL TALENTO CUANDO EL TALENTO NO SE ESFUERZA.", cita: "Liderazgo Efectivo" },
+      { frase: "CULTIVA TU MENTE CON GRANDES PENSAMIENTOS Y LOGRARÁS GRANDES RESULTADOS.", cita: "Benjamin Disraeli" },
+      { frase: "EL CAMBIO ES INEVITABLE; EL PROGRESO ES UNA ELECCIÓN.", cita: "Liderazgo Moderno" },
+      { frase: "SÉ EL CAMBIO QUE QUIERES VER EN EL MUNDO.", cita: "Mahatma Gandhi" },
+      { frase: "LA CALIDAD NO ES UN ACTO, ES UN HÁBITO CONSTANTE.", cita: "Aristóteles" },
+      { frase: "CADA GRAN LOGRO FUE ALGUNA VEZ CONSIDERADO IMPOSIBLE.", cita: "Pensamiento Estratégico" },
+      { frase: "LA ÚNICA LIMITACIÓN EN NUESTRA REALIZACIÓN DEL MAÑANA SERÁN NUESTRAS DUDAS DE HOY.", cita: "Franklin D. Roosevelt" },
+      { frase: "HAZ LO QUE PUEDAS, CON LO QUE TENGAS, DONDE ESTÉS.", cita: "Theodore Roosevelt" },
+      { frase: "LA MEJOR FORMA DE EMPEZAR ES DEJAR DE HABLAR Y EMPEZAR A HACER.", cita: "Walt Disney" },
+      { frase: "TU TIEMPO ES LIMITADO, ASÍ QUE NO LO MALGASTES VIVIENDO LA VIDA DE OTRO.", cita: "Steve Jobs" },
+      { frase: "LA MOTIVACIÓN NOS IMPULSA A EMPEZAR, EL HÁBITO NOS PERMITE CONTINUAR.", cita: "Jim Ryun" },
+      { frase: "CADA PROBLEMA ES UN REGALO; SIN PROBLEMAS NO CRECERÍAMOS.", cita: "Tony Robbins" },
+      { frase: "EL CORAJE ES LA EXCELENCIA BAJO PRESIÓN.", cita: "Ernest Hemingway" },
+      { frase: "APRENDE DE CADA EXPERIENCIA Y ADAPTA TU CAMINO.", cita: "Estrategia Tecnológica" },
+      { frase: "EL FUTURO PERTENECE A QUIENES CREEN EN LA BELLEZA DE SUS SUEÑOS.", cita: "Eleanor Roosevelt" },
+      { frase: "LA PERSEVERANCIA ES EL CEMENTO DEL ÉXITO A LARGO PLAZO.", cita: "Proverbio Secular" },
+      { frase: "NO BUSQUES EL MOMENTO PERFECTO, TOMA EL MOMENTO Y HAZLO PERFECTO.", cita: "Mentalidad Ganadora" },
+      { frase: "LA EXCELENCIA NO ES UN DESTINO, ES UN VIAJE DE MEJORA CONTINUA.", cita: "KAIZEN" },
+      { frase: "LO QUE HACES HOY PUEDE MEJORAR TODOS TUS MAÑANAS.", cita: "Ralph Marston" },
+      { frase: "LA MENTE QUE SE ABRE A UNA NUEVA IDEA NUNCA VUELVE A SU TAMAÑO ORIGINAL.", cita: "Albert Einstein" },
+      { frase: "SI QUIERES IR RÁPIDO, VE SOLO. SI QUIERES IR LEJOS, VE ACOMPAÑADO.", cita: "Proverbio Africano" },
+      { frase: "EL MEJOR MOMENTO PARA PLANTAR UN ÁRBOL FUE HACE 20 AÑOS. EL SEGUNDO MEJOR MOMENTO ES HOY.", cita: "Proverbio Chino" },
+      { frase: "LA RUTA AL ÉXITO ESTÁ SIEMPRE EN CONSTRUCCIÓN.", cita: "Lily Tomlin" },
+      { frase: "HAZ DE CADA DÍA TU OBRA MAESTRA.", cita: "John Wooden" },
+      { frase: "NADA ES IMPOSIBLE, LA MISMA PALABRA DICE 'SOY POSIBLE'.", cita: "Audrey Hepburn" },
+      { frase: "EL LIDERAZGO ES LA CAPACIDAD DE TRANSFORMAR LA VISIÓN EN REALIDAD.", cita: "Warren Bennis" }
+    ];
+
+    // 18 MOTION ENTRANCE ANIMATIONS
+    const ANIMATIONS_LIST = [
+      { id: 'slide', title: 'Deslizar desde abajo (Slide Up)' },
+      { id: 'slideLeft', title: 'Deslizar desde la izquierda' },
+      { id: 'slideRight', title: 'Deslizar desde la derecha' },
+      { id: 'slideDown', title: 'Deslizar desde arriba' },
+      { id: 'fade', title: 'Desvanecer (Fade In/Out)' },
+      { id: 'zoom', title: 'Zoom a Fondo (Ken Burns)' },
+      { id: 'zoomText', title: 'Zoom In/Out General' },
+      { id: 'sequential', title: 'Aparición Escalonada' },
+      { id: 'typewriter', title: 'Máquina de Escribir' },
+      { id: 'bounce', title: 'Rebote Elástico Suave' },
+      { id: 'rotate', title: 'Rotación Elegante' },
+      { id: 'blur', title: 'Desenfoque a Claridad' },
+      { id: 'flipX', title: 'Giro 3D Flotante' },
+      { id: 'curtain', title: 'Apertura de Cortina' },
+      { id: 'shimmer', title: 'Destello Luminoso' },
+      { id: 'wave', title: 'Ondulación Suave' },
+      { id: 'spiral', title: 'Espiral Sutil' },
+      { id: 'none', title: 'Sin Transición (Estático)' }
+    ];
+
+    // 28 PARTICLE & FX OVERLAYS
+    const FX_OVERLAYS_LIST = [
+      { id: 'none', title: 'Sin Efectos FX' },
+      { id: 'sparkles', title: 'Destellos y Estrellas' },
+      { id: 'bubbles', title: 'Burbujas Flotantes' },
+      { id: 'dust', title: 'Polvo Estelar / Luces Doradas' },
+      { id: 'snow', title: 'Copos de Luz Suaves' },
+      { id: 'rays', title: 'Rayos de Luz Divina' },
+      { id: 'rain', title: 'Lluvia Lenta' },
+      { id: 'petals', title: 'Pétalos Sutiles' },
+      { id: 'fog', title: 'Bruma / Niebla Soft' },
+      { id: 'fireflies', title: 'Luciérnagas Nocturnas' },
+      { id: 'lensflare', title: 'Destellos de Lente' },
+      { id: 'bokeh', title: 'Esferas Bokeh' },
+      { id: 'aurora', title: 'Aurora Boreal' },
+      { id: 'lightleaks', title: 'Fugas de Luz' },
+      { id: 'matrices', title: 'Lluvia de Estrellas Caídas' },
+      { id: 'vignette', title: 'Viñeta Cinematográfica' },
+      { id: 'cinematicbars', title: 'Franjas Anamórficas' },
+      { id: 'glitch', title: 'Resplandor Neón Contorno' },
+      { id: 'proc_aurora_overlay', title: 'Aurora Overlay Transparente' },
+      { id: 'proc_waves_overlay', title: 'Océano de Ondas Overlay' },
+      { id: 'proc_nebula_overlay', title: 'Nebulosa Overlay' },
+      { id: 'proc_tunnel_overlay', title: 'Anillos de Luz Overlay' },
+      { id: 'proc_geometric_overlay', title: 'Malla Geométrica Overlay' },
+      { id: 'proc_sunbeams_overlay', title: 'Rayos del Amanecer Overlay' },
+      { id: 'proc_supernova_overlay', title: 'Estrella Resplandeciente Overlay' },
+      { id: 'proc_water_ripples_overlay', title: 'Ondas de Agua Overlay' },
+      { id: 'proc_constellations_overlay', title: 'Constelaciones Overlay' },
+      { id: 'proc_ember_rise_overlay', title: 'Chispas de Fuego Overlay' }
+    ];
+
+    // 20 PROCEDURAL CANVAS BACKGROUNDS
+    const PROCEDURAL_BG_LIST = [
+      { id: 'proc_aurora', title: '1. Aurora Boreal' },
+      { id: 'proc_clouds', title: '2. Nubes Místicas' },
+      { id: 'proc_stars', title: '3. Lluvia de Estrellas' },
+      { id: 'proc_fireflies', title: '4. Luciérnagas' },
+      { id: 'proc_cross_glow', title: '5. Resplandor Divino' },
+      { id: 'proc_waves', title: '6. Océano de Paz' },
+      { id: 'proc_nebula', title: '7. Nebulosa Espiritual' },
+      { id: 'proc_sunbeams', title: '8. Rayos del Amanecer' },
+      { id: 'proc_bokeh', title: '9. Esferas Bokeh' },
+      { id: 'proc_golden_dust', title: '10. Polvo de Oro' },
+      { id: 'proc_geometric', title: '11. Malla Geométrica' },
+      { id: 'proc_supernova', title: '12. Supernova' },
+      { id: 'proc_tunnel', title: '13. Anillos de Luz' },
+      { id: 'proc_petals_flow', title: '14. Torbellino Pétalos' },
+      { id: 'proc_halo', title: '15. Halo de Gloria' },
+      { id: 'proc_water_ripples', title: '16. Ondas de Agua' },
+      { id: 'proc_prism', title: '17. Refracción Prisma' },
+      { id: 'proc_constellations', title: '18. Constelaciones' },
+      { id: 'proc_ember_rise', title: '19. Chispas Fuego' },
+      { id: 'proc_soft_smoke', title: '20. Incienso Místico' }
+    ];
+
+    // GLOBAL APP STATE
+    let currentZoom = 1.0;
+    let selectedBgKey = 'video_proc_aurora';
+    let selectedAnimationKey = 'slide';
+    let selectedFxKey = 'none';
+    let userCustomBgImg = null;
+    let userCustomLogoImg = null;
+    let currentPhraseBankIndex = 0;
+
+    // Timeline Playback State
+    let isTimelinePlaying = false;
+    let timelineAnimFrameId = null;
+    let timelineStartTime = null;
+
+    // Audio State
+    let activeAudioTrack = null;
+    let audioPreviewEl = null;
+
+    // Undo / Redo History Stack
+    let historyStack = [];
+    let historyIndex = -1;
+
+    // INITIALIZATION
+    window.onload = function() {
+      try {
+        initPhraseBank();
+        renderMotionAnimList();
+        renderFxOverlayList();
+        renderProceduralBgGrid();
+        searchPhotos(); // Initial photos query
+        pushHistoryState();
+        safeUpdateCanvas();
+        fitStageZoom();
+        window.addEventListener('resize', fitStageZoom);
+      } catch (e) {
+        console.error("Initialization error:", e);
+      }
+    };
+
+    // TOAST NOTIFICATIONS (replaces alert)
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `px-4 py-2.5 rounded-xl shadow-2xl text-xs font-bold text-white transition-all transform duration-300 pointer-events-auto flex items-center gap-2 ${type === 'error' ? 'bg-rose-600' : (type === 'success' ? 'bg-emerald-600' : 'bg-cyan-600')}`;
+      toast.innerHTML = `<i class="fa-solid ${type === 'error' ? 'fa-circle-exclamation' : (type === 'success' ? 'fa-circle-check' : 'fa-circle-info')}"></i> ${msg}`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // UNDO / REDO HISTORY SYSTEM
+    function pushHistoryState() {
+      try {
+        const state = {
+          phrase: document.getElementById('inputPhrase').value,
+          fontPhrase: document.getElementById('selectFontPhrase').value,
+          colorPhrase: document.getElementById('colorPhrase').value,
+          citation: document.getElementById('inputCitation').value,
+          fontCitation: document.getElementById('selectFontCitation').value,
+          colorCitation: document.getElementById('colorCitation').value,
+          handle: document.getElementById('inputHandle').value,
+          showStamp: document.getElementById('chkShowStamp').checked,
+          stampText: document.getElementById('inputStampText').value,
+          stampSub: document.getElementById('inputStampSub').value,
+          showLogo: document.getElementById('chkShowLogo').checked,
+          logoStyle: document.getElementById('selectLogo').value,
+          shapeStyle: document.getElementById('selectShapeStyle').value,
+          colorShape: document.getElementById('colorShape').value,
+          bgKey: selectedBgKey,
+          animKey: selectedAnimationKey,
+          fxKey: selectedFxKey,
+          ratio: document.getElementById('selectRatio').value
+        };
+
+        if (historyIndex < historyStack.length - 1) {
+          historyStack = historyStack.slice(0, historyIndex + 1);
+        }
+        historyStack.push(JSON.stringify(state));
+        historyIndex = historyStack.length - 1;
+      } catch (e) {
+        console.warn("Error pushing history state:", e);
+      }
+    }
+
+    function undo() {
+      if (historyIndex > 0) {
+        historyIndex--;
+        restoreHistoryState(historyStack[historyIndex]);
+      }
+    }
+
+    function redo() {
+      if (historyIndex < historyStack.length - 1) {
+        historyIndex++;
+        restoreHistoryState(historyStack[historyIndex]);
+      }
+    }
+
+    function restoreHistoryState(jsonStr) {
+      if (!jsonStr) return;
+      try {
+        const state = JSON.parse(jsonStr);
+        document.getElementById('inputPhrase').value = state.phrase || '';
+        document.getElementById('selectFontPhrase').value = state.fontPhrase || 'Montserrat';
+        document.getElementById('colorPhrase').value = state.colorPhrase || '#ffffff';
+        document.getElementById('inputCitation').value = state.citation || '';
+        document.getElementById('selectFontCitation').value = state.fontCitation || 'Lora';
+        document.getElementById('colorCitation').value = state.colorCitation || '#38bdf8';
+        document.getElementById('inputHandle').value = state.handle || '';
+        document.getElementById('chkShowStamp').checked = !!state.showStamp;
+        document.getElementById('inputStampText').value = state.stampText || 'SUMMIT2026';
+        document.getElementById('inputStampSub').value = state.stampSub || 'INNOVACIÓN Y FUTURO';
+        document.getElementById('chkShowLogo').checked = !!state.showLogo;
+        document.getElementById('selectLogo').value = state.logoStyle || 'blanco';
+        document.getElementById('selectShapeStyle').value = state.shapeStyle || 'none';
+        document.getElementById('colorShape').value = state.colorShape || '#00838f';
+        document.getElementById('selectRatio').value = state.ratio || '4:5';
+
+        selectedBgKey = state.bgKey || 'video_proc_aurora';
+        selectedAnimationKey = state.animKey || 'slide';
+        selectedFxKey = state.fxKey || 'none';
+
+        toggleStampInputs();
+        handleLogoSelectChange();
+        fitStageZoom();
+        safeUpdateCanvas();
+      } catch (e) {
+        console.error("Error restoring history state:", e);
+      }
+    }
+
+    // SAFE CANVAS UPDATE ENGINE
+    function safeUpdateCanvas(currentTimeSec = null) {
+      try {
+        const canvas = document.getElementById('mainCanvas');
+        if (!canvas) return;
+
+        const duration = parseFloat(document.getElementById('selectDuration').value) || 15;
+        const time = currentTimeSec !== null ? currentTimeSec : parseFloat(document.getElementById('timelineScrubber').value) || 0;
+
+        const phrase = document.getElementById('inputPhrase').value || '';
+        const citation = document.getElementById('inputCitation').value || '';
+        const fontPhrase = document.getElementById('selectFontPhrase').value;
+        const fontCitation = document.getElementById('selectFontCitation').value;
+        const colorPhrase = document.getElementById('colorPhrase').value;
+        const colorCitation = document.getElementById('colorCitation').value;
+        const handle = document.getElementById('inputHandle').value || '';
+
+        const logoStyle = document.getElementById('selectLogo').value;
+        const showLogo = document.getElementById('chkShowLogo').checked;
+
+        const showStamp = document.getElementById('chkShowStamp').checked;
+        const stampText = document.getElementById('inputStampText').value || '';
+        const stampSub = document.getElementById('inputStampSub').value || '';
+        const stampGlow = document.getElementById('colorStampGlow').value || '#00838f';
+
+        const shapeStyle = document.getElementById('selectShapeStyle').value;
+        const colorShape = document.getElementById('colorShape').value;
+        const shapeOpacity = parseFloat(document.getElementById('rangeShapeOpacity').value) || 0.6;
+
+        const ratio = document.getElementById('selectRatio').value;
+
+        drawStudioCanvasCard(canvas, {
+          phrase, citation, fontPhrase, fontCitation, colorPhrase, colorCitation, handle,
+          logoStyle, showLogo,
+          showStamp, stampText, stampSub, stampGlow,
+          shapeStyle, colorShape, shapeOpacity,
+          ratio,
+          bgKey: selectedBgKey,
+          animKey: selectedAnimationKey,
+          fxKey: selectedFxKey,
+          time, duration
+        });
+      } catch (e) {
+        console.error("Error during safeUpdateCanvas:", e);
+      }
+    }
+
+    // STAGE CANVAS RENDERING ENGINE
+    function drawStudioCanvasCard(canvas, opts) {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      // 1. Dimensions based on Aspect Ratio
+      canvas.width = 1080;
+      let targetHeight = 1350; // 4:5
+      if (opts.ratio === '9:16') targetHeight = 1920;
+      if (opts.ratio === '1:1') targetHeight = 1080;
+      if (opts.ratio === '16:9') { canvas.width = 1920; targetHeight = 1080; }
+      canvas.height = targetHeight;
+
+      // Update CSS Box aspect ratio
+      const box = document.getElementById('canvasContainerBox');
+      if (box) {
+        if (opts.ratio === '9:16') box.style.aspectRatio = '9 / 16';
+        else if (opts.ratio === '1:1') box.style.aspectRatio = '1 / 1';
+        else if (opts.ratio === '16:9') box.style.aspectRatio = '16 / 9';
+        else box.style.aspectRatio = '4 / 5';
+      }
+
+      const time = opts.time || 0;
+      const dur = opts.duration || 15;
+
+      // Transition Interpolation
+      const inDur = 1.5;
+      const outDur = 1.5;
+      let inProgress = Math.min(1.0, time / inDur);
+      let outProgress = time > (dur - outDur) ? Math.min(1.0, (time - (dur - outDur)) / outDur) : 0;
+      const pIn = 1 - Math.pow(1 - inProgress, 3);
+      const pOut = 1 - Math.pow(1 - outProgress, 3);
+      const netAlpha = Math.max(0, pIn * (1 - pOut));
+
+      // 2. Render Background
+      if (opts.bgKey.startsWith('video_proc_')) {
+        drawProceduralBg(ctx, canvas.width, canvas.height, opts.bgKey, time);
+      } else if (opts.bgKey === 'user_custom' && userCustomBgImg) {
+        drawCoverImage(ctx, userCustomBgImg, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      } else if (opts.bgKey.startsWith('stock_photo_') && window.stockPhotoImgs && window.stockPhotoImgs[opts.bgKey]) {
+        drawCoverImage(ctx, window.stockPhotoImgs[opts.bgKey], canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.50)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      } else if (opts.bgKey === 'custom_gradient') {
+        const g1 = document.getElementById('colorGrad1').value;
+        const g2 = document.getElementById('colorGrad2').value;
+        const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        grad.addColorStop(0, g1);
+        grad.addColorStop(1, g2);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      } else {
+        const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        grad.addColorStop(0, '#0f172a');
+        grad.addColorStop(1, '#1e293b');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      // Vignette Gradient Overlays
+      const topGrad = ctx.createLinearGradient(0, 0, 0, 260);
+      topGrad.addColorStop(0, 'rgba(0, 0, 0, 0.75)');
+      topGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = topGrad;
+      ctx.fillRect(0, 0, canvas.width, 260);
+
+      const botGrad = ctx.createLinearGradient(0, canvas.height - 320, 0, canvas.height);
+      botGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+      botGrad.addColorStop(1, 'rgba(0, 0, 0, 0.80)');
+      ctx.fillStyle = botGrad;
+      ctx.fillRect(0, canvas.height - 320, canvas.width, 320);
+
+      // 3. Render Shapes / Frames
+      drawCanvasShapeFrame(ctx, canvas.width, canvas.height, opts.shapeStyle, opts.colorShape, opts.shapeOpacity);
+
+      // 4. Render FX Overlay
+      drawFxParticleOverlay(ctx, canvas.width, canvas.height, opts.fxKey, time);
+
+      // Motion Offsets
+      let logoAlpha = netAlpha, phraseAlpha = netAlpha, handleAlpha = netAlpha;
+      let phraseYOffset = (1 - pIn) * 60 - (pOut * 40);
+      let phraseXOffset = 0;
+
+      if (opts.animKey === 'slideLeft') {
+        phraseXOffset = (1 - pIn) * (-250) + (pOut * 250);
+      } else if (opts.animKey === 'none') {
+        logoAlpha = phraseAlpha = handleAlpha = 1.0;
+        phraseYOffset = phraseXOffset = 0;
+      }
+
+      // 5. Render Logo
+      let logoY = opts.ratio === '9:16' ? 200 : (opts.ratio === '16:9' ? 80 : 110);
+      if (opts.showLogo) {
+        ctx.save();
+        ctx.globalAlpha = logoAlpha;
+        if (opts.logoStyle === 'custom' && userCustomLogoImg) {
+          const lw = 150;
+          const lh = lw * (userCustomLogoImg.height / userCustomLogoImg.width || 1);
+          ctx.drawImage(userCustomLogoImg, (canvas.width - lw) / 2, logoY, lw, lh);
+        } else {
+          const fillCol = opts.logoStyle === 'negro' ? '#000000' : (opts.logoStyle === 'turquesa' ? '#00838f' : '#ffffff');
+          ctx.beginPath();
+          ctx.arc(canvas.width / 2, logoY + 22, 22, 0, Math.PI * 2);
+          ctx.fillStyle = fillCol;
+          ctx.shadowColor = 'rgba(0,131,143,0.6)';
+          ctx.shadowBlur = 12;
+          ctx.fill();
+
+          ctx.font = '900 11px "Montserrat", sans-serif';
+          ctx.fillStyle = opts.logoStyle === 'negro' ? '#ffffff' : '#0f172a';
+          ctx.textAlign = 'center';
+          ctx.fillText('PRO', canvas.width / 2, logoY + 26);
+        }
+        ctx.restore();
+      }
+
+      // 6. Render Handle
+      let handleY = canvas.height - (opts.ratio === '9:16' ? 280 : (opts.ratio === '16:9' ? 80 : 90));
+      let stampY = handleY - 60;
+
+      if (opts.handle && handleAlpha > 0.01) {
+        ctx.save();
+        ctx.globalAlpha = handleAlpha;
+        ctx.font = '600 22px "Montserrat", sans-serif';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
+        ctx.textAlign = 'center';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
+        ctx.shadowBlur = 8;
+        ctx.fillText(opts.handle, canvas.width / 2, handleY);
+        ctx.restore();
+      }
+
+      // 7. Render Campaign Stamp (Sello de Campaña)
+      if (opts.showStamp && opts.stampText) {
+        ctx.save();
+        ctx.globalAlpha = netAlpha;
+        ctx.textAlign = 'center';
+
+        ctx.font = '900 44px "Montserrat", "Outfit", sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = opts.stampGlow || '#00838f';
+        ctx.shadowBlur = 18;
+        ctx.fillText(opts.stampText.toUpperCase(), canvas.width / 2, stampY);
+
+        if (opts.stampSub) {
+          ctx.font = '700 15px "Montserrat", sans-serif';
+          ctx.fillStyle = '#38bdf8';
+          ctx.shadowBlur = 8;
+          ctx.fillText(opts.stampSub.toUpperCase(), canvas.width / 2, stampY + 24);
+        }
+        ctx.restore();
+      }
+
+      // 8. Render Main Phrase & Citation
+      if (opts.phrase && phraseAlpha > 0.01) {
+        ctx.save();
+        ctx.globalAlpha = phraseAlpha;
+        ctx.textAlign = 'center';
+        ctx.fillStyle = opts.colorPhrase || '#ffffff';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.95)';
+        ctx.shadowBlur = 16;
+
+        const fontSize = Math.max(32, Math.min(66, Math.round(1080 / Math.sqrt(opts.phrase.length + 10))));
+        ctx.font = `700 ${fontSize}px "${opts.fontPhrase}", sans-serif`;
+
+        const maxWidth = canvas.width - 240;
+        const words = opts.phrase.toUpperCase().split(' ');
+        let lines = [];
+        let curLine = '';
+
+        words.forEach(w => {
+          let test = curLine + w + ' ';
+          if (ctx.measureText(test).width > maxWidth && curLine !== '') {
+            lines.push(curLine.trim());
+            curLine = w + ' ';
+          } else {
+            curLine = test;
+          }
+        });
+        lines.push(curLine.trim());
+
+        const lineHeight = fontSize * 1.25;
+        let startY = (canvas.height / 2) - ((lines.length * lineHeight) / 2) + phraseYOffset;
+
+        lines.forEach((l, idx) => {
+          ctx.fillText(l, (canvas.width / 2) + phraseXOffset, startY + (idx * lineHeight));
+        });
+
+        // Citation
+        if (opts.citation) {
+          ctx.font = `italic 600 28px "${opts.fontCitation}", serif`;
+          ctx.fillStyle = opts.colorCitation || '#38bdf8';
+          ctx.shadowBlur = 8;
+          ctx.fillText(`— ${opts.citation}`, canvas.width / 2, startY + (lines.length * lineHeight) + 36);
+        }
+
+        ctx.restore();
+      }
+    }
+
+    // DRAW CANVAS SHAPE / FRAME
+    function drawCanvasShapeFrame(ctx, w, h, style, color, opacity) {
+      if (!style || style === 'none') return;
+      ctx.save();
+      ctx.globalAlpha = opacity;
+      ctx.strokeStyle = color;
+
+      if (style === 'frame_thin') {
+        ctx.lineWidth = 4;
+        ctx.strokeRect(40, 40, w - 80, h - 80);
+      } else if (style === 'frame_double') {
+        ctx.lineWidth = 3;
+        ctx.strokeRect(35, 35, w - 70, h - 70);
+        ctx.strokeRect(45, 45, w - 90, h - 90);
+      } else if (style === 'divider_line') {
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(w * 0.3, h - 160);
+        ctx.lineTo(w * 0.7, h - 160);
+        ctx.stroke();
+      } else if (style === 'box_glass') {
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.5)';
+        ctx.roundRect ? ctx.roundRect(80, 180, w - 160, h - 360, 24) : ctx.fillRect(80, 180, w - 160, h - 360);
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // STOCK PHOTOS SEARCH ENGINE
+    async function searchPhotos() {
+      const query = document.getElementById('photoSearchInput').value.trim() || 'tech,nature,city';
+      const container = document.getElementById('photoGridContainer');
+      container.innerHTML = `<div class="col-span-3 p-4 text-center text-xs text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Cargando imágenes de stock...</div>`;
+
+      window.stockPhotoImgs = {};
+      const keywords = query.split(',').map(s => s.trim());
+      const ts = Date.now();
+
+      container.innerHTML = '';
+
+      for (let i = 1; i <= 15; i++) {
+        const kw = keywords[i % keywords.length];
+        const photoUrl = `https://picsum.photos/seed/studiocraft_${kw}_${i}_${ts}/600/800`;
+        const photoKey = `stock_photo_${i}`;
+
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = photoUrl;
+        img.onload = () => {
+          window.stockPhotoImgs[photoKey] = img;
+        };
+
+        const thumb = document.createElement('div');
+        thumb.className = `aspect-square rounded-lg border bg-slate-900 cursor-pointer overflow-hidden relative transition hover:border-cyan-400 ${selectedBgKey === photoKey ? 'border-cyan-400 ring-2 ring-cyan-500/50' : 'border-slate-800'}`;
+        thumb.style.backgroundImage = `url('${photoUrl}')`;
+        thumb.style.backgroundSize = 'cover';
+
+        thumb.onclick = () => {
+          selectedBgKey = photoKey;
+          pushHistoryState();
+          safeUpdateCanvas();
+          searchPhotos();
+        };
+
+        container.appendChild(thumb);
+      }
+    }
+
+    // PROCEDURAL BG GRID RENDERER
+    function renderProceduralBgGrid() {
+      const container = document.getElementById('proceduralBgGrid');
+      container.innerHTML = '';
+      PROCEDURAL_BG_LIST.forEach(p => {
+        const key = 'video_' + p.id;
+        const card = document.createElement('button');
+        card.className = `p-1.5 rounded-lg border text-left flex flex-col justify-between aspect-square transition ${selectedBgKey === key ? 'border-cyan-400 bg-cyan-950/60' : 'border-slate-800 bg-slate-900 hover:border-slate-700'}`;
+        card.innerHTML = `<span class="text-[9px] font-bold text-white truncate">${p.title}</span><span class="text-[8px] text-cyan-400 font-mono">CÓDIGO</span>`;
+        card.onclick = () => {
+          selectedBgKey = key;
+          pushHistoryState();
+          safeUpdateCanvas();
+          renderProceduralBgGrid();
+        };
+        container.appendChild(card);
+      });
+    }
+
+    function selectGradientMode() {
+      selectedBgKey = 'custom_gradient';
+      pushHistoryState();
+      safeUpdateCanvas();
+    }
+
+    // ITUNES MUSIC SEARCH & AUDIO MIXER
+    async function searchMusic() {
+      const query = document.getElementById('musicSearchInput').value.trim() || 'ambient piano';
+      const container = document.getElementById('musicSearchResultsContainer');
+      container.innerHTML = `<div class="p-3 text-center text-xs text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Buscando canciones en iTunes...</div>`;
+
+      try {
+        const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=15`);
+        const data = await res.json();
+
+        container.innerHTML = '';
+        if (data.results && data.results.length > 0) {
+          data.results.forEach(track => {
+            const item = document.createElement('div');
+            item.className = 'p-2 bg-slate-950 border border-slate-800 rounded-lg flex items-center justify-between gap-2 hover:border-slate-700 transition';
+            item.innerHTML = `
+              <div class="flex items-center gap-2 overflow-hidden">
+                <img src="${track.artworkUrl60 || track.artworkUrl100}" class="w-8 h-8 rounded object-cover shrink-0">
+                <div class="overflow-hidden">
+                  <div class="text-xs font-bold text-white truncate">${track.trackName}</div>
+                  <div class="text-[10px] text-slate-400 truncate">${track.artistName}</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 shrink-0">
+                <button onclick="previewAudioTrack('${track.previewUrl}')" class="p-1.5 bg-slate-800 hover:bg-slate-700 rounded text-xs text-cyan-400" title="Escuchar"><i class="fa-solid fa-play"></i></button>
+                <button onclick="selectMusicTrack('${track.trackName.replace(/'/g, "")} - ${track.artistName.replace(/'/g, "")}', '${track.previewUrl}')" class="px-2 py-1 bg-cyan-600 hover:bg-cyan-500 rounded text-[10px] font-bold text-white">Usar</button>
+              </div>
+            `;
+            container.appendChild(item);
+          });
+        } else {
+          container.innerHTML = `<div class="p-3 text-center text-xs text-slate-400">No se encontraron pistas para "${query}".</div>`;
+        }
+      } catch (err) {
+        console.error("iTunes Music search error:", err);
+        container.innerHTML = `<div class="p-3 text-center text-xs text-rose-400">Error de conexión al buscar en iTunes.</div>`;
+      }
+    }
+
+    function setMusicCategoryPill(category, btn) {
+      document.querySelectorAll('.music-pill').forEach(b => b.classList.remove('bg-cyan-600', 'text-white'));
+      btn.classList.add('bg-cyan-600', 'text-white');
+      document.getElementById('musicSearchInput').value = category;
+      searchMusic();
+    }
+
+    function previewAudioTrack(url) {
+      stopAudioPlayback();
+      audioPreviewEl = new Audio(url);
+      audioPreviewEl.play().catch(e => console.log(e));
+    }
+
+    function selectMusicTrack(title, url) {
+      stopAudioPlayback();
+      activeAudioTrack = { title, url };
+      document.getElementById('activeTrackTitle').innerText = title;
+      showToast(`Música seleccionada: ${title}`, 'success');
+    }
+
+    function handleUserMp3Upload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        stopAudioPlayback();
+        const url = URL.createObjectURL(file);
+        activeAudioTrack = { title: file.name, url };
+        document.getElementById('activeTrackTitle').innerText = file.name;
+        showToast(`MP3 subido: ${file.name}`, 'success');
+      }
+    }
+
+    function stopAudioPlayback() {
+      if (audioPreviewEl) {
+        audioPreviewEl.pause();
+        audioPreviewEl = null;
+      }
+    }
+
+    // PROCEDURAL CANVAS BACKGROUND ALGORITHMS (20)
+    function drawProceduralBg(ctx, width, height, type, time) {
+      ctx.save();
+      if (type === 'video_proc_aurora') {
+        const grad = ctx.createLinearGradient(0, 0, 0, height);
+        grad.addColorStop(0, '#0f172a'); grad.addColorStop(0.5, '#064e3b'); grad.addColorStop(1, '#022c22');
+        ctx.fillStyle = grad; ctx.fillRect(0, 0, width, height);
+        for (let i = 0; i < 3; i++) {
+          ctx.beginPath(); ctx.moveTo(0, height * 0.2);
+          for (let x = 0; x <= width; x += 20) {
+            ctx.lineTo(x, (height * 0.3) + Math.sin(x * 0.005 + time * 1.2 + i) * 80);
+          }
+          ctx.lineTo(width, height); ctx.lineTo(0, height); ctx.closePath();
+          ctx.fillStyle = `rgba(16, 185, 129, ${0.15 + i * 0.05})`; ctx.fill();
+        }
+      } else if (type === 'video_proc_stars') {
+        ctx.fillStyle = '#050814'; ctx.fillRect(0, 0, width, height);
+        for (let i = 0; i < 50; i++) {
+          const x = (i * 137) % width;
+          const y = (time * 30 + i * 70) % height;
+          ctx.fillStyle = `rgba(255, 255, 255, ${0.3 + 0.7 * Math.abs(Math.sin(time + i))})`;
+          ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI * 2); ctx.fill();
+        }
+      } else {
+        const grad = ctx.createLinearGradient(0, 0, width, height);
+        grad.addColorStop(0, '#090d16'); grad.addColorStop(1, '#1e293b');
+        ctx.fillStyle = grad; ctx.fillRect(0, 0, width, height);
+      }
+      ctx.restore();
+    }
+
+    // PARTICLE OVERLAY ENGINE (28)
+    function drawFxParticleOverlay(ctx, width, height, fxKey, time) {
+      if (!fxKey || fxKey === 'none') return;
+      ctx.save();
+      if (fxKey === 'sparkles') {
+        for (let i = 0; i < 30; i++) {
+          const x = (i * 269 + Math.sin(time + i) * 20) % width;
+          const y = (i * 193 + Math.cos(time + i) * 20) % height;
+          const pulse = Math.abs(Math.sin(time * 1.5 + i));
+          ctx.fillStyle = `rgba(255, 245, 200, ${0.3 + pulse * 0.5})`;
+          ctx.beginPath(); ctx.arc(x, y, 3 * pulse, 0, Math.PI * 2); ctx.fill();
+        }
+      } else if (fxKey === 'cinematicbars') {
+        const barH = height * 0.08;
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, width, barH);
+        ctx.fillRect(0, height - barH, width, barH);
+      }
+      ctx.restore();
+    }
+
+    function drawCoverImage(ctx, img, targetW, targetH) {
+      if (!img || !img.width) return;
+      const scale = Math.max(targetW / img.width, targetH / img.height);
+      const w = img.width * scale;
+      const h = img.height * scale;
+      ctx.drawImage(img, (targetW - w) / 2, (targetH - h) / 2, w, h);
+    }
+
+    // TIMELINE PLAYBACK CONTROLLER
+    function toggleTimelinePlay() {
+      if (isTimelinePlaying) stopTimelinePlay();
+      else startTimelinePlay();
+    }
+
+    function startTimelinePlay() {
+      isTimelinePlaying = true;
+      document.getElementById('timelinePlayIcon').className = 'fa-solid fa-stop text-xs';
+      
+      const duration = parseFloat(document.getElementById('selectDuration').value) || 15;
+      const scrubber = document.getElementById('timelineScrubber');
+      
+      if (activeAudioTrack && activeAudioTrack.url) {
+        stopAudioPlayback();
+        audioPreviewEl = new Audio(activeAudioTrack.url);
+        audioPreviewEl.currentTime = parseFloat(scrubber.value) || 0;
+        audioPreviewEl.play().catch(e => console.log(e));
+      }
+
+      timelineStartTime = performance.now() - (parseFloat(scrubber.value) * 1000);
+
+      function loop(now) {
+        if (!isTimelinePlaying) return;
+        let elapsed = (now - timelineStartTime) / 1000;
+        if (elapsed >= duration) {
+          elapsed = 0;
+          timelineStartTime = now;
+        }
+        scrubber.value = elapsed.toFixed(2);
+        document.getElementById('currentTimeLabel').innerText = `${elapsed.toFixed(1)}s`;
+        safeUpdateCanvas(elapsed);
+        timelineAnimFrameId = requestAnimationFrame(loop);
+      }
+      timelineAnimFrameId = requestAnimationFrame(loop);
+    }
+
+    function stopTimelinePlay() {
+      isTimelinePlaying = false;
+      document.getElementById('timelinePlayIcon').className = 'fa-solid fa-play text-xs ml-0.5';
+      if (timelineAnimFrameId) cancelAnimationFrame(timelineAnimFrameId);
+      stopAudioPlayback();
+    }
+
+    function onTimelineScrub(val) {
+      document.getElementById('currentTimeLabel').innerText = `${parseFloat(val).toFixed(1)}s`;
+      safeUpdateCanvas(parseFloat(val));
+    }
+
+    function onDurationChange() {
+      const duration = document.getElementById('selectDuration').value;
+      document.getElementById('timelineScrubber').max = duration;
+      document.getElementById('totalTimeLabel').innerText = `${duration}.0s`;
+      safeUpdateCanvas();
+    }
+
+    // VIDEO EXPORT WITH MEDIARECORDER & FIX-WEBM-DURATION
+    async function generarVideoAnimado() {
+      stopTimelinePlay();
+      const canvas = document.getElementById('mainCanvas');
+      const btn = document.getElementById('btnExportVideo');
+
+      if (!canvas) return;
+
+      const durationSec = parseFloat(document.getElementById('selectDuration').value) || 15;
+      const durationMs = durationSec * 1000;
+      const originalText = btn.innerHTML;
+
+      btn.disabled = true;
+
+      const canvasStream = canvas.captureStream(30);
+      let finalStream = canvasStream;
+      let audioCtx = null;
+
+      if (activeAudioTrack && activeAudioTrack.url) {
+        try {
+          stopAudioPlayback();
+          audioPreviewEl = new Audio(activeAudioTrack.url);
+          audioPreviewEl.crossOrigin = 'anonymous';
+
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioCtx();
+          const source = audioCtx.createMediaElementSource(audioPreviewEl);
+          const dest = audioCtx.createMediaStreamDestination();
+          source.connect(dest);
+          source.connect(audioCtx.destination);
+
+          const audioTrack = dest.stream.getAudioTracks()[0];
+          if (audioTrack) {
+            finalStream = new MediaStream([canvasStream.getVideoTracks()[0], audioTrack]);
+          }
+          await audioPreviewEl.play();
+        } catch (e) {
+          console.warn("Audio Context splice fallback:", e);
+        }
+      }
+
+      let mimeType = 'video/webm;codecs=vp9,opus';
+      if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm;codecs=vp8,opus';
+      if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm';
+
+      const recordedChunks = [];
+      let mediaRecorder = new MediaRecorder(finalStream, { mimeType });
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) recordedChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = async () => {
+        stopAudioPlayback();
+        if (audioCtx) { try { audioCtx.close(); } catch(e){} }
+
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Procesando...`;
+        const rawBlob = new Blob(recordedChunks, { type: mediaRecorder.mimeType || 'video/webm' });
+
+        const fixedBlob = await new Promise((resolve) => {
+          const fixFunc = window.ysFixWebmDuration || window.fixWebmDuration;
+          if (typeof fixFunc === 'function') {
+            try {
+              fixFunc(rawBlob, durationMs, (result) => resolve(result));
+            } catch(err) {
+              resolve(rawBlob);
+            }
+          } else {
+            resolve(rawBlob);
+          }
+        });
+
+        const url = URL.createObjectURL(fixedBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `studiocraft-video-${Date.now()}.webm`;
+        a.click();
+
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        safeUpdateCanvas();
+        showToast('¡Video exportado correctamente!', 'success');
+      };
+
+      mediaRecorder.start();
+
+      let startTime = performance.now();
+      function renderFrame(now) {
+        const elapsedSec = (now - startTime) / 1000;
+        const pct = Math.min(Math.round((elapsedSec / durationSec) * 100), 100);
+
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Grabando (${pct}%)...`;
+        safeUpdateCanvas(Math.min(elapsedSec, durationSec));
+
+        if (elapsedSec < durationSec) {
+          requestAnimationFrame(renderFrame);
+        } else {
+          if (mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+        }
+      }
+      requestAnimationFrame(renderFrame);
+    }
+
+    // UI SIDEBAR TABS SWITCHER
+    function switchSidebarTab(tabId) {
+      document.querySelectorAll('.sidebar-tab').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.querySelector(`[data-tab="${tabId}"]`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      const targetPanel = document.getElementById(tabId);
+      if (targetPanel) targetPanel.classList.remove('hidden');
+    }
+
+    function initPhraseBank() {
+      currentPhraseBankIndex = 0;
+      loadMorePhrasesToBank();
+    }
+
+    function loadMorePhrasesToBank() {
+      const select = document.getElementById('selectPhraseBank');
+      const countLabel = document.getElementById('phraseBankCount');
+      if (!select) return;
+
+      currentPhraseBankIndex = Math.min(currentPhraseBankIndex + 15, SECULAR_QUOTES.length);
+      select.innerHTML = '<option value="" disabled selected>-- Elige una frase predefinida --</option>';
+
+      for (let i = 0; i < currentPhraseBankIndex; i++) {
+        const item = SECULAR_QUOTES[i];
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.innerText = `${i + 1}. "${item.frase.length > 45 ? item.frase.substring(0, 42) + '...' : item.frase}" — ${item.cita}`;
+        select.appendChild(opt);
+      }
+
+      if (countLabel) countLabel.innerText = `${currentPhraseBankIndex} de ${SECULAR_QUOTES.length}`;
+    }
+
+    function onSelectPhraseFromBank(select) {
+      const index = parseInt(select.value, 10);
+      if (!isNaN(index) && SECULAR_QUOTES[index]) {
+        document.getElementById('inputPhrase').value = SECULAR_QUOTES[index].frase;
+        document.getElementById('inputCitation').value = SECULAR_QUOTES[index].cita;
+        pushHistoryState();
+        safeUpdateCanvas();
+      }
+    }
+
+    function renderMotionAnimList() {
+      const container = document.getElementById('motionAnimList');
+      container.innerHTML = '';
+      ANIMATIONS_LIST.forEach(a => {
+        const btn = document.createElement('button');
+        btn.className = `w-full p-2 rounded-lg border text-left text-xs font-semibold transition ${selectedAnimationKey === a.id ? 'border-cyan-400 bg-cyan-950/60 text-white' : 'border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700'}`;
+        btn.innerText = a.title;
+        btn.onclick = () => {
+          selectedAnimationKey = a.id;
+          pushHistoryState();
+          renderMotionAnimList();
+          safeUpdateCanvas();
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function renderFxOverlayList() {
+      const container = document.getElementById('fxOverlayList');
+      container.innerHTML = '';
+      FX_OVERLAYS_LIST.forEach(f => {
+        const btn = document.createElement('button');
+        btn.className = `w-full p-2 rounded-lg border text-left text-xs font-semibold transition ${selectedFxKey === f.id ? 'border-cyan-400 bg-cyan-950/60 text-white' : 'border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700'}`;
+        btn.innerText = f.title;
+        btn.onclick = () => {
+          selectedFxKey = f.id;
+          pushHistoryState();
+          renderFxOverlayList();
+          safeUpdateCanvas();
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function toggleStampInputs() {
+      const chk = document.getElementById('chkShowStamp');
+      const container = document.getElementById('stampInputsContainer');
+      if (chk && container) {
+        if (chk.checked) container.classList.remove('hidden');
+        else container.classList.add('hidden');
+      }
+    }
+
+    function handleLogoSelectChange() {
+      const val = document.getElementById('selectLogo').value;
+      const wrapper = document.getElementById('customLogoUploadWrapper');
+      if (val === 'custom') wrapper.classList.remove('hidden');
+      else wrapper.classList.add('hidden');
+      pushHistoryState();
+      safeUpdateCanvas();
+    }
+
+    function handleUserLogoUpload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const img = new Image();
+        img.onload = () => { userCustomLogoImg = img; safeUpdateCanvas(); };
+        img.src = URL.createObjectURL(file);
+      }
+    }
+
+    function handleUserBgUpload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const img = new Image();
+        img.onload = () => {
+          userCustomBgImg = img;
+          selectedBgKey = 'user_custom';
+          pushHistoryState();
+          safeUpdateCanvas();
+        };
+        img.src = URL.createObjectURL(file);
+      }
+    }
+
+    function handleRatioChange() {
+      pushHistoryState();
+      fitStageZoom();
+      safeUpdateCanvas();
+    }
+
+    function fitStageZoom() {
+      const wrapper = document.getElementById('canvasViewportWrapper');
+      const box = document.getElementById('canvasContainerBox');
+      if (!wrapper || !box) return;
+
+      const pad = 40;
+      const maxW = wrapper.clientWidth - pad;
+      const maxH = wrapper.clientHeight - pad;
+
+      const ratioVal = document.getElementById('selectRatio').value;
+      let targetW = 1080, targetH = 1350;
+      if (ratioVal === '9:16') targetH = 1920;
+      if (ratioVal === '1:1') targetH = 1080;
+      if (ratioVal === '16:9') { targetW = 1920; targetH = 1080; }
+
+      const scaleX = maxW / targetW;
+      const scaleY = maxH / targetH;
+      currentZoom = Math.min(scaleX, scaleY, 1.0);
+
+      box.style.transform = `scale(${currentZoom})`;
+      box.style.transformOrigin = 'center center';
+      document.getElementById('zoomLabel').innerText = `${Math.round(currentZoom * 100)}%`;
+    }
+
+    function adjustZoom(delta) {
+      currentZoom = Math.max(0.15, Math.min(2.0, currentZoom + delta));
+      const box = document.getElementById('canvasContainerBox');
+      if (box) box.style.transform = `scale(${currentZoom})`;
+      document.getElementById('zoomLabel').innerText = `${Math.round(currentZoom * 100)}%`;
+    }
+
+    function resetZoomFit() {
+      fitStageZoom();
+    }
+
+    // PRESET TEMPLATES
+    function loadPresetTemplate(type) {
+      if (type === 'corporate') {
+        document.getElementById('inputPhrase').value = "LA INNOVACIÓN Y LA ESTRATEGIA TRANSFORMAN EL FUTURO.";
+        document.getElementById('selectFontPhrase').value = "Montserrat";
+        document.getElementById('colorPhrase').value = "#ffffff";
+        document.getElementById('inputCitation').value = "Tech Leadership";
+        document.getElementById('colorCitation').value = "#38bdf8";
+        document.getElementById('chkShowStamp').checked = true;
+        document.getElementById('inputStampText').value = "SUMMIT2026";
+        document.getElementById('inputStampSub').value = "INNOVACIÓN Y TECNOLOGÍA";
+        selectedBgKey = 'video_proc_aurora';
+        selectedAnimationKey = 'slide';
+        selectedFxKey = 'sparkles';
+      } else if (type === 'minimal') {
+        document.getElementById('inputPhrase').value = "LA SIMPLICIDAD ES LA MÁXIMA SOFISTICACIÓN EN TODO LO QUE HACES.";
+        document.getElementById('selectFontPhrase').value = "Playfair Display";
+        document.getElementById('colorPhrase').value = "#ffffff";
+        document.getElementById('inputCitation').value = "Leonardo da Vinci";
+        document.getElementById('colorCitation').value = "#fbbf24";
+        document.getElementById('chkShowStamp').checked = false;
+        selectedBgKey = 'custom_gradient';
+        selectedAnimationKey = 'fade';
+        selectedFxKey = 'dust';
+      } else if (type === 'neon') {
+        document.getElementById('inputPhrase').value = "EL ÉXITO ES LA SUMA DE PEQUEÑOS ESFUERZOS REPETIDOS CADA DÍA.";
+        document.getElementById('selectFontPhrase').value = "Bebas Neue";
+        document.getElementById('colorPhrase').value = "#38bdf8";
+        document.getElementById('inputCitation').value = "Constancia";
+        document.getElementById('colorCitation').value = "#ffffff";
+        document.getElementById('chkShowStamp').checked = true;
+        document.getElementById('inputStampText').value = "CRECIMIENTO";
+        document.getElementById('inputStampSub').value = "OBJETIVO CUMPLIDO";
+        selectedBgKey = 'video_proc_stars';
+        selectedAnimationKey = 'bounce';
+        selectedFxKey = 'glitch';
+      }
+      toggleStampInputs();
+      pushHistoryState();
+      safeUpdateCanvas();
+      showToast('¡Plantilla cargada exitosamente!', 'success');
+    }
+
+    // JSON PROJECT SAVE / LOAD
+    function exportProjectJSON() {
+      const state = {
+        phrase: document.getElementById('inputPhrase').value,
+        fontPhrase: document.getElementById('selectFontPhrase').value,
+        colorPhrase: document.getElementById('colorPhrase').value,
+        citation: document.getElementById('inputCitation').value,
+        fontCitation: document.getElementById('selectFontCitation').value,
+        colorCitation: document.getElementById('colorCitation').value,
+        handle: document.getElementById('inputHandle').value,
+        showStamp: document.getElementById('chkShowStamp').checked,
+        stampText: document.getElementById('inputStampText').value,
+        stampSub: document.getElementById('inputStampSub').value,
+        showLogo: document.getElementById('chkShowLogo').checked,
+        logoStyle: document.getElementById('selectLogo').value,
+        shapeStyle: document.getElementById('selectShapeStyle').value,
+        colorShape: document.getElementById('colorShape').value,
+        bgKey: selectedBgKey,
+        animKey: selectedAnimationKey,
+        fxKey: selectedFxKey,
+        ratio: document.getElementById('selectRatio').value
+      };
+
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `studiocraft-project-${Date.now()}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('¡Proyecto JSON guardado!', 'success');
+    }
+
+    function importProjectJSON(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          try {
+            restoreHistoryState(evt.target.result);
+            showToast('¡Proyecto JSON cargado!', 'success');
+          } catch(err) {
+            showToast('Error al leer el archivo JSON.', 'error');
+          }
+        };
+        reader.readAsText(file);
+      }
+    }
+
+    // EXPORT & SHARE
+    function openExportImageModal() {
+      document.getElementById('exportImageModal').classList.remove('hidden');
+      document.getElementById('exportImageModal').classList.add('flex');
+    }
+
+    function closeExportImageModal() {
+      document.getElementById('exportImageModal').classList.add('hidden');
+      document.getElementById('exportImageModal').classList.remove('flex');
+    }
+
+    function triggerImageDownload() {
+      const canvas = document.getElementById('mainCanvas');
+      if (!canvas) return;
+
+      const format = document.getElementById('modalFileFormat').value || 'webp';
+      const mime = format === 'png' ? 'image/png' : (format === 'jpg' ? 'image/jpeg' : 'image/webp');
+      
+      const link = document.createElement('a');
+      link.download = `studiocraft-graphic.${format}`;
+      link.href = canvas.toDataURL(mime, 0.95);
+      link.click();
+      closeExportImageModal();
+      showToast('Imagen descargada.', 'success');
+    }
+
+    async function shareStudioCanvas() {
+      const canvas = document.getElementById('mainCanvas');
+      if (!canvas) return;
+
+      const phrase = document.getElementById('inputPhrase').value || '';
+      const citation = document.getElementById('inputCitation').value || '';
+
+      try {
+        const dataUrl = canvas.toDataURL('image/webp', 0.92);
+        const res = await fetch(dataUrl);
+        const blob = await res.blob();
+        const file = new File([blob], 'studiocraft-post.webp', { type: 'image/webp' });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            title: 'StudioCraft Graphic',
+            text: `"${phrase}" — ${citation}`,
+            files: [file]
+          });
+          return;
+        }
+      } catch (e) {}
+
+      triggerImageDownload();
+    }
+  </script>
+</body>
+</html>
