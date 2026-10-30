@@ -194,7 +194,7 @@
         <!-- Main Phrase -->
         <div class="space-y-1.5">
           <label class="text-[10px] font-semibold text-slate-400 block">Frase Principal</label>
-          <textarea id="inputPhrase" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()">EL ÉXITO ES LA SUMA DE PEQUEÑOS ESFUERZOS REPETIDOS DÍA TRAS DÍA.</textarea>
+          <textarea id="inputPhrase" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()"></textarea>
 
           <div class="flex gap-2">
             <div class="flex-1">
@@ -235,7 +235,7 @@
         <!-- Citation / Author -->
         <div class="space-y-1.5 pt-2 border-t border-slate-800">
           <label class="text-[10px] font-semibold text-slate-400 block">Cita / Autor / Referencia</label>
-          <input type="text" id="inputCitation" value="Robert Collier" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()">
+          <input type="text" id="inputCitation" value="" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()">
 
           <div class="flex gap-2">
             <div class="flex-1">
@@ -437,23 +437,23 @@
 
         <!-- Mode Switcher Tabs -->
         <div class="flex bg-slate-800 p-1 rounded-lg text-[10px] font-bold">
-          <button id="btnBgModePhotos" onclick="setBgMode('photos')" class="flex-1 py-1.5 rounded text-slate-400 hover:text-white">Fotos</button>
-          <button id="btnBgModeVideos" onclick="setBgMode('videos')" class="flex-1 py-1.5 rounded bg-cyan-600 text-white">Videos</button>
+          <button id="btnBgModePhotos" onclick="setBgMode('photos')" class="flex-1 py-1.5 rounded bg-cyan-600 text-white">Fotos</button>
+          <button id="btnBgModeVideos" onclick="setBgMode('videos')" class="flex-1 py-1.5 rounded text-slate-400 hover:text-white">Videos</button>
           <button id="btnBgModeCode" onclick="setBgMode('code')" class="flex-1 py-1.5 rounded text-slate-400 hover:text-white">Código (20)</button>
         </div>
 
         <!-- Search Engine Box (For Photos & Videos) -->
         <div id="mediaSearchBox" class="bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/80 space-y-2">
-          <label id="mediaSearchLabel" class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block">Buscador de Videos de Stock</label>
+          <label id="mediaSearchLabel" class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block">Buscador de Fotos de Stock</label>
           <div class="flex gap-1.5">
-            <input type="text" id="mediaSearchInput" value="Naturaleza" placeholder="Buscar por palabra clave..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-cyan-500" onkeyup="if(event.key==='Enter') triggerMediaSearch()">
+            <input type="text" id="mediaSearchInput" value="" placeholder="Buscar por palabra clave..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-cyan-500" onkeyup="if(event.key==='Enter') triggerMediaSearch()">
             <button onclick="triggerMediaSearch()" class="px-2.5 py-1 bg-cyan-600 hover:bg-cyan-500 font-bold text-xs text-white rounded-lg transition shrink-0">
               <i class="fa-solid fa-magnifying-glass"></i>
             </button>
           </div>
 
           <!-- Video Category Pills -->
-          <div id="videoCategoryPills" class="flex gap-1 overflow-x-auto pb-1 text-[9px]">
+          <div id="videoCategoryPills" class="flex gap-1 overflow-x-auto pb-1 text-[9px] hidden">
             <button onclick="setVideoCategory('Naturaleza', this)" class="video-pill px-2 py-0.5 rounded-full bg-cyan-600 text-white font-semibold whitespace-nowrap">Naturaleza</button>
             <button onclick="setVideoCategory('Mar', this)" class="video-pill px-2 py-0.5 rounded-full bg-slate-900 hover:bg-slate-700 text-slate-300 font-semibold whitespace-nowrap">Mar</button>
             <button onclick="setVideoCategory('Fuego', this)" class="video-pill px-2 py-0.5 rounded-full bg-slate-900 hover:bg-slate-700 text-slate-300 font-semibold whitespace-nowrap">Fuego</button>
@@ -606,8 +606,8 @@
         <button onclick="closeVideoPreviewModal()" class="text-slate-400 hover:text-white text-base">✕</button>
       </div>
 
-      <div class="rounded-xl overflow-hidden bg-black aspect-video flex items-center justify-center border border-slate-800">
-        <video id="modalVideoPlayer" class="w-full h-full object-contain" controls autoplay loop muted playsinline crossOrigin="anonymous"></video>
+      <div class="rounded-xl overflow-hidden bg-black aspect-video flex items-center justify-center border border-slate-800 relative">
+        <video id="modalVideoPlayer" class="w-full h-full object-contain" controls autoplay loop muted playsinline webkit-playsinline crossOrigin="anonymous"></video>
       </div>
 
       <div class="pt-2 flex gap-2">
@@ -697,6 +697,38 @@
       { frase: "CREA ALGO QUE INVENTE UN FUTURO MEJOR PARA TODOS.", cita: "Visión del Futuro" }
     ];
 
+    // CURATED HIGH-RESOLUTION STOCK PHOTOS FOR RANDOM INITIAL LOAD & GALLERY
+    const CURATED_STOCK_PHOTOS = [
+      { id: 'stock_photo_1', title: 'Montañas y Lago Alpenglow', cat: 'Naturaleza', url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80' },
+      { id: 'stock_photo_2', title: 'Océano Azul Profundo', cat: 'Mar', url: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1200&q=80' },
+      { id: 'stock_photo_3', title: 'Bosque Místico en la Niebla', cat: 'Naturaleza', url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1200&q=80' },
+      { id: 'stock_photo_4', title: 'Atardecer Dorado en la Playa', cat: 'Mar', url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80' },
+      { id: 'stock_photo_5', title: 'Cielo Estelar y Cosmos', cat: 'Espacio', url: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80' },
+      { id: 'stock_photo_6', title: 'Reflejo de Picos Nevados', cat: 'Naturaleza', url: 'https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?auto=format&fit=crop&w=1200&q=80' },
+      { id: 'stock_photo_7', title: 'Atardecer Cálido en el Campo', cat: 'Naturaleza', url: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=1200&q=80' },
+      { id: 'stock_photo_8', title: 'Sendero de Sequoyas', cat: 'Naturaleza', url: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1200&q=80' },
+      { id: 'stock_photo_9', title: 'Cordillera Alpina', cat: 'Naturaleza', url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80' },
+      { id: 'stock_photo_10', title: 'Luz Neón Abstracta', cat: 'Abstracto', url: 'https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&w=1200&q=80' },
+      { id: 'stock_photo_11', title: 'Pinos de Montaña', cat: 'Naturaleza', url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80' },
+      { id: 'stock_photo_12', title: 'Nebulosa Espacial Púrpura', cat: 'Espacio', url: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=1200&q=80' }
+    ];
+
+    // HIGH QUALITY DIRECT PUBLIC CORS-ENABLED MP4 STOCK VIDEOS
+    const STOCK_VIDEOS_LIBRARY = [
+      { id: 'vid_flower_nature', title: 'Flores y Naturaleza en HD', cat: 'Naturaleza', url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4' },
+      { id: 'vid_ocean_waves', title: 'Océano y Olas Azules', cat: 'Mar', url: 'https://vjs.zencdn.net/v/oceans.mp4' },
+      { id: 'vid_fire_blazes', title: 'Fuego y Llamas Intensas', cat: 'Fuego', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4' },
+      { id: 'vid_tech_escape', title: 'Tecnología y Acción Tech', cat: 'Tecnología', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4' },
+      { id: 'vid_city_route', title: 'Ruta y Paisaje Urbano', cat: 'Ciudad', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4' },
+      { id: 'vid_space_lights', title: 'Luces y Efectos de Espacio', cat: 'Espacio', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4' },
+      { id: 'vid_abstract_motion', title: 'Movimiento Abstracto', cat: 'Abstracto', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4' },
+      { id: 'vid_fantasy_landscape', title: 'Paisaje de Ensueño', cat: 'Naturaleza', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' },
+      { id: 'vid_city_speed', title: 'Ciudad y Velocidad', cat: 'Ciudad', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4' },
+      { id: 'vid_effects_dynamic', title: 'Dinámica de Partículas', cat: 'Abstracto', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4' },
+      { id: 'vid_cosmos_burst', title: 'Cosmos y Destellos', cat: 'Espacio', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4' },
+      { id: 'vid_forest_stream', title: 'Bosque y Paisaje Natural', cat: 'Naturaleza', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' }
+    ];
+
     // ALL 20 PROCEDURAL CODE BACKGROUNDS LIST
     const PROCEDURAL_BG_LIST = [
       { id: 'video_proc_aurora', title: '1. Aurora Boreal' },
@@ -719,22 +751,6 @@
       { id: 'video_proc_constellations', title: '18. Constelaciones' },
       { id: 'video_proc_ember_rise', title: '19. Chispas de Fuego' },
       { id: 'video_proc_soft_smoke', title: '20. Incienso Místico' }
-    ];
-
-    // FREE ROYALTY-FREE REAL MP4 STOCK VIDEOS LIBRARY WITH VERIFIED CDN LINKS
-    const STOCK_VIDEOS_LIBRARY = [
-      { id: 'vid_forest_sun', title: 'Bosque y Sol Radiante', cat: 'Naturaleza', url: 'https://assets.mixkit.co/videos/preview/mixkit-forest-stream-in-the-sunlight-529-large.mp4' },
-      { id: 'vid_ocean_dark', title: 'Océano Pacífico Nocturno', cat: 'Mar', url: 'https://assets.mixkit.co/videos/preview/mixkit-dramatic-dark-clouds-over-a-calm-ocean-43015-large.mp4' },
-      { id: 'vid_stars_cosmos', title: 'Galaxia y Estrellas', cat: 'Espacio', url: 'https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-background-1610-large.mp4' },
-      { id: 'vid_fire_embers', title: 'Fuego y Chispas Doradas', cat: 'Fuego', url: 'https://assets.mixkit.co/videos/preview/mixkit-gold-and-red-sparks-floating-41315-large.mp4' },
-      { id: 'vid_tech_network', title: 'Red de Conexiones Tech', cat: 'Tecnología', url: 'https://assets.mixkit.co/videos/preview/mixkit-plexus-network-loop-background-28042-large.mp4' },
-      { id: 'vid_neon_lines', title: 'Partículas Neón Loop', cat: 'Abstracto', url: 'https://assets.mixkit.co/videos/preview/mixkit-abstract-fast-flowing-neon-lines-17581-large.mp4' },
-      { id: 'vid_waves_blue', title: 'Olas Marinas Cristalinas', cat: 'Mar', url: 'https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4' },
-      { id: 'vid_sunset_clouds', title: 'Amanecer Nubes Doradas', cat: 'Naturaleza', url: 'https://assets.mixkit.co/videos/preview/mixkit-clouds-and-blue-sky-2408-large.mp4' },
-      { id: 'vid_city_night', title: 'Luces de la Ciudad', cat: 'Ciudad', url: 'https://assets.mixkit.co/videos/preview/mixkit-top-aerial-view-of-city-traffic-at-night-41544-large.mp4' },
-      { id: 'vid_deep_space', title: 'Túnel Espacial Infinito', cat: 'Espacio', url: 'https://assets.mixkit.co/videos/preview/mixkit-flying-through-a-star-field-in-space-41540-large.mp4' },
-      { id: 'vid_digital_code', title: 'Ondas Digitales Cyan', cat: 'Tecnología', url: 'https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-blue-code-41539-large.mp4' },
-      { id: 'vid_ink_water', title: 'Tinta Mística en Agua', cat: 'Abstracto', url: 'https://assets.mixkit.co/videos/preview/mixkit-ink-swirling-in-water-4122-large.mp4' }
     ];
 
     // ANIMATIONS LIST
@@ -789,10 +805,10 @@
 
     // APP GLOBAL STATE
     let currentZoom = 1.0;
-    let selectedBgKey = 'video_proc_aurora';
+    let selectedBgKey = 'stock_photo_1';
     let selectedAnimationKey = 'slide';
     let selectedFxKey = 'sparkles';
-    let activeBgMode = 'videos';
+    let activeBgMode = 'photos';
 
     let userCustomBgImg = null;
     let userCustomBgVideo = null;
@@ -807,18 +823,40 @@
     let audioPreviewEl = null;
     let pendingModalVideo = null;
 
-    // INITIALIZATION
+    // INITIALIZATION ON PAGE LOAD
     window.onload = function() {
       try {
         const savedRatio = localStorage.getItem('studiocraft_ratio') || '4:5';
         const ratioSelect = document.getElementById('selectRatio');
         if (ratioSelect) ratioSelect.value = savedRatio;
 
+        // 1. SELECT RANDOM SECULAR QUOTE
+        const randomQuoteIdx = Math.floor(Math.random() * SECULAR_QUOTES.length);
+        const chosenQuote = SECULAR_QUOTES[randomQuoteIdx];
+        document.getElementById('inputPhrase').value = chosenQuote.frase;
+        document.getElementById('inputCitation').value = chosenQuote.cita;
+
+        // 2. SELECT RANDOM STOCK PHOTO FOR INITIAL ENTRANCE BACKGROUND
+        const randomPhotoIdx = Math.floor(Math.random() * CURATED_STOCK_PHOTOS.length);
+        const chosenPhoto = CURATED_STOCK_PHOTOS[randomPhotoIdx];
+
+        window.stockPhotoImgs = window.stockPhotoImgs || {};
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = chosenPhoto.url;
+        img.onload = () => {
+          window.stockPhotoImgs[chosenPhoto.id] = img;
+          safeUpdateCanvas();
+        };
+
+        selectedBgKey = chosenPhoto.id;
+        activeBgMode = 'photos';
+
         initPhraseBank();
         renderMotionAnimList();
         renderFxOverlayList();
-        setBgMode('videos');
-        stopTimelinePlay(); // Force initial static composition mode
+        setBgMode('photos');
+        stopTimelinePlay(); // Static composition on load
         fitStageZoom();
         safeUpdateCanvas();
         startContinuousBgLoop();
@@ -905,12 +943,12 @@
       }
     }
 
-    // MAIN CANVAS RENDER ENGINE WITH PERFECT LAYOUT GUARANTEES
+    // MAIN CANVAS RENDER ENGINE
     function drawStudioCanvasCard(canvas, opts) {
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      // 1. DYNAMIC CANVAS RESOLUTION BASED ON SELECTED RATIO
+      // 1. DYNAMIC CANVAS RESOLUTION
       let targetW = 1080, targetH = 1350; // Default 4:5
       if (opts.ratio === '9:16') { targetW = 1080; targetH = 1920; }
       else if (opts.ratio === '1:1') { targetW = 1080; targetH = 1080; }
@@ -926,7 +964,7 @@
       const bgTime = opts.isStaticMode ? realTime : time;
       const dur = opts.duration || 15;
 
-      // Animation progress parameters
+      // Animation parameters
       let pLogo = 1.0, pCard = 1.0, pPhrase = 1.0, pCitation = 1.0, pStamp = 1.0, pHandle = 1.0;
 
       if (!opts.isStaticMode && opts.animKey !== 'none') {
@@ -953,7 +991,7 @@
         }
       }
 
-      // 2. DRAW BACKGROUND (PROCEDURAL / IMAGE / MP4 LOOP VIDEO)
+      // 2. DRAW BACKGROUND (STOCK PHOTO / VIDEO / PROCEDURAL)
       if (opts.bgKey.startsWith('video_proc_')) {
         drawProceduralBg(ctx, targetW, targetH, opts.bgKey, bgTime);
       } else if (opts.bgKey === 'user_custom' && userCustomBgImg) {
@@ -964,10 +1002,10 @@
         ctx.fillStyle = 'rgba(0,0,0,0.40)'; ctx.fillRect(0, 0, targetW, targetH);
       } else if (opts.bgKey.startsWith('stock_photo_') && window.stockPhotoImgs && window.stockPhotoImgs[opts.bgKey]) {
         drawCoverImage(ctx, window.stockPhotoImgs[opts.bgKey], targetW, targetH);
-        ctx.fillStyle = 'rgba(0,0,0,0.52)'; ctx.fillRect(0, 0, targetW, targetH);
+        ctx.fillStyle = 'rgba(0,0,0,0.48)'; ctx.fillRect(0, 0, targetW, targetH);
       } else if (opts.bgKey.startsWith('stock_video_') && window.stockVideoElements && window.stockVideoElements[opts.bgKey]) {
         drawCoverImage(ctx, window.stockVideoElements[opts.bgKey], targetW, targetH);
-        ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fillRect(0, 0, targetW, targetH);
+        ctx.fillStyle = 'rgba(0,0,0,0.42)'; ctx.fillRect(0, 0, targetW, targetH);
       } else {
         const grad = ctx.createLinearGradient(0, 0, 0, targetH);
         grad.addColorStop(0, '#0f172a'); grad.addColorStop(1, '#1e293b');
@@ -991,7 +1029,7 @@
       let cardLeft = (targetW - cardWidth) / 2;
       let cardHeight = cardBottom - cardTop;
 
-      // 5. RENDER MARCO / CONTAINER CARD
+      // 5. RENDER CONTAINER CARD / MARCO
       if (opts.showContainer && pCard > 0.01) {
         ctx.save();
         ctx.globalAlpha = pCard;
@@ -1195,24 +1233,24 @@
       const bVideos = document.getElementById('btnBgModeVideos');
       const bCode = document.getElementById('btnBgModeCode');
 
-      bPhotos.className = `flex-1 py-1.5 rounded ${mode === 'photos' ? 'bg-cyan-600 text-white font-bold' : 'text-slate-400 hover:text-white'}`;
-      bVideos.className = `flex-1 py-1.5 rounded ${mode === 'videos' ? 'bg-cyan-600 text-white font-bold' : 'text-slate-400 hover:text-white'}`;
-      bCode.className = `flex-1 py-1.5 rounded ${mode === 'code' ? 'bg-cyan-600 text-white font-bold' : 'text-slate-400 hover:text-white'}`;
+      if (bPhotos) bPhotos.className = `flex-1 py-1.5 rounded ${mode === 'photos' ? 'bg-cyan-600 text-white font-bold' : 'text-slate-400 hover:text-white'}`;
+      if (bVideos) bVideos.className = `flex-1 py-1.5 rounded ${mode === 'videos' ? 'bg-cyan-600 text-white font-bold' : 'text-slate-400 hover:text-white'}`;
+      if (bCode) bCode.className = `flex-1 py-1.5 rounded ${mode === 'code' ? 'bg-cyan-600 text-white font-bold' : 'text-slate-400 hover:text-white'}`;
 
       const searchBox = document.getElementById('mediaSearchBox');
       const searchLabel = document.getElementById('mediaSearchLabel');
       const pillsBox = document.getElementById('videoCategoryPills');
 
       if (mode === 'photos') {
-        searchBox.classList.remove('hidden');
-        searchLabel.innerText = 'Buscador de Fotos de Stock';
-        pillsBox.classList.add('hidden');
+        if (searchBox) searchBox.classList.remove('hidden');
+        if (searchLabel) searchLabel.innerText = 'Buscador de Fotos de Stock';
+        if (pillsBox) pillsBox.classList.add('hidden');
       } else if (mode === 'videos') {
-        searchBox.classList.remove('hidden');
-        searchLabel.innerText = 'Buscador de Videos de Stock';
-        pillsBox.classList.remove('hidden');
+        if (searchBox) searchBox.classList.remove('hidden');
+        if (searchLabel) searchLabel.innerText = 'Buscador de Videos de Stock';
+        if (pillsBox) pillsBox.classList.remove('hidden');
       } else {
-        searchBox.classList.add('hidden');
+        if (searchBox) searchBox.classList.add('hidden');
       }
 
       renderBgGrid();
@@ -1263,7 +1301,63 @@
       }
     }
 
-    // REAL MP4 STOCK VIDEOS GALLERY WITH MODAL PREVIEW & LOCAL BLOB LOADER
+    // STOCK PHOTOS GALLERY ENGINE
+    function searchPhotos() {
+      const query = document.getElementById('mediaSearchInput').value.trim().toLowerCase();
+      const container = document.getElementById('bgThumbnailGridContainer');
+      container.innerHTML = '';
+
+      window.stockPhotoImgs = window.stockPhotoImgs || {};
+      const grid = document.createElement('div');
+      grid.className = 'grid grid-cols-2 gap-2';
+
+      const filtered = CURATED_STOCK_PHOTOS.filter(p => 
+        !query || p.title.toLowerCase().includes(query) || p.cat.toLowerCase().includes(query)
+      );
+      const displayList = filtered.length > 0 ? filtered : CURATED_STOCK_PHOTOS;
+
+      displayList.forEach(p => {
+        if (!window.stockPhotoImgs[p.id]) {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.src = p.url;
+          img.onload = () => {
+            window.stockPhotoImgs[p.id] = img;
+            safeUpdateCanvas();
+          };
+          window.stockPhotoImgs[p.id] = img;
+        }
+
+        const card = document.createElement('div');
+        card.className = `p-1 rounded-lg border text-left flex flex-col gap-1 transition overflow-hidden bg-slate-900 cursor-pointer ${selectedBgKey === p.id ? 'border-cyan-400 ring-2 ring-cyan-500/50' : 'border-slate-800 hover:border-slate-700'}`;
+
+        const imgThumb = document.createElement('div');
+        imgThumb.className = 'w-full h-20 rounded bg-slate-950 bg-cover bg-center';
+        imgThumb.style.backgroundImage = `url('${p.url}')`;
+
+        const labelBox = document.createElement('div');
+        labelBox.className = 'p-1';
+        labelBox.innerHTML = `
+          <div class="text-[10px] font-bold text-white truncate">${p.title}</div>
+          <div class="text-[8px] text-cyan-400 font-semibold">${p.cat}</div>
+        `;
+
+        card.appendChild(imgThumb);
+        card.appendChild(labelBox);
+
+        card.onclick = () => {
+          selectedBgKey = p.id;
+          safeUpdateCanvas();
+          searchPhotos();
+        };
+
+        grid.appendChild(card);
+      });
+
+      container.appendChild(grid);
+    }
+
+    // REAL MP4 STOCK VIDEOS GALLERY WITH PREVIEW & CANVAS LOADER
     function searchStockVideos() {
       const query = document.getElementById('mediaSearchInput').value.toLowerCase().trim();
       const container = document.getElementById('bgThumbnailGridContainer');
@@ -1284,10 +1378,11 @@
         if (!window.stockVideoElements[key]) {
           const vid = document.createElement('video');
           vid.crossOrigin = 'anonymous';
-          vid.setAttribute('playsinline', '');
-          vid.setAttribute('webkit-playsinline', '');
+          vid.setAttribute('playsinline', 'true');
+          vid.setAttribute('webkit-playsinline', 'true');
           vid.src = v.url;
-          vid.loop = true; vid.muted = true;
+          vid.loop = true; 
+          vid.muted = true;
           vid.play().catch(e => {});
           window.stockVideoElements[key] = vid;
         }
@@ -1297,10 +1392,12 @@
         
         const previewVideo = document.createElement('video');
         previewVideo.crossOrigin = 'anonymous';
-        previewVideo.setAttribute('playsinline', '');
-        previewVideo.setAttribute('webkit-playsinline', '');
+        previewVideo.setAttribute('playsinline', 'true');
+        previewVideo.setAttribute('webkit-playsinline', 'true');
         previewVideo.src = v.url;
-        previewVideo.muted = true; previewVideo.loop = true; previewVideo.autoplay = true;
+        previewVideo.muted = true; 
+        previewVideo.loop = true; 
+        previewVideo.autoplay = true;
         previewVideo.className = 'w-full h-20 rounded bg-slate-950 object-cover pointer-events-none';
         previewVideo.play().catch(e => {});
 
@@ -1326,14 +1423,32 @@
       container.appendChild(grid);
     }
 
-    // VIDEO PREVIEW MODAL ENGINE
+    // VIDEO PREVIEW MODAL ENGINE WITH TIME METADATA & RELIABLE PLAYBACK
     function openVideoPreviewModal(v) {
       pendingModalVideo = v;
       document.getElementById('modalVideoTitle').innerText = v.title;
       document.getElementById('modalVideoCat').innerText = `Categoría: ${v.cat}`;
+      
       const player = document.getElementById('modalVideoPlayer');
+      player.pause();
+      player.removeAttribute('src');
+      player.crossOrigin = 'anonymous';
+      player.muted = true;
+      player.autoplay = true;
+      player.loop = true;
+      player.playsInline = true;
+      player.setAttribute('playsinline', 'true');
+      player.setAttribute('webkit-playsinline', 'true');
+
+      player.onloadedmetadata = function() {
+        if (player.duration && !isNaN(player.duration)) {
+          document.getElementById('modalVideoCat').innerText = `Categoría: ${v.cat} • ${Math.round(player.duration)}s HD`;
+        }
+        player.play().catch(e => console.log("Modal play handler:", e));
+      };
+
       player.src = v.url;
-      player.play().catch(e => {});
+      player.load();
 
       const modal = document.getElementById('videoPreviewModal');
       modal.classList.remove('hidden'); modal.classList.add('flex');
@@ -1351,32 +1466,34 @@
       const btn = document.getElementById('btnModalUseVideo');
       const origHTML = btn.innerHTML;
       btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Cargando video...`;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Cargando en lienzo...`;
 
       try {
         const vid = document.createElement('video');
         vid.crossOrigin = 'anonymous';
-        vid.setAttribute('playsinline', '');
-        vid.setAttribute('webkit-playsinline', '');
+        vid.setAttribute('playsinline', 'true');
+        vid.setAttribute('webkit-playsinline', 'true');
         vid.muted = true;
         vid.loop = true;
-
-        try {
-          const response = await fetch(pendingModalVideo.url);
-          if (response.ok) {
-            const blob = await response.blob();
-            vid.src = URL.createObjectURL(blob);
-          } else {
-            vid.src = pendingModalVideo.url;
-          }
-        } catch (fetchErr) {
-          vid.src = pendingModalVideo.url;
-        }
+        vid.autoplay = true;
+        vid.src = pendingModalVideo.url;
 
         await new Promise((resolve) => {
-          vid.onloadeddata = () => { vid.play().then(resolve).catch(resolve); };
-          vid.onerror = () => resolve();
-          setTimeout(resolve, 3000);
+          const onReady = () => {
+            vid.removeEventListener('canplay', onReady);
+            vid.removeEventListener('loadeddata', onReady);
+            vid.play().then(resolve).catch(resolve);
+          };
+
+          if (vid.readyState >= 2) {
+            vid.play().then(resolve).catch(resolve);
+          } else {
+            vid.addEventListener('canplay', onReady);
+            vid.addEventListener('loadeddata', onReady);
+            vid.onerror = () => resolve();
+            setTimeout(resolve, 3500);
+          }
+          vid.load();
         });
 
         userCustomBgVideo = vid;
@@ -1385,51 +1502,11 @@
         closeVideoPreviewModal();
         safeUpdateCanvas();
       } catch (err) {
-        console.error("Error loading video canvas source:", err);
+        console.error("Error setting video canvas background:", err);
       } finally {
         btn.disabled = false;
         btn.innerHTML = origHTML;
       }
-    }
-
-    // STOCK PHOTO SEARCH ENGINE
-    async function searchPhotos() {
-      const query = document.getElementById('mediaSearchInput').value.trim() || 'tecnologia, abstracto';
-      const container = document.getElementById('bgThumbnailGridContainer');
-      container.innerHTML = `<div class="p-3 text-center text-xs text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Cargando fotos...</div>`;
-
-      window.stockPhotoImgs = {};
-      const keywords = query.split(',').map(s => s.trim());
-      const ts = Date.now();
-
-      container.innerHTML = '';
-      const photoGrid = document.createElement('div');
-      photoGrid.className = 'grid grid-cols-3 gap-1.5';
-
-      for (let i = 1; i <= 12; i++) {
-        const kw = keywords[i % keywords.length];
-        const photoUrl = `https://picsum.photos/seed/studiocraft_${kw}_${i}_${ts}/600/800`;
-        const photoKey = `stock_photo_${i}`;
-
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.src = photoUrl;
-        img.onload = () => { window.stockPhotoImgs[photoKey] = img; };
-
-        const thumb = document.createElement('div');
-        thumb.className = `aspect-square rounded-lg border bg-slate-900 cursor-pointer overflow-hidden relative transition ${selectedBgKey === photoKey ? 'border-cyan-400 ring-2 ring-cyan-500/50' : 'border-slate-800 hover:border-slate-700'}`;
-        thumb.style.backgroundImage = `url('${photoUrl}')`;
-        thumb.style.backgroundSize = 'cover';
-
-        thumb.onclick = () => {
-          selectedBgKey = photoKey;
-          safeUpdateCanvas();
-          renderBgGrid();
-        };
-
-        photoGrid.appendChild(thumb);
-      }
-      container.appendChild(photoGrid);
     }
 
     // ITUNES MUSIC SEARCH
@@ -1653,7 +1730,7 @@
           ctx.fill();
         }
       } else {
-        // Soft Smoke / Incienso Místico
+        // Soft Smoke
         ctx.fillStyle = '#050814'; ctx.fillRect(0, 0, width, height);
         for (let i = 0; i < 4; i++) {
           ctx.fillStyle = `rgba(148, 163, 184, ${0.08 + i * 0.02})`;
@@ -2046,8 +2123,8 @@
         if (file.type.startsWith('video/')) {
           const vid = document.createElement('video');
           vid.crossOrigin = 'anonymous';
-          vid.setAttribute('playsinline', '');
-          vid.setAttribute('webkit-playsinline', '');
+          vid.setAttribute('playsinline', 'true');
+          vid.setAttribute('webkit-playsinline', 'true');
           vid.src = URL.createObjectURL(file);
           vid.loop = true; vid.muted = true; vid.play();
           userCustomBgVideo = vid;
@@ -2067,7 +2144,7 @@
       safeUpdateCanvas();
     }
 
-    // ACCURATE ZOOM & ASPECT RATIO DISPLAY ENGINE FOR CANVAS STAGE
+    // ACCURATE ZOOM & ASPECT RATIO DISPLAY ENGINE
     function fitStageZoom() {
       const wrapper = document.getElementById('canvasViewportWrapper');
       const box = document.getElementById('canvasContainerBox');
