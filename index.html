@@ -96,8 +96,8 @@
       <i class="fa-solid fa-vector-square text-cyan-400 text-xs"></i>
       <span class="text-xs font-semibold text-slate-400 hidden sm:inline">Formato:</span>
       <select id="selectRatio" class="bg-slate-800 text-xs font-bold text-white focus:outline-none cursor-pointer rounded px-1 py-0.5" onchange="handleRatioChange()">
-        <option value="9:16" selected>9:16 Story / Reel (1080 × 1920)</option>
-        <option value="4:5">4:5 Post Feed (1080 × 1350)</option>
+        <option value="4:5" selected>4:5 Post Feed (1080 × 1350)</option>
+        <option value="9:16">9:16 Story / Reel (1080 × 1920)</option>
         <option value="1:1">1:1 Cuadrado (1080 × 1080)</option>
         <option value="16:9">16:9 Banner Horizontal (1920 × 1080)</option>
       </select>
@@ -594,6 +594,30 @@
     </div>
   </div>
 
+  <!-- VIDEO PREVIEW & LOCAL LOADER MODAL -->
+  <div id="videoPreviewModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <div>
+          <h3 id="modalVideoTitle" class="text-sm font-bold text-white">Previsualización de Video de Stock</h3>
+          <span id="modalVideoCat" class="text-[10px] font-semibold text-cyan-400">Categoría: Stock</span>
+        </div>
+        <button onclick="closeVideoPreviewModal()" class="text-slate-400 hover:text-white text-base">✕</button>
+      </div>
+
+      <div class="rounded-xl overflow-hidden bg-black aspect-video flex items-center justify-center border border-slate-800">
+        <video id="modalVideoPlayer" class="w-full h-full object-contain" controls autoplay loop muted playsinline></video>
+      </div>
+
+      <div class="pt-2 flex gap-2">
+        <button onclick="closeVideoPreviewModal()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-bold text-slate-300">Cerrar</button>
+        <button id="btnModalUseVideo" onclick="confirmUseVideoFromModal()" class="flex-1 py-2.5 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 rounded-xl text-xs font-extrabold text-white flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20">
+          <i class="fa-solid fa-play"></i> <span>⚡ Utilizar en el Lienzo</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- JAVASCRIPT ENGINE -->
   <script>
     // SECULAR QUOTES DATABASE (50 QUOTES)
@@ -749,10 +773,16 @@
 
     let activeAudioTrack = null;
     let audioPreviewEl = null;
+    let pendingModalVideo = null;
 
     // INITIALIZATION
     window.onload = function() {
       try {
+        // Restore aspect ratio from localStorage or default to 4:5
+        const savedRatio = localStorage.getItem('studiocraft_ratio') || '4:5';
+        const ratioSelect = document.getElementById('selectRatio');
+        if (ratioSelect) ratioSelect.value = savedRatio;
+
         initPhraseBank();
         renderMotionAnimList();
         renderFxOverlayList();
@@ -838,9 +868,9 @@
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      // 1. DYNAMIC CANVAS DIMENSIONS & ASPECT RATIOS
-      let targetW = 1080, targetH = 1920; // Default 9:16
-      if (opts.ratio === '4:5') { targetW = 1080; targetH = 1350; }
+      // 1. DYNAMIC CANVAS DIMENSIONS & ASPECT RATIOS (DEFAULT 4:5)
+      let targetW = 1080, targetH = 1350; // Default 4:5
+      if (opts.ratio === '9:16') { targetW = 1080; targetH = 1920; }
       else if (opts.ratio === '1:1') { targetW = 1080; targetH = 1080; }
       else if (opts.ratio === '16:9') { targetW = 1920; targetH = 1080; }
 
@@ -914,17 +944,17 @@
       drawFxParticleOverlay(ctx, targetW, targetH, opts.fxKey, time);
 
       // 4. ACCURATE LAYOUT COORDINATE COMPUTATION FOR 16:9, 9:16 AND ALL RATIOS
-      let topPadding = opts.ratio === '9:16' ? 140 : (opts.ratio === '16:9' ? 60 : 80);
-      let bottomPadding = opts.ratio === '9:16' ? 140 : (opts.ratio === '16:9' ? 60 : 80);
+      let topPadding = opts.ratio === '16:9' ? 50 : (opts.ratio === '9:16' ? 140 : 70);
+      let bottomPadding = opts.ratio === '16:9' ? 50 : (opts.ratio === '9:16' ? 140 : 70);
 
       let logoY = topPadding + (opts.logoScale || 18);
       let handleY = targetH - bottomPadding - (opts.handleSize || 22) / 2;
       let stampY = handleY - (opts.showStamp ? (opts.stampGap || 65) : 0);
 
       // Compute Frame/Container Bounds (Must wrap ALL elements cleanly from above logo to below handle/stamp)
-      let cardTop = topPadding - 20;
-      let cardBottom = handleY + (opts.handleSize || 22) + 20;
-      let cardWidth = opts.ratio === '16:9' ? targetW - 200 : (opts.ratio === '9:16' ? targetW - 140 : targetW - 120);
+      let cardTop = topPadding - 15;
+      let cardBottom = handleY + (opts.handleSize || 22) + 15;
+      let cardWidth = opts.ratio === '16:9' ? targetW - 320 : (opts.ratio === '9:16' ? targetW - 140 : targetW - 120);
       let cardLeft = (targetW - cardWidth) / 2;
       let cardHeight = cardBottom - cardTop;
 
@@ -1057,7 +1087,7 @@
         ctx.restore();
       }
 
-      // 7. RENDER MAIN PHRASE & CITATION WITH AUTO-FIT FONT SIZE SCALING
+      // 7. RENDER MAIN PHRASE & CITATION WITH PERFECT 16:9 AND MULTI-RATIO AUTO-WRAP
       if (opts.phrase && pPhrase > 0.01) {
         ctx.save();
         ctx.globalAlpha = pPhrase;
@@ -1066,57 +1096,48 @@
         ctx.shadowColor = 'rgba(0, 0, 0, 0.95)';
         ctx.shadowBlur = 12;
 
-        let baseFontCalc = Math.round(1100 / Math.sqrt(opts.phrase.length + 10));
-        let fontSize = opts.phraseSizeOverride > 0 ? opts.phraseSizeOverride : Math.max(22, Math.min(opts.ratio === '16:9' ? 48 : 62, baseFontCalc));
+        let maxWidth = cardWidth - (opts.ratio === '16:9' ? 120 : 80);
+        let logoBottomBoundary = opts.showLogo ? (logoY + (opts.logoScale || 18) + 15) : (cardTop + 25);
+        let stampTopBoundary = opts.showStamp ? (stampY - (opts.stampTitleSize || 42) - 10) : (handleY - (opts.handleSize || 22) - 10);
+        let availableVSpace = Math.max(100, stampTopBoundary - logoBottomBoundary);
 
-        const maxWidth = cardWidth - (opts.ratio === '16:9' ? 140 : 80);
-
-        // Auto scale down fontSize if any single word exceeds maxWidth
+        let fontSize = opts.phraseSizeOverride > 0 ? opts.phraseSizeOverride : (opts.ratio === '16:9' ? 38 : (opts.ratio === '9:16' ? 52 : 44));
         ctx.font = `700 ${fontSize}px "${opts.fontPhrase}", sans-serif`;
+
         const words = opts.phrase.toUpperCase().split(' ');
-        
-        words.forEach(w => {
-          while (ctx.measureText(w).width > maxWidth && fontSize > 16) {
-            fontSize -= 2;
-            ctx.font = `700 ${fontSize}px "${opts.fontPhrase}", sans-serif`;
-          }
-        });
 
-        let lines = [], curLine = '';
-        words.forEach(w => {
-          let test = curLine + w + ' ';
-          if (ctx.measureText(test).width > maxWidth && curLine !== '') {
-            lines.push(curLine.trim());
-            curLine = w + ' ';
-          } else {
-            curLine = test;
-          }
-        });
-        if (curLine.trim() !== '') lines.push(curLine.trim());
-
-        // Vertical space check for 16:9 and tall text
-        let lineHeight = fontSize * 1.25;
-        let logoBottomBoundary = opts.showLogo ? (logoY + (opts.logoScale || 18) + 20) : (cardTop + 30);
-        let stampTopBoundary = opts.showStamp ? (stampY - (opts.stampTitleSize || 42) - 15) : (handleY - (opts.handleSize || 22) - 15);
-        let availableVSpace = stampTopBoundary - logoBottomBoundary;
-
-        while ((lines.length * lineHeight + 50) > availableVSpace && fontSize > 16) {
-          fontSize -= 2;
-          lineHeight = fontSize * 1.25;
-          ctx.font = `700 ${fontSize}px "${opts.fontPhrase}", sans-serif`;
-          lines = []; curLine = '';
+        // Auto-wrap function helper
+        function getWrappedLines(fSize) {
+          ctx.font = `700 ${fSize}px "${opts.fontPhrase}", sans-serif`;
+          let lines = [], curLine = '';
           words.forEach(w => {
             let test = curLine + w + ' ';
             if (ctx.measureText(test).width > maxWidth && curLine !== '') {
               lines.push(curLine.trim());
               curLine = w + ' ';
-            } else { curLine = test; }
+            } else {
+              curLine = test;
+            }
           });
           if (curLine.trim() !== '') lines.push(curLine.trim());
+          return lines;
         }
 
+        let lines = getWrappedLines(fontSize);
+        let citSize = opts.citationSizeOverride > 0 ? opts.citationSizeOverride : Math.round(fontSize * 0.44);
+        let totalHeight = (lines.length * fontSize * 1.25) + (opts.citation ? (citSize * 1.5) : 0);
+
+        // Iteratively scale down font size if total height exceeds vertical space or a single word exceeds maxWidth
+        while ((totalHeight > availableVSpace || words.some(w => ctx.measureText(w).width > maxWidth)) && fontSize > 16) {
+          fontSize -= 2;
+          citSize = opts.citationSizeOverride > 0 ? opts.citationSizeOverride : Math.round(fontSize * 0.44);
+          lines = getWrappedLines(fontSize);
+          totalHeight = (lines.length * fontSize * 1.25) + (opts.citation ? (citSize * 1.5) : 0);
+        }
+
+        let lineHeight = fontSize * 1.25;
         let phraseAreaCenter = (logoBottomBoundary + stampTopBoundary) / 2;
-        let startY = phraseAreaCenter - ((lines.length * lineHeight) / 2) + (fontSize * 0.35);
+        let startY = phraseAreaCenter - (totalHeight / 2) + (fontSize * 0.7);
 
         lines.forEach((l, idx) => {
           ctx.fillText(l, targetW / 2, startY + (idx * lineHeight));
@@ -1124,157 +1145,18 @@
 
         // Citation
         if (opts.citation && pCitation > 0.01) {
-          let citSize = opts.citationSizeOverride > 0 ? opts.citationSizeOverride : Math.round(fontSize * 0.44);
           ctx.font = `italic 600 ${citSize}px "${opts.fontCitation}", serif`;
           ctx.fillStyle = '#e2e8f0';
           ctx.shadowBlur = 6;
-          ctx.fillText(`— ${opts.citation}`, targetW / 2, startY + (lines.length * lineHeight) + (citSize * 0.85));
+          ctx.fillText(`— ${opts.citation}`, targetW / 2, startY + (lines.length * lineHeight) + (citSize * 0.8));
         }
 
         ctx.restore();
       }
 
       // 8. RENDER STAMP
-      if (opts.showStamp && opts.stampText && pStamp > 0.01) {
-        ctx.save();
-        ctx.globalAlpha = pStamp;
-        ctx.textAlign = 'center';
-
-        const titleSize = opts.stampTitleSize || 42;
-        ctx.font = `900 ${titleSize}px "Montserrat", sans-serif`;
-        ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = '#00838f';
-        ctx.shadowBlur = 14;
-        ctx.fillText(opts.stampText.toUpperCase(), targetW / 2, stampY);
-
-        if (opts.stampSub) {
-          ctx.font = `700 ${Math.round(titleSize * 0.36)}px "Montserrat", sans-serif`;
-          ctx.fillStyle = '#38bdf8';
-          ctx.shadowBlur = 6;
-          ctx.fillText(opts.stampSub.toUpperCase(), targetW / 2, stampY + (titleSize * 0.48));
-        }
-        ctx.restore();
-      }
-
-      // 9. RENDER HANDLE / USER
-      if (opts.handle && pHandle > 0.01) {
-        ctx.save();
-        ctx.globalAlpha = pHandle;
-        ctx.font = `600 ${opts.handleSize || 22}px "Montserrat", sans-serif`;
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
-        ctx.textAlign = 'center';
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
-        ctx.shadowBlur = 8;
-        ctx.fillText(opts.handle, targetW / 2, handleY);
-        ctx.restore();
-      }
-    }
-
-    function hexToRgba(hex, alpha) {
-      let c;
-      if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-        c = hex.substring(1).split('');
-        if (c.length === 3) c = [c[0], c[0], c[1], c[1], c[2], c[2]];
-        c = '0x' + c.join('');
-        return `rgba(${[(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',')},${alpha})`;
-      }
-      return `rgba(56, 189, 248, ${alpha})`;
-    }
-
-    function drawRoundedRect(ctx, x, y, width, height, radius) {
-      ctx.beginPath();
-      ctx.moveTo(x + radius, y);
-      ctx.lineTo(x + width - radius, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-      ctx.lineTo(x + width, y + height - radius);
-      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-      ctx.lineTo(x + radius, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-      ctx.lineTo(x, y + radius);
-      ctx.quadraticCurveTo(x, y, x + radius, y);
-      ctx.closePath();
-    }
-
-    // MEDIA MODE SWITCHER (FOTOS vs VIDEOS vs CÓDIGO 20)
-    function setBgMode(mode) {
-      activeBgMode = mode;
-      document.getElementById('btnBgModePhotos').className = `flex-1 py-1.5 rounded ${mode === 'photos' ? 'bg-cyan-600 text-white' : 'text-slate-400 hover:text-white'}`;
-      document.getElementById('btnBgModeVideos').className = `flex-1 py-1.5 rounded ${mode === 'videos' ? 'bg-cyan-600 text-white' : 'text-slate-400 hover:text-white'}`;
-      document.getElementById('btnBgModeCode').className = `flex-1 py-1.5 rounded ${mode === 'code' ? 'bg-cyan-600 text-white' : 'text-slate-400 hover:text-white'}`;
-
-      const searchBox = document.getElementById('mediaSearchBox');
-      const searchLabel = document.getElementById('mediaSearchLabel');
-      const categoryPills = document.getElementById('videoCategoryPills');
-
-      if (mode === 'code') {
-        searchBox.classList.add('hidden');
-      } else {
-        searchBox.classList.remove('hidden');
-        if (mode === 'videos') {
-          searchLabel.innerText = 'Buscador de Videos de Stock';
-          categoryPills.classList.remove('hidden');
-        } else {
-          searchLabel.innerText = 'Buscador de Fotos de Stock';
-          categoryPills.classList.add('hidden');
-        }
-      }
-
-      renderBgGrid();
-    }
-
-    function setVideoCategory(cat, btn) {
-      document.querySelectorAll('.video-pill').forEach(b => b.className = 'video-pill px-2 py-0.5 rounded-full bg-slate-900 hover:bg-slate-700 text-slate-300 font-semibold whitespace-nowrap');
-      btn.className = 'video-pill px-2 py-0.5 rounded-full bg-cyan-600 text-white font-semibold whitespace-nowrap';
-      document.getElementById('mediaSearchInput').value = cat;
-      triggerMediaSearch();
-    }
-
-    function triggerMediaSearch() {
-      if (activeBgMode === 'videos') searchStockVideos();
-      else searchPhotos();
-    }
-
-    // RENDER MEDIA GRID WITH LIVE VISUAL PREVIEWS FOR VIDEOS & CODE BACKGROUNDS
-    async function renderBgGrid() {
-      const container = document.getElementById('bgThumbnailGridContainer');
-      if (!container) return;
-      container.innerHTML = '';
-
-      if (activeBgMode === 'code') {
-        const grid = document.createElement('div');
-        grid.className = 'grid grid-cols-2 gap-2';
-
-        PROCEDURAL_BG_LIST.forEach(p => {
-          const key = 'video_' + p.id;
-          const card = document.createElement('button');
-          card.className = `p-1.5 rounded-lg border text-left flex flex-col gap-1 transition overflow-hidden ${selectedBgKey === key ? 'border-cyan-400 bg-cyan-950/60 ring-2 ring-cyan-500/40' : 'border-slate-800 bg-slate-900 hover:border-slate-700'}`;
-          
-          // Live Canvas Visual Thumbnail for ALL 20 Backgrounds
-          const previewCanvas = document.createElement('canvas');
-          previewCanvas.width = 120; previewCanvas.height = 70;
-          previewCanvas.className = 'w-full h-14 rounded bg-slate-950 object-cover';
-          const pCtx = previewCanvas.getContext('2d');
-          drawProceduralBg(pCtx, 120, 70, key, 3.0);
-
-          card.innerHTML = `<span class="text-[10px] font-bold text-white truncate">${p.title}</span>`;
-          card.prepend(previewCanvas);
-
-          card.onclick = () => {
-            selectedBgKey = key;
-            safeUpdateCanvas();
-            renderBgGrid();
-          };
-          grid.appendChild(card);
-        });
-        container.appendChild(grid);
-      } else if (activeBgMode === 'videos') {
-        searchStockVideos();
-      } else {
-        searchPhotos();
-      }
-    }
-
-    // VISUAL REAL STOCK MP4 VIDEO GALLERY
+// ... existing code ?
+    // VISUAL REAL STOCK MP4 VIDEO GALLERY WITH PREVIEW MODAL & LOCAL LOADER
     function searchStockVideos() {
       const query = document.getElementById('mediaSearchInput').value.toLowerCase().trim();
       const container = document.getElementById('bgThumbnailGridContainer');
@@ -1301,10 +1183,10 @@
           window.stockVideoElements[key] = vid;
         }
 
-        const card = document.createElement('button');
-        card.className = `p-1 rounded-lg border text-left flex flex-col gap-1 transition overflow-hidden bg-slate-900 ${selectedBgKey === key ? 'border-cyan-400 ring-2 ring-cyan-500/50' : 'border-slate-800 hover:border-slate-700'}`;
+        const card = document.createElement('div');
+        card.className = `p-1 rounded-lg border text-left flex flex-col gap-1 transition overflow-hidden bg-slate-900 group cursor-pointer ${selectedBgKey === key ? 'border-cyan-400 ring-2 ring-cyan-500/50' : 'border-slate-800 hover:border-slate-700'}`;
         
-        // Video Preview Card Element
+        // Video Preview Card
         const previewVideo = document.createElement('video');
         previewVideo.src = v.url;
         previewVideo.muted = true;
@@ -1317,22 +1199,91 @@
         card.appendChild(previewVideo);
         
         const labelBox = document.createElement('div');
-        labelBox.className = 'p-1';
+        labelBox.className = 'p-1 flex items-center justify-between';
         labelBox.innerHTML = `
-          <div class="text-[10px] font-bold text-white truncate">${v.title}</div>
-          <div class="text-[8px] text-cyan-400 font-semibold">${v.cat}</div>
+          <div class="overflow-hidden">
+            <div class="text-[10px] font-bold text-white truncate">${v.title}</div>
+            <div class="text-[8px] text-cyan-400 font-semibold">${v.cat}</div>
+          </div>
+          <button class="px-1.5 py-0.5 bg-cyan-600 hover:bg-cyan-500 rounded text-[9px] font-bold text-white shrink-0 ml-1">
+            <i class="fa-solid fa-play text-[8px] mr-0.5"></i> Ver
+          </button>
         `;
         card.appendChild(labelBox);
 
-        card.onclick = () => {
-          selectedBgKey = key;
-          safeUpdateCanvas();
-          renderBgGrid();
-        };
+        card.onclick = () => { openVideoPreviewModal(v); };
         grid.appendChild(card);
       });
 
       container.appendChild(grid);
+    }
+
+    // VIDEO PREVIEW MODAL & LOCAL BLOB LOADER ENGINE
+    function openVideoPreviewModal(v) {
+      pendingModalVideo = v;
+      document.getElementById('modalVideoTitle').innerText = v.title;
+      document.getElementById('modalVideoCat').innerText = `Categoría: ${v.cat}`;
+      const player = document.getElementById('modalVideoPlayer');
+      player.src = v.url;
+      player.play().catch(e => {});
+
+      const modal = document.getElementById('videoPreviewModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeVideoPreviewModal() {
+      const player = document.getElementById('modalVideoPlayer');
+      if (player) { player.pause(); player.src = ''; }
+      const modal = document.getElementById('videoPreviewModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    async function confirmUseVideoFromModal() {
+      if (!pendingModalVideo) return;
+      const btn = document.getElementById('btnModalUseVideo');
+      const origHTML = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Guardando copia local...`;
+
+      try {
+        const response = await fetch(pendingModalVideo.url);
+        const blob = await response.blob();
+        const localBlobUrl = URL.createObjectURL(blob);
+
+        const vid = document.createElement('video');
+        vid.crossOrigin = 'anonymous';
+        vid.src = localBlobUrl;
+        vid.loop = true;
+        vid.muted = true;
+        vid.playsInline = true;
+
+        await new Promise((resolve) => {
+          vid.onloadeddata = () => { vid.play().catch(e=>{}); resolve(); };
+          vid.onerror = () => resolve();
+          setTimeout(resolve, 3000);
+        });
+
+        userCustomBgVideo = vid;
+        selectedBgKey = 'user_custom_video';
+
+        closeVideoPreviewModal();
+        safeUpdateCanvas();
+      } catch (err) {
+        console.error("Error creating local video copy:", err);
+        const vid = document.createElement('video');
+        vid.crossOrigin = 'anonymous';
+        vid.src = pendingModalVideo.url;
+        vid.loop = true; vid.muted = true; vid.playsInline = true; vid.play().catch(e=>{});
+        userCustomBgVideo = vid;
+        selectedBgKey = 'user_custom_video';
+        closeVideoPreviewModal();
+        safeUpdateCanvas();
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = origHTML;
+      }
     }
 
     // STOCK PHOTO SEARCH ENGINE
@@ -1994,6 +1945,8 @@
     }
 
     function handleRatioChange() {
+      const val = document.getElementById('selectRatio').value;
+      localStorage.setItem('studiocraft_ratio', val);
       fitStageZoom();
       safeUpdateCanvas();
     }
@@ -2008,8 +1961,8 @@
       const maxH = wrapper.clientHeight - pad;
 
       const ratioVal = document.getElementById('selectRatio').value;
-      let targetW = 1080, targetH = 1920;
-      if (ratioVal === '4:5') targetH = 1350;
+      let targetW = 1080, targetH = 1350; // Default 4:5
+      if (ratioVal === '9:16') targetH = 1920;
       if (ratioVal === '1:1') targetH = 1080;
       if (ratioVal === '16:9') { targetW = 1920; targetH = 1080; }
 
