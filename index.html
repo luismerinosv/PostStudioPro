@@ -172,7 +172,7 @@
     <!-- SIDEBAR EXPANDABLE CONTROL SUBPANEL -->
     <div class="w-80 bg-slate-900/95 border-r border-slate-800 flex flex-col shrink-0 overflow-y-auto p-4 space-y-4 z-10">
       
-      <!-- PANEL 1: BANCO DE FRASES SECULARES (50 FRASES) -->
+      <!-- PANEL 1: BANCO DE FRASES (50 FRASES) -->
       <div id="tab-quotes" class="tab-panel space-y-3">
         <div class="flex items-center justify-between pb-2 border-b border-slate-800">
           <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200">Banco de Frases</h2>
@@ -187,13 +187,13 @@
         </button>
       </div>
 
-      <!-- PANEL 2: CONTENIDO Y FUENTES DE TEXTO -->
+      <!-- PANEL 2: CONTENIDO Y FUENTES DE TEXTO (CON SOMBRAS PARA CADA TEXTO) -->
       <div id="tab-text" class="tab-panel hidden space-y-4">
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Texto y Tipografías</h2>
         
         <!-- Main Phrase -->
-        <div class="space-y-1.5">
-          <label class="text-[10px] font-semibold text-slate-400 block">Frase Principal</label>
+        <div class="space-y-2">
+          <label class="text-[10px] font-bold text-cyan-400 block uppercase">Frase Principal</label>
           <textarea id="inputPhrase" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()"></textarea>
 
           <div class="flex gap-2">
@@ -220,6 +220,18 @@
             </div>
           </div>
 
+          <!-- Phrase Shadow Toggle & Color -->
+          <div class="flex items-center justify-between pt-1">
+            <label class="flex items-center space-x-1.5 cursor-pointer">
+              <input type="checkbox" id="chkPhraseShadow" checked class="rounded accent-cyan-500 w-3.5 h-3.5" onchange="safeUpdateCanvas()">
+              <span class="text-[10px] text-slate-300 font-semibold">Activar Sombra de Texto</span>
+            </label>
+            <div class="flex items-center gap-1">
+              <span class="text-[9px] text-slate-400">Color:</span>
+              <input type="color" id="pickerPhraseShadowColor" value="#000000" class="w-6 h-6 rounded bg-transparent cursor-pointer border-0" oninput="safeUpdateCanvas()">
+            </div>
+          </div>
+
           <div class="space-y-1 pt-1">
             <div class="flex justify-between text-[10px]">
               <span class="text-slate-400">Tamaño Frase Manual:</span>
@@ -233,8 +245,8 @@
         </div>
 
         <!-- Citation / Author -->
-        <div class="space-y-1.5 pt-2 border-t border-slate-800">
-          <label class="text-[10px] font-semibold text-slate-400 block">Cita / Autor / Referencia</label>
+        <div class="space-y-2 pt-3 border-t border-slate-800">
+          <label class="text-[10px] font-bold text-cyan-400 block uppercase">Cita / Autor / Referencia</label>
           <input type="text" id="inputCitation" value="" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()">
 
           <div class="flex gap-2">
@@ -255,6 +267,18 @@
             </div>
           </div>
 
+          <!-- Citation Shadow Toggle & Color -->
+          <div class="flex items-center justify-between pt-1">
+            <label class="flex items-center space-x-1.5 cursor-pointer">
+              <input type="checkbox" id="chkCitationShadow" checked class="rounded accent-cyan-500 w-3.5 h-3.5" onchange="safeUpdateCanvas()">
+              <span class="text-[10px] text-slate-300 font-semibold">Activar Sombra Cita</span>
+            </label>
+            <div class="flex items-center gap-1">
+              <span class="text-[9px] text-slate-400">Color:</span>
+              <input type="color" id="pickerCitationShadowColor" value="#000000" class="w-6 h-6 rounded bg-transparent cursor-pointer border-0" oninput="safeUpdateCanvas()">
+            </div>
+          </div>
+
           <div class="space-y-1 pt-1">
             <div class="flex justify-between text-[10px]">
               <span class="text-slate-400">Tamaño Cita Manual:</span>
@@ -268,8 +292,8 @@
         </div>
 
         <!-- Handle / User Options -->
-        <div class="space-y-2 pt-2 border-t border-slate-800">
-          <label class="text-[10px] font-semibold text-slate-400 block">Usuario / Pie de Imagen (@handle)</label>
+        <div class="space-y-2 pt-3 border-t border-slate-800">
+          <label class="text-[10px] font-bold text-cyan-400 block uppercase">Usuario / Pie de Imagen (@handle)</label>
           <input type="text" id="inputHandle" value="@studiocraft.pro" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()">
           
           <div class="grid grid-cols-2 gap-2">
@@ -295,13 +319,14 @@
           </div>
 
           <div class="space-y-1.5 pt-1">
+            <!-- Handle Shadow Toggle & Color -->
             <div class="flex items-center justify-between">
               <label class="flex items-center space-x-1.5 cursor-pointer">
                 <input type="checkbox" id="chkHandleShadow" checked class="rounded accent-cyan-500 w-3.5 h-3.5" onchange="safeUpdateCanvas()">
-                <span class="text-[10px] text-slate-300 font-semibold">Sombra Texto</span>
+                <span class="text-[10px] text-slate-300 font-semibold">Activar Sombra Usuario</span>
               </label>
               <div class="flex items-center gap-1">
-                <span class="text-[9px] text-slate-400">Color Sombra:</span>
+                <span class="text-[9px] text-slate-400">Color:</span>
                 <input type="color" id="pickerHandleShadowColor" value="#000000" class="w-6 h-6 rounded bg-transparent cursor-pointer border-0" oninput="safeUpdateCanvas()">
               </div>
             </div>
@@ -394,7 +419,7 @@
         </div>
       </div>
 
-      <!-- PANEL 4: SELLO DE CAMPAÑA Y PERSONALIZACIÓN DE FUENTE / COLOR / SOMBRA -->
+      <!-- PANEL 4: SELLO DE CAMPAÑA Y PERSONALIZACIÓN DE FUENTE / COLOR / SOMBRAS -->
       <div id="tab-stamp" class="tab-panel hidden space-y-3">
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Sello de Campaña</h2>
         
@@ -408,9 +433,34 @@
             <label class="text-[10px] font-semibold text-slate-400 block mb-1">Título del Sello (ej. SUMMIT2026)</label>
             <input type="text" id="inputStampText" value="SUMMIT2026" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()">
           </div>
+
+          <!-- Stamp Title Shadow Toggle & Color -->
+          <div class="flex items-center justify-between">
+            <label class="flex items-center space-x-1.5 cursor-pointer">
+              <input type="checkbox" id="chkStampTitleShadow" checked class="rounded accent-cyan-500 w-3.5 h-3.5" onchange="safeUpdateCanvas()">
+              <span class="text-[10px] text-slate-300 font-semibold">Sombra Título Sello</span>
+            </label>
+            <div class="flex items-center gap-1">
+              <span class="text-[9px] text-slate-400">Color:</span>
+              <input type="color" id="pickerStampShadowColor" value="#000000" class="w-6 h-6 rounded bg-transparent cursor-pointer border-0" oninput="safeUpdateCanvas()">
+            </div>
+          </div>
+
           <div>
             <label class="text-[10px] font-semibold text-slate-400 block mb-1">Subtítulo del Sello (ej. INNOVACIÓN Y TECNOLOGÍA)</label>
             <input type="text" id="inputStampSub" value="INNOVACIÓN Y TECNOLOGÍA" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()">
+          </div>
+
+          <!-- Stamp Subtitle Shadow Toggle & Color -->
+          <div class="flex items-center justify-between">
+            <label class="flex items-center space-x-1.5 cursor-pointer">
+              <input type="checkbox" id="chkStampSubShadow" checked class="rounded accent-cyan-500 w-3.5 h-3.5" onchange="safeUpdateCanvas()">
+              <span class="text-[10px] text-slate-300 font-semibold">Sombra Subtítulo Sello</span>
+            </label>
+            <div class="flex items-center gap-1">
+              <span class="text-[9px] text-slate-400">Color:</span>
+              <input type="color" id="pickerStampSubShadowColor" value="#000000" class="w-6 h-6 rounded bg-transparent cursor-pointer border-0" oninput="safeUpdateCanvas()">
+            </div>
           </div>
 
           <!-- Font & Colors Customization for Stamp -->
@@ -440,18 +490,6 @@
                 <input type="color" id="pickerStampSubColor" value="#ffffff" class="w-full h-8 rounded bg-transparent cursor-pointer border border-slate-700" oninput="safeUpdateCanvas()">
               </div>
             </div>
-
-            <!-- Stamp Shadow Toggle & Color Picker -->
-            <div class="flex items-center justify-between pt-1">
-              <label class="flex items-center space-x-1.5 cursor-pointer">
-                <input type="checkbox" id="chkStampShadow" checked class="rounded accent-cyan-500 w-3.5 h-3.5" onchange="safeUpdateCanvas()">
-                <span class="text-[10px] text-slate-300 font-semibold">Sombra Texto</span>
-              </label>
-              <div class="flex items-center gap-1">
-                <span class="text-[9px] text-slate-400">Color Sombra:</span>
-                <input type="color" id="pickerStampShadowColor" value="#000000" class="w-6 h-6 rounded bg-transparent cursor-pointer border-0" oninput="safeUpdateCanvas()">
-              </div>
-            </div>
           </div>
 
           <div class="space-y-1 pt-1">
@@ -472,7 +510,7 @@
         </div>
       </div>
 
-      <!-- PANEL 5: LOGO Y MARCA -->
+      <!-- PANEL 5: LOGO Y MARCA (CON CONTROL DE POSICIÓN VERTICAL / OFFSET Y) -->
       <div id="tab-logo" class="tab-panel hidden space-y-3">
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Personalización de Logo</h2>
 
@@ -496,16 +534,28 @@
             <span class="text-slate-400">Tamaño del Logo:</span>
             <span id="labelLogoScale" class="text-cyan-400 font-bold font-mono">18px</span>
           </div>
-          <input type="range" id="sliderLogoScale" min="10" max="45" value="18" class="w-full accent-cyan-500" oninput="document.getElementById('labelLogoScale').innerText=this.value+'px'; safeUpdateCanvas();">
+          <input type="range" id="sliderLogoScale" min="10" max="60" value="18" class="w-full accent-cyan-500" oninput="document.getElementById('labelLogoScale').innerText=this.value+'px'; safeUpdateCanvas();">
         </div>
 
-        <div id="customLogoUploadWrapper" class="hidden">
+        <!-- NEW: LOGO VERTICAL POSITION (OFFSET Y) CONTROL -->
+        <div class="space-y-1 pt-1 border-t border-slate-800">
+          <div class="flex justify-between text-[10px]">
+            <span class="text-slate-400">Posición Vertical (Offset Y Logo):</span>
+            <span id="labelLogoOffsetY" class="text-cyan-400 font-bold font-mono">0px</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="range" id="sliderLogoOffsetY" min="-150" max="150" value="0" class="flex-1 accent-cyan-500" oninput="document.getElementById('labelLogoOffsetY').innerText=this.value+'px'; safeUpdateCanvas();">
+            <button onclick="document.getElementById('sliderLogoOffsetY').value=0; document.getElementById('labelLogoOffsetY').innerText='0px'; safeUpdateCanvas();" class="text-[9px] bg-slate-800 px-2 py-1 rounded text-slate-300 hover:text-cyan-400 transition">Reset</button>
+          </div>
+        </div>
+
+        <div id="customLogoUploadWrapper" class="hidden pt-2 border-t border-slate-800">
           <label class="text-[10px] font-semibold text-slate-400 block mb-1">Subir Logo PNG Transparente</label>
           <input type="file" id="inputCustomLogo" accept="image/*" class="w-full text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer" onchange="handleUserLogoUpload(event)">
         </div>
       </div>
 
-      <!-- PANEL 6: FONDOS, BANCO DE VIDEOS Y FONDOS PROCEDURALES CÓDIGO -->
+      <!-- PANEL 6: FONDOS, BANCO DE VIDEOS DE STOCK Y CÓDIGO -->
       <div id="tab-background" class="tab-panel hidden space-y-4">
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Fondos & Medios de Stock</h2>
 
@@ -528,9 +578,9 @@
 
           <!-- Video Category Pills -->
           <div id="videoCategoryPills" class="flex gap-1 overflow-x-auto pb-1 text-[9px] hidden">
-            <button onclick="setVideoCategory('Naturaleza', this)" class="video-pill px-2 py-0.5 rounded-full bg-cyan-600 text-white font-semibold whitespace-nowrap">Naturaleza</button>
+            <button onclick="setVideoCategory('Fuego', this)" class="video-pill px-2 py-0.5 rounded-full bg-cyan-600 text-white font-semibold whitespace-nowrap">Fuego</button>
+            <button onclick="setVideoCategory('Naturaleza', this)" class="video-pill px-2 py-0.5 rounded-full bg-slate-900 hover:bg-slate-700 text-slate-300 font-semibold whitespace-nowrap">Naturaleza</button>
             <button onclick="setVideoCategory('Mar', this)" class="video-pill px-2 py-0.5 rounded-full bg-slate-900 hover:bg-slate-700 text-slate-300 font-semibold whitespace-nowrap">Mar</button>
-            <button onclick="setVideoCategory('Fuego', this)" class="video-pill px-2 py-0.5 rounded-full bg-slate-900 hover:bg-slate-700 text-slate-300 font-semibold whitespace-nowrap">Fuego</button>
             <button onclick="setVideoCategory('Espacio', this)" class="video-pill px-2 py-0.5 rounded-full bg-slate-900 hover:bg-slate-700 text-slate-300 font-semibold whitespace-nowrap">Espacio</button>
             <button onclick="setVideoCategory('Ciudad', this)" class="video-pill px-2 py-0.5 rounded-full bg-slate-900 hover:bg-slate-700 text-slate-300 font-semibold whitespace-nowrap">Ciudad</button>
             <button onclick="setVideoCategory('Tecnología', this)" class="video-pill px-2 py-0.5 rounded-full bg-slate-900 hover:bg-slate-700 text-slate-300 font-semibold whitespace-nowrap">Tecnología</button>
@@ -622,6 +672,12 @@
         <!-- Exact aspect-scaled box with transform scale -->
         <div id="canvasContainerBox" class="relative shadow-2xl rounded-lg overflow-hidden border border-slate-800 bg-slate-950 transition-transform duration-100 ease-out flex items-center justify-center">
           <canvas id="mainCanvas" class="block w-full h-full object-contain"></canvas>
+
+          <!-- VIDEO LOADING TOAST OVERLAY ON CANVAS STAGE -->
+          <div id="canvasLoadingToast" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm z-30 flex flex-col items-center justify-center text-white space-y-3 hidden transition-opacity">
+            <i class="fa-solid fa-spinner fa-spin text-3xl text-cyan-400"></i>
+            <span id="canvasLoadingToastText" class="text-xs font-extrabold tracking-wide text-cyan-200">Cargando video en lienzo...</span>
+          </div>
         </div>
       </div>
 
@@ -726,6 +782,19 @@
       return `rgba(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}, ${alpha})`;
     }
 
+    // CANVAS LOADING TOAST HELPERS
+    function showCanvasLoadingToast(text) {
+      const toast = document.getElementById('canvasLoadingToast');
+      const toastText = document.getElementById('canvasLoadingToastText');
+      if (toastText && text) toastText.innerText = text;
+      if (toast) { toast.classList.remove('hidden'); toast.classList.add('flex'); }
+    }
+
+    function hideCanvasLoadingToast() {
+      const toast = document.getElementById('canvasLoadingToast');
+      if (toast) { toast.classList.add('hidden'); toast.classList.remove('flex'); }
+    }
+
     // SECULAR QUOTES DATABASE (50 QUOTES)
     const SECULAR_QUOTES = [
       { frase: "EL ÉXITO ES LA SUMA DE PEQUEÑOS ESFUERZOS REPETIDOS DÍA TRAS DÍA.", cita: "Robert Collier" },
@@ -796,7 +865,7 @@
       { id: 'stock_photo_12', title: 'Nebulosa Espacial Púrpura', cat: 'Espacio', url: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=1200&q=80' }
     ];
 
-    // 15 HIGH QUALITY DIRECT PUBLIC CORS-ENABLED MP4 STOCK VIDEOS WITH HD POSTERS
+    // HIGH QUALITY DIRECT CORS-ENABLED MP4 STOCK VIDEOS WITH POSTERS
     const STOCK_VIDEOS_LIBRARY = [
       { id: 'vid_fire_blazes', title: 'Fuego y Llamas Intensas', cat: 'Fuego', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', poster: 'https://images.unsplash.com/photo-1508873696983-2df515122519?auto=format&fit=crop&w=600&q=80' },
       { id: 'vid_tech_escape', title: 'Tecnología y Acción Tech', cat: 'Tecnología', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80' },
@@ -808,11 +877,8 @@
       { id: 'vid_tears_steel', title: 'Cyberpunk y Luces', cat: 'Tecnología', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4', poster: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80' },
       { id: 'vid_bullrun_neon', title: 'Luces de Neón en Movimiento', cat: 'Abstracto', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4', poster: 'https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&w=600&q=80' },
       { id: 'vid_flower_mdn', title: 'Flores y Primavera en HD', cat: 'Naturaleza', url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4', poster: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=600&q=80' },
-      { id: 'vid_oceans_vjs', title: 'Océano y Olas Azules', cat: 'Mar', url: 'https://vjs.zencdn.net/v/oceans.mp4', poster: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=600&q=80' },
       { id: 'vid_bunny_forest', title: 'Bosque de Pinos Silvestres', cat: 'Naturaleza', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', poster: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80' },
-      { id: 'vid_elephant_dream', title: 'Galaxia Espacial Profunda', cat: 'Espacio', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', poster: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=600&q=80' },
-      { id: 'vid_car_grand', title: 'Motores y Carreteras', cat: 'Ciudad', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4', poster: 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=600&q=80' },
-      { id: 'vid_gti_review', title: 'Conducción Nocturna Neón', cat: 'Abstracto', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4', poster: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=600&q=80' }
+      { id: 'vid_elephant_dream', title: 'Galaxia Espacial Profunda', cat: 'Espacio', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', poster: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=600&q=80' }
     ];
 
     // ALL 20 PROCEDURAL CODE BACKGROUNDS LIST
@@ -990,33 +1056,46 @@
         const isStaticMode = !isTimelinePlaying && (currentTimeSec === null || currentTimeSec === -1);
         const time = isStaticMode ? 3.0 : (currentTimeSec !== null ? currentTimeSec : parseFloat(document.getElementById('timelineScrubber').value) || 0);
 
+        // Phrase
         const phrase = document.getElementById('inputPhrase').value || '';
-        const citation = document.getElementById('inputCitation').value || '';
         const fontPhrase = document.getElementById('selectFontPhrase').value;
+        const showPhraseShadow = document.getElementById('chkPhraseShadow') ? document.getElementById('chkPhraseShadow').checked : true;
+        const phraseShadowColor = document.getElementById('pickerPhraseShadowColor') ? document.getElementById('pickerPhraseShadowColor').value : '#000000';
+
+        // Citation
+        const citation = document.getElementById('inputCitation').value || '';
         const fontCitation = document.getElementById('selectFontCitation').value;
+        const showCitationShadow = document.getElementById('chkCitationShadow') ? document.getElementById('chkCitationShadow').checked : true;
+        const citationShadowColor = document.getElementById('pickerCitationShadowColor') ? document.getElementById('pickerCitationShadowColor').value : '#000000';
         
         // Handle / User Options
         const handle = document.getElementById('inputHandle').value || '';
         const fontHandle = document.getElementById('selectFontHandle').value;
         const handleColor = document.getElementById('pickerHandleColor').value || '#cbd5e1';
-        const showHandleShadow = document.getElementById('chkHandleShadow').checked;
+        const showHandleShadow = document.getElementById('chkHandleShadow') ? document.getElementById('chkHandleShadow').checked : true;
         const handleShadowColor = document.getElementById('pickerHandleShadowColor').value || '#000000';
         const handleSize = parseInt(document.getElementById('sliderHandleSize').value, 10);
 
-        // Logo
+        // Logo Style & Vertical Offset
         const logoStyle = document.getElementById('selectLogo').value;
         const showLogo = document.getElementById('chkShowLogo').checked;
         const logoScale = parseInt(document.getElementById('sliderLogoScale').value, 10);
+        const logoOffsetY = parseInt(document.getElementById('sliderLogoOffsetY')?.value || '0', 10);
 
-        // Stamp (Sello) Options
+        // Stamp (Sello) Options & Shadows
         const showStamp = document.getElementById('chkShowStamp').checked;
         const stampText = document.getElementById('inputStampText').value || '';
         const stampSub = document.getElementById('inputStampSub').value || '';
         const fontStamp = document.getElementById('selectFontStamp').value;
         const stampColor = document.getElementById('pickerStampColor').value || '#00838f';
         const stampSubColor = document.getElementById('pickerStampSubColor').value || '#ffffff';
-        const showStampShadow = document.getElementById('chkStampShadow').checked;
-        const stampShadowColor = document.getElementById('pickerStampShadowColor').value || '#000000';
+        
+        const showStampTitleShadow = document.getElementById('chkStampTitleShadow') ? document.getElementById('chkStampTitleShadow').checked : true;
+        const stampTitleShadowColor = document.getElementById('pickerStampShadowColor') ? document.getElementById('pickerStampShadowColor').value : '#000000';
+        
+        const showStampSubShadow = document.getElementById('chkStampSubShadow') ? document.getElementById('chkStampSubShadow').checked : true;
+        const stampSubShadowColor = document.getElementById('pickerStampSubShadowColor') ? document.getElementById('pickerStampSubShadowColor').value : '#000000';
+
         const stampTitleSize = parseInt(document.getElementById('sliderStampTitleSize').value, 10);
         const stampGap = parseInt(document.getElementById('sliderStampGap').value, 10);
 
@@ -1037,10 +1116,13 @@
         const bgDarkOverlayOpacity = parseInt(document.getElementById('sliderBgDarkOverlay').value, 10) / 100;
 
         drawStudioCanvasCard(canvas, {
-          phrase, citation, fontPhrase, fontCitation,
+          phrase, fontPhrase, showPhraseShadow, phraseShadowColor,
+          citation, fontCitation, showCitationShadow, citationShadowColor,
           handle, fontHandle, handleColor, showHandleShadow, handleShadowColor, handleSize,
-          logoStyle, showLogo, logoScale,
-          showStamp, stampText, stampSub, fontStamp, stampColor, stampSubColor, showStampShadow, stampShadowColor, stampTitleSize, stampGap,
+          logoStyle, showLogo, logoScale, logoOffsetY,
+          showStamp, stampText, stampSub, fontStamp, stampColor, stampSubColor,
+          showStampTitleShadow, stampTitleShadowColor, showStampSubShadow, stampSubShadowColor,
+          stampTitleSize, stampGap,
           ratio, showContainer, shapeStyle, cardLineColor, cardLineOpacity, cardOpacity, cardLineWidth, cardRadius,
           phraseSizeOverride, citationSizeOverride, bgDarkOverlayOpacity,
           bgKey: selectedBgKey, animKey: selectedAnimationKey, fxKey: selectedFxKey,
@@ -1099,7 +1181,7 @@
         }
       }
 
-      // 2. DRAW BACKGROUND (NO FORCED DARK OVERLAY BY DEFAULT)
+      // 2. DRAW BACKGROUND (IMAGE, VIDEO OR PROCEDURAL CODE)
       if (opts.bgKey.startsWith('video_proc_')) {
         drawProceduralBg(ctx, targetW, targetH, opts.bgKey, bgTime);
       } else if (opts.bgKey === 'user_custom' && userCustomBgImg) {
@@ -1125,11 +1207,13 @@
       // 3. DRAW PARTICLE OVERLAY (Only if enabled)
       drawFxParticleOverlay(ctx, targetW, targetH, opts.fxKey, bgTime);
 
-      // 4. LAYOUT POSITION CALCULATIONS
+      // 4. LAYOUT POSITION CALCULATIONS WITH DYNAMIC LOGO OFFSET Y
       let topPadding = opts.ratio === '16:9' ? 45 : (opts.ratio === '9:16' ? 140 : 65);
       let bottomPadding = opts.ratio === '16:9' ? 45 : (opts.ratio === '9:16' ? 140 : 65);
 
-      let logoY = topPadding + (opts.logoScale || 18);
+      // Dynamic Logo Vertical Position: base topPadding + scale + user OFFSET Y slider
+      let logoY = topPadding + (opts.logoScale || 18) + (opts.logoOffsetY || 0);
+
       let handleY = targetH - bottomPadding - (opts.handleSize || 22) / 2;
       let stampY = handleY - (opts.showStamp ? (opts.stampGap || 65) : 0);
 
@@ -1203,7 +1287,7 @@
         ctx.restore();
       }
 
-      // 6. RENDER LOGO
+      // 6. RENDER LOGO (WITH VERTICAL OFFSET Y)
       if (opts.showLogo && pLogo > 0.01) {
         ctx.save();
         ctx.globalAlpha = pLogo;
@@ -1230,14 +1314,25 @@
         ctx.restore();
       }
 
-      // 7. RENDER MAIN PHRASE & CITATION
+      // 7. RENDER MAIN PHRASE & CITATION (WITH DYNAMIC SHADOW TOGGLES)
       if (opts.phrase && pPhrase > 0.01) {
         ctx.save();
         ctx.globalAlpha = pPhrase;
         ctx.textAlign = 'center';
         ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.95)';
-        ctx.shadowBlur = 12;
+
+        // MAIN PHRASE SHADOW CONTROL
+        if (opts.showPhraseShadow) {
+          ctx.shadowColor = opts.phraseShadowColor || '#000000';
+          ctx.shadowBlur = 12;
+          ctx.shadowOffsetX = 2;
+          ctx.shadowOffsetY = 2;
+        } else {
+          ctx.shadowColor = 'transparent';
+          ctx.shadowBlur = 0;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 0;
+        }
 
         let maxWidth = cardWidth - (opts.ratio === '16:9' ? 120 : 80);
         let logoBottomBoundary = opts.showLogo ? (logoY + (opts.logoScale || 18) + 15) : (cardTop + 25);
@@ -1284,17 +1379,28 @@
           ctx.fillText(l, targetW / 2, startY + (idx * lineHeight));
         });
 
-        // Citation
+        // CITATION SHADOW CONTROL
         if (opts.citation && pCitation > 0.01) {
+          if (opts.showCitationShadow) {
+            ctx.shadowColor = opts.citationShadowColor || '#000000';
+            ctx.shadowBlur = 8;
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 2;
+          } else {
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+          }
+
           ctx.font = `italic 600 ${citSize}px "${opts.fontCitation}", serif`;
           ctx.fillStyle = '#e2e8f0';
-          ctx.shadowBlur = 6;
           ctx.fillText(`— ${opts.citation}`, targetW / 2, startY + (lines.length * lineHeight) + (citSize * 0.8));
         }
         ctx.restore();
       }
 
-      // 8. RENDER CAMPAIGN STAMP (WITH FULL CUSTOM FONT / COLOR / SHADOW)
+      // 8. RENDER CAMPAIGN STAMP (WITH DYNAMIC SHADOW CONTROLS FOR TITLE & SUBTITLE)
       if (opts.showStamp && pStamp > 0.01) {
         ctx.save();
         ctx.globalAlpha = pStamp;
@@ -1308,28 +1414,45 @@
         ctx.font = `900 ${titleSize}px "${fontStamp}", sans-serif`;
         ctx.fillStyle = opts.stampColor || '#00838f';
 
-        if (opts.showStampShadow) {
-          ctx.shadowColor = opts.stampShadowColor || '#000000';
+        // STAMP TITLE SHADOW
+        if (opts.showStampTitleShadow) {
+          ctx.shadowColor = opts.stampTitleShadowColor || '#000000';
           ctx.shadowBlur = 10;
           ctx.shadowOffsetX = 2;
           ctx.shadowOffsetY = 2;
         } else {
           ctx.shadowColor = 'transparent';
           ctx.shadowBlur = 0;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 0;
         }
 
         ctx.fillText(stampTitle.toUpperCase(), targetW / 2, stampY);
 
+        // STAMP SUBTITLE SHADOW
         if (stampSub) {
           const subSize = Math.max(10, Math.round(titleSize * 0.28));
           ctx.font = `800 ${subSize}px "${fontStamp}", sans-serif`;
           ctx.fillStyle = opts.stampSubColor || '#ffffff';
+
+          if (opts.showStampSubShadow) {
+            ctx.shadowColor = opts.stampSubShadowColor || '#000000';
+            ctx.shadowBlur = 8;
+            ctx.shadowOffsetX = 1;
+            ctx.shadowOffsetY = 1;
+          } else {
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+          }
+
           ctx.fillText(stampSub.toUpperCase(), targetW / 2, stampY + subSize * 1.3);
         }
         ctx.restore();
       }
 
-      // 9. RENDER USER HANDLE (WITH FULL CUSTOM FONT / COLOR / SHADOW)
+      // 9. RENDER USER HANDLE (WITH DYNAMIC SHADOW TOGGLE & COLOR)
       if (opts.handle && pHandle > 0.01) {
         ctx.save();
         ctx.globalAlpha = pHandle;
@@ -1349,6 +1472,8 @@
         } else {
           ctx.shadowColor = 'transparent';
           ctx.shadowBlur = 0;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 0;
         }
 
         ctx.fillText(opts.handle, targetW / 2, handleY);
@@ -1487,7 +1612,72 @@
       container.appendChild(grid);
     }
 
-    // REAL MP4 STOCK VIDEOS GALLERY WITH HD POSTERS & INSTANT PREVIEW
+    // RELIABLE REAL-TIME CANVAS VIDEO APPLIER
+    async function loadVideoForCanvas(vObj) {
+      if (!vObj) return;
+      const key = 'stock_video_' + vObj.id;
+      showCanvasLoadingToast(`Cargando "${vObj.title}" en lienzo...`);
+
+      try {
+        let vid = window.stockVideoElements ? window.stockVideoElements[key] : null;
+
+        if (!vid) {
+          vid = document.createElement('video');
+          vid.crossOrigin = 'anonymous';
+          vid.muted = true;
+          vid.loop = true;
+          vid.playsInline = true;
+          vid.setAttribute('playsinline', 'true');
+          vid.setAttribute('webkit-playsinline', 'true');
+
+          // Try fetching as Blob first to prevent CORS restrictions on Canvas
+          let blobUrl = null;
+          try {
+            const resp = await fetch(vObj.url, { mode: 'cors' });
+            if (resp.ok) {
+              const blob = await resp.blob();
+              blobUrl = URL.createObjectURL(blob);
+            }
+          } catch (e) {
+            console.warn("Direct blob fetch notice, falling back to direct MP4 URL stream:", e);
+          }
+
+          vid.src = blobUrl || vObj.url;
+
+          if (!window.stockVideoElements) window.stockVideoElements = {};
+          window.stockVideoElements[key] = vid;
+        }
+
+        await new Promise((resolve) => {
+          if (vid.readyState >= 2) {
+            vid.play().then(resolve).catch(resolve);
+          } else {
+            const onReady = () => {
+              vid.removeEventListener('canplay', onReady);
+              vid.removeEventListener('loadeddata', onReady);
+              vid.play().then(resolve).catch(resolve);
+            };
+            vid.addEventListener('canplay', onReady);
+            vid.addEventListener('loadeddata', onReady);
+            vid.onerror = (e) => {
+              console.warn("Video playback event error:", e);
+              resolve();
+            };
+            vid.load();
+            setTimeout(resolve, 4000); // 4s fallback safety timeout
+          }
+        });
+
+        selectedBgKey = key;
+        hideCanvasLoadingToast();
+        safeUpdateCanvas();
+      } catch (err) {
+        console.error("Video load error:", err);
+        hideCanvasLoadingToast();
+      }
+    }
+
+    // REAL MP4 STOCK VIDEOS GALLERY WITH INSTANT 1-CLICK APPLY AND PREVIEW
     function searchStockVideos() {
       const query = document.getElementById('mediaSearchInput').value.toLowerCase().trim();
       const container = document.getElementById('bgThumbnailGridContainer');
@@ -1505,55 +1695,49 @@
 
       itemsToDisplay.forEach(v => {
         const key = 'stock_video_' + v.id;
-        if (!window.stockVideoElements[key]) {
-          const vid = document.createElement('video');
-          vid.crossOrigin = 'anonymous';
-          vid.setAttribute('playsinline', 'true');
-          vid.setAttribute('webkit-playsinline', 'true');
-          vid.src = v.url;
-          vid.loop = true; 
-          vid.muted = true;
-          vid.play().catch(e => {});
-          window.stockVideoElements[key] = vid;
-        }
 
         const card = document.createElement('div');
-        card.className = `p-1 rounded-lg border text-left flex flex-col gap-1 transition overflow-hidden bg-slate-900 group cursor-pointer ${selectedBgKey === key ? 'border-cyan-400 ring-2 ring-cyan-500/50' : 'border-slate-800 hover:border-slate-700'}`;
+        card.className = `p-1 rounded-lg border text-left flex flex-col gap-1 transition overflow-hidden bg-slate-900 group ${selectedBgKey === key ? 'border-cyan-400 ring-2 ring-cyan-500/50' : 'border-slate-800 hover:border-slate-700'}`;
         
         // Poster HD Image Container
         const posterBox = document.createElement('div');
-        posterBox.className = 'w-full h-20 rounded bg-slate-950 bg-cover bg-center relative flex items-center justify-center overflow-hidden';
+        posterBox.className = 'w-full h-20 rounded bg-slate-950 bg-cover bg-center relative flex items-center justify-center overflow-hidden cursor-pointer';
         posterBox.style.backgroundImage = `url('${v.poster}')`;
+        posterBox.onclick = () => { loadVideoForCanvas(v); };
 
         // Play badge icon over thumbnail
         const badge = document.createElement('div');
-        badge.className = 'w-7 h-7 rounded-full bg-slate-900/80 backdrop-blur border border-cyan-400/50 flex items-center justify-center text-cyan-400 text-xs shadow-lg';
+        badge.className = 'w-7 h-7 rounded-full bg-slate-900/80 backdrop-blur border border-cyan-400/50 flex items-center justify-center text-cyan-400 text-xs shadow-lg group-hover:scale-110 transition';
         badge.innerHTML = `<i class="fa-solid fa-play ml-0.5"></i>`;
         posterBox.appendChild(badge);
 
         card.appendChild(posterBox);
         
         const labelBox = document.createElement('div');
-        labelBox.className = 'p-1 flex items-center justify-between';
+        labelBox.className = 'p-1 flex items-center justify-between gap-1';
         labelBox.innerHTML = `
           <div class="overflow-hidden">
             <div class="text-[10px] font-bold text-white truncate">${v.title}</div>
             <div class="text-[8px] text-cyan-400 font-semibold">${v.cat}</div>
           </div>
-          <button class="px-1.5 py-0.5 bg-cyan-600 hover:bg-cyan-500 rounded text-[9px] font-bold text-white shrink-0 ml-1">
-            Ver
-          </button>
+          <div class="flex items-center gap-1 shrink-0">
+            <button onclick="event.stopPropagation(); openVideoPreviewModal(${JSON.stringify(v).replace(/"/g, '&quot;')});" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 rounded text-[9px] font-bold text-slate-300">
+              Ver
+            </button>
+            <button onclick="event.stopPropagation(); loadVideoForCanvas(${JSON.stringify(v).replace(/"/g, '&quot;')});" class="px-1.5 py-0.5 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 rounded text-[9px] font-extrabold text-white">
+              ⚡ Aplicar
+            </button>
+          </div>
         `;
         card.appendChild(labelBox);
 
-        card.onclick = () => { openVideoPreviewModal(v); };
         grid.appendChild(card);
       });
 
       container.appendChild(grid);
     }
 
-    // VIDEO PREVIEW MODAL ENGINE WITH MUTED & AUTOPLAY HANDLERS
+    // VIDEO PREVIEW MODAL ENGINE
     function openVideoPreviewModal(v) {
       pendingModalVideo = v;
       document.getElementById('modalVideoTitle').innerText = v.title;
@@ -1593,54 +1777,8 @@
 
     async function confirmUseVideoFromModal() {
       if (!pendingModalVideo) return;
-      const btn = document.getElementById('btnModalUseVideo');
-      const origHTML = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Cargando en lienzo...`;
-
-      try {
-        const key = 'stock_video_' + pendingModalVideo.id;
-        let vid = window.stockVideoElements[key];
-
-        if (!vid) {
-          vid = document.createElement('video');
-          vid.crossOrigin = 'anonymous';
-          vid.setAttribute('playsinline', 'true');
-          vid.setAttribute('webkit-playsinline', 'true');
-          vid.muted = true;
-          vid.loop = true;
-          vid.autoplay = true;
-          vid.src = pendingModalVideo.url;
-          window.stockVideoElements[key] = vid;
-        }
-
-        await new Promise((resolve) => {
-          const onReady = () => {
-            vid.removeEventListener('canplay', onReady);
-            vid.removeEventListener('loadeddata', onReady);
-            vid.play().then(resolve).catch(resolve);
-          };
-
-          if (vid.readyState >= 2) {
-            vid.play().then(resolve).catch(resolve);
-          } else {
-            vid.addEventListener('canplay', onReady);
-            vid.addEventListener('loadeddata', onReady);
-            vid.onerror = () => resolve();
-            setTimeout(resolve, 3000);
-          }
-          vid.load();
-        });
-
-        selectedBgKey = key;
-        closeVideoPreviewModal();
-        safeUpdateCanvas();
-      } catch (err) {
-        console.error("Error setting video canvas background:", err);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = origHTML;
-      }
+      closeVideoPreviewModal();
+      await loadVideoForCanvas(pendingModalVideo);
     }
 
     // ITUNES MUSIC SEARCH
@@ -2020,8 +2158,23 @@
 
     function drawCoverImage(ctx, img, targetW, targetH) {
       if (!img) return;
+
+      // Handle video element readiness safely
+      if (img instanceof HTMLVideoElement) {
+        if (img.readyState < 2) {
+          ctx.fillStyle = '#0f172a';
+          ctx.fillRect(0, 0, targetW, targetH);
+          return;
+        }
+        if (img.paused) {
+          img.play().catch(e => {});
+        }
+      }
+
       const srcW = img.videoWidth || img.width || targetW;
       const srcH = img.videoHeight || img.height || targetH;
+      if (!srcW || !srcH) return;
+
       const scale = Math.max(targetW / srcW, targetH / srcH);
       const w = srcW * scale;
       const h = srcH * scale;
