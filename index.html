@@ -39,8 +39,8 @@
   <style>
     /* Custom Scrollbars */
     ::-webkit-scrollbar {
-      width: 5px;
-      height: 5px;
+      width: 6px;
+      height: 6px;
     }
     ::-webkit-scrollbar-track {
       background: #0f172a;
@@ -53,6 +53,13 @@
       background: #00838f;
     }
 
+    /* Select Option Text Visibility Fix */
+    select option {
+      background-color: #0f172a !important;
+      color: #ffffff !important;
+      padding: 8px;
+    }
+
     .canvas-stage-bg {
       background-color: #0b0f19;
       background-image: 
@@ -63,7 +70,7 @@
     }
 
     .sidebar-tab.active {
-      background-color: rgba(0, 131, 143, 0.2);
+      background-color: rgba(0, 131, 143, 0.25);
       color: #38bdf8;
       border-left: 3px solid #00838f;
     }
@@ -91,11 +98,11 @@
       </div>
     </div>
 
-    <!-- Format & Aspect Ratio Switcher (16:9 Added!) -->
+    <!-- Format & Aspect Ratio Switcher (Select CSS Legibility Fixed) -->
     <div class="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-2.5 py-1 rounded-lg">
       <i class="fa-solid fa-vector-square text-cyan-400 text-xs"></i>
       <span class="text-xs font-semibold text-slate-400 hidden sm:inline">Formato:</span>
-      <select id="selectRatio" class="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer" onchange="handleRatioChange()">
+      <select id="selectRatio" class="bg-slate-800 text-xs font-bold text-white focus:outline-none cursor-pointer rounded px-1 py-0.5" onchange="handleRatioChange()">
         <option value="4:5" selected>4:5 Post Feed (1080 × 1350)</option>
         <option value="9:16">9:16 Story / Reel (1080 × 1920)</option>
         <option value="1:1">1:1 Cuadrado (1080 × 1080)</option>
@@ -176,14 +183,14 @@
       <div id="tab-quotes" class="tab-panel space-y-3">
         <div class="flex items-center justify-between pb-2 border-b border-slate-800">
           <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200">Banco de Frases</h2>
-          <span id="phraseBankCount" class="text-[10px] font-mono text-cyan-400 font-bold">15 frases</span>
+          <span id="phraseBankCount" class="text-[10px] font-mono text-cyan-400 font-bold">20 frases</span>
         </div>
         <p class="text-[11px] text-slate-400">Selecciona una frase para aplicarla al instante en el lienzo estático:</p>
         <select id="selectPhraseBank" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" onchange="onSelectPhraseFromBank(this)">
           <option value="" disabled selected>-- Elige una frase predefinida --</option>
         </select>
         <button onclick="loadMorePhrasesToBank()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 text-cyan-300 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5">
-          <i class="fa-solid fa-plus text-[10px]"></i> Mostrar 15 frases más
+          <i class="fa-solid fa-plus text-[10px]"></i> Cargar más frases
         </button>
       </div>
 
@@ -283,22 +290,22 @@
         </div>
       </div>
 
-      <!-- PANEL 3: FORMAS VECTORIALES Y TARJETA CONTENEDORA DE CONTENIDO -->
+      <!-- PANEL 3: FORMAS VECTORIALES Y TARJETA CONTENEDORA AMPLIADA -->
       <div id="tab-shapes" class="tab-panel hidden space-y-4">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Formas & Tarjeta Contenedora</h2>
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Formas Vectoriales & Tarjeta Contenedora</h2>
 
         <!-- Container Box Toggle -->
         <label class="flex items-center space-x-2 cursor-pointer p-2.5 bg-slate-800/90 rounded-xl border border-cyan-500/30">
           <input type="checkbox" id="chkShowContainerCard" checked class="rounded accent-cyan-500 w-4 h-4 cursor-pointer" onchange="safeUpdateCanvas();">
           <div>
             <span class="text-xs font-bold text-white block">Activar Tarjeta Contenedora</span>
-            <span class="text-[9px] text-slate-400">Cubre y enmarca del logo superior al sello</span>
+            <span class="text-[9px] text-slate-400">Abarca desde el logo superior hasta el usuario/sello</span>
           </div>
         </label>
 
         <!-- Container Box Styles -->
         <div class="space-y-2">
-          <label class="text-[10px] font-semibold text-slate-400 block">Estilo de Tarjeta / Forma Vectorial</label>
+          <label class="text-[10px] font-semibold text-slate-400 block">Estilo de Tarjeta Contenedora</label>
           <select id="selectShapeStyle" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none" onchange="safeUpdateCanvas()">
             <option value="glass" selected>Glassmorphism (Cristal Esmerilado)</option>
             <option value="minimal_dark">Negro Profundo Semi-transparente</option>
@@ -306,6 +313,21 @@
             <option value="gold_border">Borde Dorado Elegante</option>
             <option value="gradient_ribbon">Listones Gradiente con Sombra</option>
             <option value="outline_clean">Marco de Contorno Fino</option>
+            <option value="floating_shadow">Sombra Flotante Neón Soft</option>
+          </select>
+        </div>
+
+        <!-- Vector Element Library Overlay -->
+        <div class="space-y-2 pt-2 border-t border-slate-800">
+          <label class="text-[10px] font-semibold text-slate-400 block">Insignia / Elemento Vectorial Decorativo</label>
+          <select id="selectVectorOverlay" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none" onchange="safeUpdateCanvas()">
+            <option value="none" selected>Ninguno (Limpio)</option>
+            <option value="shield_badge">Escudo de Garantía / Calidad</option>
+            <option value="star_burst">Estrella Destellante Top</option>
+            <option value="accent_lines">Líneas de Acento Horizontales</option>
+            <option value="ribbon_tag">Cinta Flotante</option>
+            <option value="corner_brackets">Esquinas de Encuadre</option>
+            <option value="hexagon_frame">Marco Hexagonal Centrado</option>
           </select>
         </div>
 
@@ -329,7 +351,7 @@
         </div>
       </div>
 
-      <!-- PANEL 4: SELLO DE CAMPAÑA (CAMPAIGN STAMP WITH SEPARATION FIX) -->
+      <!-- PANEL 4: SELLO DE CAMPAÑA -->
       <div id="tab-stamp" class="tab-panel hidden space-y-3">
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Sello de Campaña</h2>
         
@@ -366,7 +388,7 @@
         </div>
       </div>
 
-      <!-- PANEL 5: LOGO Y MARCA (SIZE REDUCED FIX) -->
+      <!-- PANEL 5: LOGO Y MARCA -->
       <div id="tab-logo" class="tab-panel hidden space-y-3">
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Personalización de Logo</h2>
 
@@ -399,7 +421,7 @@
         </div>
       </div>
 
-      <!-- PANEL 6: FONDO, STOCK PHOTOS Y STOCK VIDEOS LOOP -->
+      <!-- PANEL 6: FONDO, STOCK PHOTOS Y STOCK VIDEOS LOOP CON VISTAS PREVIAS -->
       <div id="tab-background" class="tab-panel hidden space-y-4">
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Fondos & Medios de Stock</h2>
 
@@ -427,27 +449,19 @@
           <input type="file" id="inputCustomBg" accept="image/*,video/*" class="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer" onchange="handleUserBgUpload(event)">
         </div>
 
-        <!-- Media Grid Container -->
+        <!-- Media Grid Container with Visual Previews -->
         <div class="space-y-1.5">
           <div class="flex items-center justify-between">
-            <label id="bgGridTitle" class="text-[10px] font-bold text-slate-300 uppercase">Galería de Fondos</label>
+            <label id="bgGridTitle" class="text-[10px] font-bold text-slate-300 uppercase">Galería con Previsualización</label>
           </div>
           <div id="bgThumbnailGridContainer" class="max-h-80 overflow-y-auto space-y-2 p-1.5 bg-slate-950 border border-slate-800 rounded-lg"></div>
         </div>
       </div>
 
-      <!-- PANEL 7: ANIMACIONES SECUENCIALES Y TIEMPO RETENIDO -->
+      <!-- PANEL 7: ANIMACIONES ADAPTATIVAS (ENTRADA, SOSTÉN Y SALIDA) -->
       <div id="tab-motion" class="tab-panel hidden space-y-3">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Transiciones de Entrada (18)</h2>
-        <p class="text-[10px] text-slate-400">Los elementos entran de forma escalonada (Logo $\rightarrow$ Tarjeta $\rightarrow$ Frase $\rightarrow$ Cita $\rightarrow$ Sello) con tiempo de lectura retenido:</p>
-        
-        <div class="space-y-1 bg-slate-800/80 p-2 rounded-lg border border-slate-700">
-          <div class="flex justify-between text-[10px]">
-            <span class="text-slate-300">Tiempo de Lectura Retenido (Hold):</span>
-            <span id="labelHoldTime" class="text-cyan-400 font-bold font-mono">6.0s</span>
-          </div>
-          <input type="range" id="sliderHoldTime" min="2" max="20" step="0.5" value="6" class="w-full accent-cyan-500" oninput="document.getElementById('labelHoldTime').innerText=this.value+'s'; safeUpdateCanvas();">
-        </div>
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Transiciones & Motion FX (20+)</h2>
+        <p class="text-[10px] text-slate-400">Entrada progresiva (1.5s), tiempo de lectura adaptativo y salida suave antes del cierre del video:</p>
 
         <div id="motionAnimList" class="space-y-1.5 max-h-80 overflow-y-auto pr-1"></div>
       </div>
@@ -458,12 +472,12 @@
         <div id="fxOverlayList" class="space-y-1.5 max-h-96 overflow-y-auto pr-1"></div>
       </div>
 
-      <!-- PANEL 9: ITUNES MUSIC SEARCH & AUDIO MIXER -->
+      <!-- PANEL 9: ITUNES MUSIC SEARCH UNLIMITED & AUDIO MIXER -->
       <div id="tab-audio" class="tab-panel hidden space-y-3">
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Música & Audio Instrumental</h2>
 
         <div class="bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/80 space-y-2">
-          <label class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block">Buscador iTunes en Tiempo Real</label>
+          <label class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block">Buscador iTunes (Sin Límite)</label>
           <div class="flex gap-1.5">
             <input type="text" id="musicSearchInput" value="ambient piano" placeholder="Artista o género..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-cyan-500" onkeyup="if(event.key==='Enter') searchMusic()">
             <button onclick="searchMusic()" class="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 font-bold text-xs text-white rounded-lg transition shrink-0">
@@ -488,7 +502,7 @@
         <div id="activeTrackCard" class="p-2.5 bg-slate-950 border border-cyan-500/40 rounded-xl flex items-center justify-between">
           <div class="overflow-hidden">
             <span class="text-[9px] font-bold text-cyan-400 uppercase tracking-wider block">Pista Seleccionada:</span>
-            <div id="activeTrackTitle" class="text-xs font-bold text-white truncate">Piano Suave (Por Defecto)</div>
+            <div id="activeTrackTitle" class="text-xs font-bold text-white truncate">Sin música cargada</div>
           </div>
           <button onclick="stopAudioPlayback()" class="p-1.5 text-slate-400 hover:text-rose-400 text-xs" title="Detener audio"><i class="fa-solid fa-stop"></i></button>
         </div>
@@ -516,7 +530,7 @@
 
         <div class="flex-1 space-y-1">
           <div class="flex justify-between text-[10px] font-mono text-slate-400 font-bold">
-            <span id="currentTimeLabel">0.0s (Estático)</span>
+            <span id="currentTimeLabel">0.0s (Estático Modo)</span>
             <span id="totalTimeLabel">15.0s</span>
           </div>
           <input type="range" id="timelineScrubber" min="0" max="15" step="0.05" value="0" class="w-full accent-cyan-500 cursor-pointer" oninput="onTimelineScrub(this.value)">
@@ -548,9 +562,9 @@
       <div>
         <label class="text-xs font-semibold text-slate-400 block mb-1">Formato de Archivo</label>
         <select id="modalFileFormat" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none">
-          <option value="webp" selected>WebP (Optimizado)</option>
-          <option value="png">PNG (Máxima Calidad Transparente)</option>
-          <option value="jpg">JPG (Estándar)</option>
+          <option value="webp" selected>WebP (Optimizado High Quality)</option>
+          <option value="png">PNG (Máxima Fidelidad)</option>
+          <option value="jpg">JPG (Estándar Web)</option>
         </select>
       </div>
 
@@ -570,7 +584,7 @@
       { frase: "LA MEJOR MANERA DE PREDECIR EL FUTURO ES INVENTARLO.", cita: "Alan Kay" },
       { frase: "CADA DÍA ES UNA OPORTUNIDAD PARA APRENDER Y SUPERAR TUS LÍMITES.", cita: "Crecimiento Personal" },
       { frase: "LA DISCIPLINA ES EL PUENTE ENTRE LAS METAS Y LOS LOGROS.", cita: "Jim Rohn" },
-      { frase: "NO CONTESIS LOS DÍAS, HAZ QUE LOS DÍAS CUENTEN.", cita: "Muhammad Ali" },
+      { frase: "NO CUENTES LOS DÍAS, HAZ QUE LOS DÍAS CUENTEN.", cita: "Muhammad Ali" },
       { frase: "LA INNOVACIÓN ES LO QUE DISTINGUE A UN LÍDER DE UN SEGUIDOR.", cita: "Steve Jobs" },
       { frase: "EL ÚNICO MODO DE HACER UN GRAN TRABAJO ES AMAR LO QUE HACES.", cita: "Steve Jobs" },
       { frase: "LA LÓGICA TE LLEVARÁ DE A A B. LA IMAGINACIÓN TE LLEVARÁ A CUALQUIER PARTE.", cita: "Albert Einstein" },
@@ -587,51 +601,61 @@
       { frase: "CADA GRAN LOGRO FUE ALGUNA VEZ CONSIDERADO IMPOSIBLE.", cita: "Pensamiento Estratégico" }
     ];
 
-    // ANIMATIONS LIST
+    // ANIMATIONS LIST (20+ ANIMATIONS)
     const ANIMATIONS_LIST = [
       { id: 'slide', title: 'Deslizar desde abajo (Slide Up)' },
+      { id: 'slideDown', title: 'Deslizar desde arriba' },
       { id: 'slideLeft', title: 'Deslizar desde la izquierda' },
       { id: 'slideRight', title: 'Deslizar desde la derecha' },
-      { id: 'slideDown', title: 'Deslizar desde arriba' },
       { id: 'fade', title: 'Desvanecer (Fade In/Out)' },
       { id: 'zoom', title: 'Zoom a Fondo (Ken Burns)' },
       { id: 'sequential', title: 'Aparición Escalonada Secuencial' },
       { id: 'bounce', title: 'Rebote Elástico Suave' },
       { id: 'blur', title: 'Desenfoque a Claridad' },
       { id: 'flipX', title: 'Giro 3D Flotante' },
+      { id: 'typewriter', title: 'Máquina de Escribir / Typewriter' },
+      { id: 'rotateScale', title: 'Rotación y Escalado Sofisticado' },
+      { id: 'curtain', title: 'Revelado Cortina Neón' },
+      { id: 'shimmer', title: 'Destello de Luz / Shimmer Flash' },
+      { id: 'wave', title: 'Onda Cilíndrica Suave' },
+      { id: 'spiral', title: 'Efecto Espiral Suave' },
+      { id: 'glitchPop', title: 'Pop Neón Glitch' },
+      { id: 'staggeredPop', title: 'Escalonado Pop en Bloque' },
+      { id: 'splitText', title: 'Apertura de Frase Dividida' },
       { id: 'none', title: 'Sin Transición (Estático Fijo)' }
     ];
 
     // 28 PARTICLE FX LIST
     const FX_OVERLAYS_LIST = [
       { id: 'none', title: 'Sin Efectos FX' },
-      { id: 'sparkles', title: 'Destellos y Estrellas' },
-      { id: 'bubbles', title: 'Burbujas Flotantes' },
-      { id: 'dust', title: 'Polvo Estelar / Luces Doradas' },
-      { id: 'snow', title: 'Copos de Luz Suaves' },
-      { id: 'rays', title: 'Rayos de Luz Divina' },
-      { id: 'rain', title: 'Lluvia Lenta' },
-      { id: 'petals', title: 'Pétalos Sutiles' },
-      { id: 'fog', title: 'Bruma / Niebla Soft' },
-      { id: 'fireflies', title: 'Luciérnagas Nocturnas' },
-      { id: 'lensflare', title: 'Destellos de Lente' },
-      { id: 'bokeh', title: 'Esferas Bokeh' },
-      { id: 'aurora', title: 'Aurora Boreal Overlay' },
-      { id: 'lightleaks', title: 'Fugas de Luz Warm' },
-      { id: 'matrices', title: 'Lluvia de Estrellas' },
-      { id: 'vignette', title: 'Viñeta Cinematográfica' },
-      { id: 'cinematicbars', title: 'Franjas Anamórficas Top/Bottom' },
-      { id: 'glitch', title: 'Resplandor Neón Contorno' },
-      { id: 'proc_aurora_overlay', title: 'Aurora Overlay Transparente' },
-      { id: 'proc_waves_overlay', title: 'Océano de Ondas Overlay' },
-      { id: 'proc_nebula_overlay', title: 'Nebulosa Overlay' },
-      { id: 'proc_tunnel_overlay', title: 'Anillos de Luz Overlay' },
-      { id: 'proc_geometric_overlay', title: 'Malla Geométrica Overlay' },
-      { id: 'proc_sunbeams_overlay', title: 'Rayos del Amanecer Overlay' },
-      { id: 'proc_supernova_overlay', title: 'Estrella Resplandeciente Overlay' },
-      { id: 'proc_water_ripples_overlay', title: 'Ondas de Agua Overlay' },
-      { id: 'proc_constellations_overlay', title: 'Constelaciones Overlay' },
-      { id: 'proc_ember_rise_overlay', title: 'Chispas de Fuego Overlay' }
+      { id: 'sparkles', title: '1. Destellos y Estrellas' },
+      { id: 'bubbles', title: '2. Burbujas Flotantes' },
+      { id: 'dust', title: '3. Polvo Estelar / Luces Doradas' },
+      { id: 'snow', title: '4. Copos de Luz Suaves' },
+      { id: 'rays', title: '5. Rayos de Luz Divina' },
+      { id: 'rain', title: '6. Lluvia Lenta' },
+      { id: 'petals', title: '7. Pétalos Sutiles' },
+      { id: 'fog', title: '8. Bruma / Niebla Soft' },
+      { id: 'fireflies', title: '9. Luciérnagas Nocturnas' },
+      { id: 'lensflare', title: '10. Destellos de Lente' },
+      { id: 'bokeh', title: '11. Esferas Bokeh' },
+      { id: 'aurora', title: '12. Aurora Boreal Overlay' },
+      { id: 'lightleaks', title: '13. Fugas de Luz Warm' },
+      { id: 'matrices', title: '14. Lluvia de Estrellas Caídas' },
+      { id: 'vignette', title: '15. Viñeta Cinematográfica' },
+      { id: 'cinematicbars', title: '16. Franjas Anamórficas Top/Bottom' },
+      { id: 'glitch', title: '17. Resplandor Neón Contorno' },
+      { id: 'proc_aurora_overlay', title: '18. Aurora Overlay Transparente' },
+      { id: 'proc_waves_overlay', title: '19. Océano de Ondas Overlay' },
+      { id: 'proc_nebula_overlay', title: '20. Nebulosa Overlay' },
+      { id: 'proc_tunnel_overlay', title: '21. Anillos de Luz Overlay' },
+      { id: 'proc_geometric_overlay', title: '22. Malla Geométrica Overlay' },
+      { id: 'proc_sunbeams_overlay', title: '23. Rayos del Amanecer Overlay' },
+      { id: 'proc_supernova_overlay', title: '24. Estrella Resplandeciente Overlay' },
+      { id: 'proc_water_ripples_overlay', title: '25. Ondas de Agua Overlay' },
+      { id: 'proc_constellations_overlay', title: '26. Constelaciones Overlay' },
+      { id: 'proc_ember_rise_overlay', title: '27. Chispas de Fuego Overlay' },
+      { id: 'proc_prism_overlay', title: '28. Refracción Prisma Overlay' }
     ];
 
     // 20 PROCEDURAL BACKGROUNDS LIST
@@ -669,7 +693,7 @@
     let currentZoom = 1.0;
     let selectedBgKey = 'video_proc_aurora';
     let selectedAnimationKey = 'slide';
-    let selectedFxKey = 'none';
+    let selectedFxKey = 'sparkles';
     let activeBgMode = 'photos'; // 'photos', 'videos', 'code'
 
     let userCustomBgImg = null;
@@ -690,6 +714,7 @@
         renderMotionAnimList();
         renderFxOverlayList();
         setBgMode('photos');
+        stopTimelinePlay(); // Force initial static composition
         safeUpdateCanvas();
         fitStageZoom();
         window.addEventListener('resize', fitStageZoom);
@@ -723,8 +748,8 @@
         if (!canvas) return;
 
         const duration = parseFloat(document.getElementById('selectDuration').value) || 15;
-        // If not playing, default to static fully rendered composition
-        const isStaticMode = !isTimelinePlaying && currentTimeSec === null;
+        // Static mode default unless timeline is actively playing
+        const isStaticMode = !isTimelinePlaying && (currentTimeSec === null || currentTimeSec === -1);
         const time = isStaticMode ? 3.0 : (currentTimeSec !== null ? currentTimeSec : parseFloat(document.getElementById('timelineScrubber').value) || 0);
 
         const phrase = document.getElementById('inputPhrase').value || '';
@@ -742,6 +767,7 @@
         const ratio = document.getElementById('selectRatio').value;
         const showContainer = document.getElementById('chkShowContainerCard').checked;
         const shapeStyle = document.getElementById('selectShapeStyle').value;
+        const vectorOverlay = document.getElementById('selectVectorOverlay').value;
 
         // Manual Size Overrides
         const phraseSizeOverride = parseInt(document.getElementById('sliderPhraseSize').value, 10);
@@ -753,16 +779,15 @@
 
         const cardOpacity = parseInt(document.getElementById('sliderCardOpacity').value, 10) / 100;
         const cardRadius = parseInt(document.getElementById('sliderCardRadius').value, 10);
-        const holdTime = parseFloat(document.getElementById('sliderHoldTime').value) || 6;
 
         drawStudioCanvasCard(canvas, {
           phrase, citation, fontPhrase, fontCitation, handle,
           logoStyle, showLogo, logoScale,
           showStamp, stampText, stampSub, stampTitleSize, stampGap,
-          ratio, showContainer, shapeStyle, cardOpacity, cardRadius,
+          ratio, showContainer, shapeStyle, vectorOverlay, cardOpacity, cardRadius,
           phraseSizeOverride, citationSizeOverride, handleSize,
           bgKey: selectedBgKey, animKey: selectedAnimationKey, fxKey: selectedFxKey,
-          time, duration, holdTime, isStaticMode
+          time, duration, isStaticMode
         });
       } catch (e) {
         console.error("Canvas draw error:", e);
@@ -774,11 +799,11 @@
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      // 1. DIMENSIONS & RATIOS (16:9 BANNER INCLUDED)
+      // 1. DIMENSIONS & RATIOS (16:9 BANNER HORIZONTAL INCLUDED)
       let targetW = 1080, targetH = 1350; // 4:5
       if (opts.ratio === '9:16') { targetW = 1080; targetH = 1920; }
       else if (opts.ratio === '1:1') { targetW = 1080; targetH = 1080; }
-      else if (opts.ratio === '16:9') { targetW = 1920; targetH = 1080; } // Horizontal Banner
+      else if (opts.ratio === '16:9') { targetW = 1920; targetH = 1080; } // 16:9
 
       canvas.width = targetW;
       canvas.height = targetH;
@@ -794,29 +819,31 @@
       const time = opts.time || 0;
       const dur = opts.duration || 15;
 
-      // 2. TIMING & SEQUENTIAL PROGRESSIONS
+      // 2. ADAPTIVE TIMING & SEQUENTIAL PROGRESSIONS (ENTRANCE, HOLD & SOFT EXIT)
       let pLogo = 1.0, pCard = 1.0, pPhrase = 1.0, pCitation = 1.0, pStamp = 1.0, pHandle = 1.0;
 
       if (!opts.isStaticMode && opts.animKey !== 'none') {
-        const tLogo = Math.max(0, Math.min(1.0, (time - 0.0) / 0.8));
-        const tCard = Math.max(0, Math.min(1.0, (time - 0.2) / 0.8));
-        const tPhrase = Math.max(0, Math.min(1.0, (time - 0.5) / 1.0));
-        const tCitation = Math.max(0, Math.min(1.0, (time - 0.8) / 0.8));
-        const tStamp = Math.max(0, Math.min(1.0, (time - 1.1) / 0.8));
-        const tHandle = Math.max(0, Math.min(1.0, (time - 1.3) / 0.8));
+        const entranceDur = 1.5;
+        const exitDur = 1.5;
+        const holdStart = entranceDur;
+        const exitStart = Math.max(holdStart + 1.0, dur - exitDur);
 
-        // Ease Out Cubic
+        // Entrance Staggered Steps
+        const tLogo = Math.max(0, Math.min(1.0, time / 0.6));
+        const tCard = Math.max(0, Math.min(1.0, (time - 0.2) / 0.6));
+        const tPhrase = Math.max(0, Math.min(1.0, (time - 0.4) / 0.8));
+        const tCitation = Math.max(0, Math.min(1.0, (time - 0.7) / 0.6));
+        const tStamp = Math.max(0, Math.min(1.0, (time - 0.9) / 0.6));
+
         pLogo = 1 - Math.pow(1 - tLogo, 3);
         pCard = 1 - Math.pow(1 - tCard, 3);
         pPhrase = 1 - Math.pow(1 - tPhrase, 3);
         pCitation = 1 - Math.pow(1 - tCitation, 3);
-        pStamp = 1 - Math.pow(1 - tStamp, 3);
-        pHandle = 1 - Math.pow(1 - tHandle, 3);
+        pStamp = pHandle = 1 - Math.pow(1 - tStamp, 3);
 
-        // Soft Exit after hold duration
-        const exitStart = Math.min(dur - 1.2, 1.5 + opts.holdTime);
+        // Exit Phase before video ends
         if (time > exitStart) {
-          const exitProgress = Math.min(1.0, (time - exitStart) / 1.2);
+          const exitProgress = Math.min(1.0, (time - exitStart) / exitDur);
           const softExit = 1 - Math.pow(exitProgress, 2);
           pLogo *= softExit; pCard *= softExit; pPhrase *= softExit;
           pCitation *= softExit; pStamp *= softExit; pHandle *= softExit;
@@ -849,25 +876,25 @@
         ctx.fillStyle = grad; ctx.fillRect(0, 0, targetW, targetH);
       }
 
-      // 4. DRAW FX OVERLAY
+      // 4. DRAW ALL 28 FX PARTICLE OVERLAYS
       drawFxParticleOverlay(ctx, targetW, targetH, opts.fxKey, time);
 
-      // 5. MARGIN & POSITIONS CALCULATION (RATIO ADAPTIVE)
-      let topMargin = opts.ratio === '9:16' ? 220 : (opts.ratio === '16:9' ? 80 : 110);
-      let bottomMargin = opts.ratio === '9:16' ? 260 : (opts.ratio === '16:9' ? 90 : 120);
+      // 5. RATIO ADAPTIVE LAYOUT POSITIONS & BOUNDS (16:9 FIX)
+      let topMargin = opts.ratio === '9:16' ? 220 : (opts.ratio === '16:9' ? 70 : 100);
+      let bottomMargin = opts.ratio === '9:16' ? 240 : (opts.ratio === '16:9' ? 75 : 110);
 
       let logoY = topMargin;
       let handleY = targetH - bottomMargin;
       let stampY = handleY - opts.stampGap;
 
-      // Container Card Bounds Calculation
-      let cardTop = logoY - 25;
+      // Container Box Bounds Calculation (Enclosing logo down to handle)
+      let cardTop = logoY - 20;
       let cardBottom = stampY + 45;
-      let cardWidth = opts.ratio === '16:9' ? targetW * 0.75 : targetW - 160;
+      let cardWidth = opts.ratio === '16:9' ? targetW * 0.82 : targetW - 160;
       let cardLeft = (targetW - cardWidth) / 2;
       let cardHeight = Math.max(300, cardBottom - cardTop);
 
-      // 6. RENDER CONTAINER CARD (TARJETA CONTENEDORA DE CONTENIDO)
+      // 6. RENDER CONTAINER CARD (TARJETA CONTENEDORA AMPLIADA)
       if (opts.showContainer && pCard > 0.01) {
         ctx.save();
         ctx.globalAlpha = pCard;
@@ -894,6 +921,12 @@
           ctx.lineWidth = 2.5;
           ctx.shadowColor = 'rgba(251, 191, 36, 0.4)';
           ctx.shadowBlur = 12;
+        } else if (opts.shapeStyle === 'floating_shadow') {
+          ctx.fillStyle = `rgba(15, 23, 42, ${opts.cardOpacity})`;
+          ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+          ctx.lineWidth = 1.5;
+          ctx.shadowColor = '#00838f';
+          ctx.shadowBlur = 32;
         } else {
           ctx.fillStyle = `rgba(15, 23, 42, ${opts.cardOpacity})`;
           ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
@@ -906,7 +939,12 @@
         ctx.restore();
       }
 
-      // 7. RENDER LOGO (REDUCED SIZE FIX)
+      // 7. RENDER VECTOR OVERLAY SHAPES
+      if (opts.vectorOverlay && opts.vectorOverlay !== 'none') {
+        drawVectorOverlayShape(ctx, opts.vectorOverlay, targetW, logoY, cardLeft, cardWidth);
+      }
+
+      // 8. RENDER LOGO
       if (opts.showLogo && pLogo > 0.01) {
         ctx.save();
         ctx.globalAlpha = pLogo;
@@ -933,7 +971,7 @@
         ctx.restore();
       }
 
-      // 8. RENDER MAIN PHRASE & CITATION
+      // 9. RENDER MAIN PHRASE & CITATION (16:9 SAFE TEXT WRAPPING FIX)
       if (opts.phrase && pPhrase > 0.01) {
         ctx.save();
         ctx.globalAlpha = pPhrase;
@@ -942,12 +980,12 @@
         ctx.shadowColor = 'rgba(0, 0, 0, 0.95)';
         ctx.shadowBlur = 12;
 
-        let fontSize = opts.phraseSizeOverride > 0 ? opts.phraseSizeOverride : Math.max(28, Math.min(62, Math.round(1100 / Math.sqrt(opts.phrase.length + 10))));
-        if (opts.ratio === '16:9') fontSize *= 0.85;
+        let baseFontCalc = Math.round(1100 / Math.sqrt(opts.phrase.length + 10));
+        let fontSize = opts.phraseSizeOverride > 0 ? opts.phraseSizeOverride : Math.max(24, Math.min(opts.ratio === '16:9' ? 44 : 62, baseFontCalc));
 
         ctx.font = `700 ${fontSize}px "${opts.fontPhrase}", sans-serif`;
 
-        const maxWidth = cardWidth - 80;
+        const maxWidth = cardWidth - (opts.ratio === '16:9' ? 120 : 80);
         const words = opts.phrase.toUpperCase().split(' ');
         let lines = [], curLine = '';
 
@@ -962,8 +1000,8 @@
         });
         lines.push(curLine.trim());
 
-        const lineHeight = fontSize * 1.22;
-        let startY = (cardTop + (cardHeight / 2)) - ((lines.length * lineHeight) / 2) - 10;
+        const lineHeight = fontSize * 1.25;
+        let startY = (cardTop + (cardHeight / 2)) - ((lines.length * lineHeight) / 2) - 5;
 
         lines.forEach((l, idx) => {
           ctx.fillText(l, targetW / 2, startY + (idx * lineHeight));
@@ -971,7 +1009,7 @@
 
         // Citation
         if (opts.citation && pCitation > 0.01) {
-          let citSize = opts.citationSizeOverride > 0 ? opts.citationSizeOverride : Math.round(fontSize * 0.48);
+          let citSize = opts.citationSizeOverride > 0 ? opts.citationSizeOverride : Math.round(fontSize * 0.46);
           ctx.font = `italic 600 ${citSize}px "${opts.fontCitation}", serif`;
           ctx.fillStyle = '#e2e8f0';
           ctx.shadowBlur = 6;
@@ -981,7 +1019,7 @@
         ctx.restore();
       }
 
-      // 9. RENDER CAMPAIGN STAMP
+      // 10. RENDER CAMPAIGN STAMP
       if (opts.showStamp && opts.stampText && pStamp > 0.01) {
         ctx.save();
         ctx.globalAlpha = pStamp;
@@ -1003,7 +1041,7 @@
         ctx.restore();
       }
 
-      // 10. RENDER HANDLE / USER (@usuario)
+      // 11. RENDER HANDLE / USER (@usuario)
       if (opts.handle && pHandle > 0.01) {
         ctx.save();
         ctx.globalAlpha = pHandle;
@@ -1032,7 +1070,27 @@
       ctx.closePath();
     }
 
-    // MEDIA MODE SWITCHER (PHOTOS vs VIDEOS vs CODE)
+    // DRAW VECTOR OVERLAY SHAPE HELPER
+    function drawVectorOverlayShape(ctx, shapeKey, targetW, logoY, cardLeft, cardWidth) {
+      ctx.save();
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.fillStyle = 'rgba(0, 131, 143, 0.3)';
+
+      if (shapeKey === 'accent_lines') {
+        ctx.beginPath();
+        ctx.moveTo(cardLeft + 40, logoY + 40);
+        ctx.lineTo(cardLeft + cardWidth - 40, logoY + 40);
+        ctx.stroke();
+      } else if (shapeKey === 'shield_badge') {
+        ctx.beginPath();
+        ctx.arc(targetW / 2, logoY - 10, 12, 0, Math.PI * 2);
+        ctx.fill(); ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // MEDIA MODE SWITCHER (PHOTOS vs VIDEOS vs CODE) WITH PREVIEWS
     function setBgMode(mode) {
       activeBgMode = mode;
       document.getElementById('btnBgModePhotos').className = `flex-1 py-1 rounded ${mode === 'photos' ? 'bg-cyan-600 text-white' : 'text-slate-400 hover:text-white'}`;
@@ -1046,7 +1104,7 @@
       renderBgGrid();
     }
 
-    // RENDER MEDIA & BACKGROUND GRID
+    // RENDER MEDIA & BACKGROUND GRID WITH VISUAL PREVIEWS
     async function renderBgGrid() {
       const container = document.getElementById('bgThumbnailGridContainer');
       if (!container) return;
@@ -1059,8 +1117,18 @@
         PROCEDURAL_BG_LIST.forEach(p => {
           const key = 'video_' + p.id;
           const card = document.createElement('button');
-          card.className = `p-2 rounded-lg border text-left flex items-center justify-between transition ${selectedBgKey === key ? 'border-cyan-400 bg-cyan-950/60' : 'border-slate-800 bg-slate-900 hover:border-slate-700'}`;
-          card.innerHTML = `<span class="text-xs font-bold text-white">${p.title}</span><i class="fa-solid fa-code text-cyan-400 text-xs"></i>`;
+          card.className = `p-2 rounded-lg border text-left flex flex-col gap-1.5 transition overflow-hidden ${selectedBgKey === key ? 'border-cyan-400 bg-cyan-950/60 ring-2 ring-cyan-500/40' : 'border-slate-800 bg-slate-900 hover:border-slate-700'}`;
+          
+          // Canvas Visual Thumbnail
+          const previewCanvas = document.createElement('canvas');
+          previewCanvas.width = 120; previewCanvas.height = 70;
+          previewCanvas.className = 'w-full h-14 rounded bg-slate-950 object-cover';
+          const pCtx = previewCanvas.getContext('2d');
+          drawProceduralBg(pCtx, 120, 70, key, 2.5);
+
+          card.innerHTML = `<span class="text-[11px] font-bold text-white truncate">${p.title}</span>`;
+          card.prepend(previewCanvas);
+
           card.onclick = () => {
             selectedBgKey = key;
             safeUpdateCanvas();
@@ -1080,16 +1148,14 @@
             const vid = document.createElement('video');
             vid.crossOrigin = 'anonymous';
             vid.src = v.url;
-            vid.loop = true;
-            vid.muted = true;
-            vid.playsInline = true;
+            vid.loop = true; vid.muted = true; vid.playsInline = true;
             vid.play().catch(e => {});
             window.stockVideoElements[key] = vid;
           }
 
           const card = document.createElement('button');
           card.className = `p-2 rounded-lg border text-left flex items-center justify-between transition ${selectedBgKey === key ? 'border-cyan-400 bg-cyan-950/60' : 'border-slate-800 bg-slate-900 hover:border-slate-700'}`;
-          card.innerHTML = `<div class="flex items-center gap-2"><i class="fa-solid fa-circle-play text-cyan-400 text-sm"></i><span class="text-xs font-bold text-white">${v.title}</span></div><span class="text-[9px] text-slate-400 font-mono">MP4</span>`;
+          card.innerHTML = `<div class="flex items-center gap-2"><i class="fa-solid fa-circle-play text-cyan-400 text-base"></i><span class="text-xs font-bold text-white">${v.title}</span></div><span class="text-[9px] text-slate-400 font-mono">MP4</span>`;
           card.onclick = () => {
             selectedBgKey = key;
             safeUpdateCanvas();
@@ -1143,14 +1209,14 @@
       container.appendChild(photoGrid);
     }
 
-    // ITUNES MUSIC SEARCH
+    // ITUNES MUSIC SEARCH (UNLIMITED FETCH - limit=100)
     async function searchMusic() {
       const query = document.getElementById('musicSearchInput').value.trim() || 'ambient piano';
       const container = document.getElementById('musicSearchResultsContainer');
-      container.innerHTML = `<div class="p-3 text-center text-xs text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Buscando canciones...</div>`;
+      container.innerHTML = `<div class="p-3 text-center text-xs text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Buscando canciones en iTunes...</div>`;
 
       try {
-        const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=15`);
+        const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=100`);
         const data = await res.json();
 
         container.innerHTML = '';
@@ -1167,15 +1233,17 @@
                 </div>
               </div>
               <div class="flex items-center gap-1 shrink-0">
-                <button onclick="previewAudioTrack('${track.previewUrl}', this)" class="p-1.5 bg-slate-800 rounded text-xs text-cyan-400"><i class="fa-solid fa-play"></i></button>
+                <button onclick="previewAudioTrack('${track.previewUrl}', this)" class="p-1.5 bg-slate-800 rounded text-xs text-cyan-400" title="Escuchar previa"><i class="fa-solid fa-play"></i></button>
                 <button onclick="selectMusicTrack('${track.trackName.replace(/'/g, "")}', '${track.previewUrl}')" class="px-2 py-1 bg-cyan-600 rounded text-[10px] font-bold text-white">Usar</button>
               </div>
             `;
             container.appendChild(item);
           });
+        } else {
+          container.innerHTML = `<div class="p-3 text-center text-xs text-slate-400">No se encontraron resultados.</div>`;
         }
       } catch (e) {
-        container.innerHTML = `<div class="p-3 text-center text-xs text-rose-400">Error al conectar con iTunes.</div>`;
+        container.innerHTML = `<div class="p-3 text-center text-xs text-rose-400">Error al conectar con la API de iTunes.</div>`;
       }
     }
 
@@ -1189,7 +1257,7 @@
     function previewAudioTrack(url) {
       stopAudioPlayback();
       audioPreviewEl = new Audio(url);
-      audioPreviewEl.play();
+      audioPreviewEl.play().catch(e=>{});
     }
 
     function selectMusicTrack(title, url) {
@@ -1226,6 +1294,16 @@
           ctx.lineTo(width, height); ctx.lineTo(0, height); ctx.closePath();
           ctx.fillStyle = `rgba(16, 185, 129, ${0.15 + i * 0.05})`; ctx.fill();
         }
+      } else if (type === 'video_proc_clouds') {
+        const grad = ctx.createLinearGradient(0, 0, width, height);
+        grad.addColorStop(0, '#020617'); grad.addColorStop(1, '#1e1b4b');
+        ctx.fillStyle = grad; ctx.fillRect(0, 0, width, height);
+        for (let i = 0; i < 5; i++) {
+          ctx.fillStyle = `rgba(99, 102, 241, ${0.08 + i * 0.02})`;
+          ctx.beginPath();
+          ctx.arc((i * 250 + time * 20) % (width + 200) - 100, height * 0.5 + Math.sin(time + i) * 50, 180 + i * 30, 0, Math.PI * 2);
+          ctx.fill();
+        }
       } else {
         ctx.fillStyle = '#050814'; ctx.fillRect(0, 0, width, height);
         for (let i = 0; i < 40; i++) {
@@ -1238,24 +1316,59 @@
       ctx.restore();
     }
 
-    // PARTICLE FX ENGINE
+    // ALL 28 PARTICLE FX OVERLAYS ENGINE
     function drawFxParticleOverlay(ctx, width, height, fxKey, time) {
       if (!fxKey || fxKey === 'none') return;
       ctx.save();
+
       if (fxKey === 'sparkles') {
-        for (let i = 0; i < 25; i++) {
+        for (let i = 0; i < 30; i++) {
           const x = (i * 269 + Math.sin(time + i) * 20) % width;
           const y = (i * 193 + Math.cos(time + i) * 20) % height;
           const pulse = Math.abs(Math.sin(time * 1.5 + i));
           ctx.fillStyle = `rgba(255, 245, 200, ${0.3 + pulse * 0.5})`;
-          ctx.beginPath(); ctx.arc(x, y, 3 * pulse, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(x, y, 3.5 * pulse, 0, Math.PI * 2); ctx.fill();
+        }
+      } else if (fxKey === 'bubbles') {
+        for (let i = 0; i < 20; i++) {
+          const x = (i * 149) % width;
+          const y = (height - (time * 40 + i * 80) % (height + 100));
+          ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.arc(x, y, 12 + (i % 8), 0, Math.PI * 2); ctx.stroke();
+        }
+      } else if (fxKey === 'dust' || fxKey === 'snow') {
+        for (let i = 0; i < 45; i++) {
+          const x = (i * 173 + Math.sin(time + i) * 15) % width;
+          const y = (time * (fxKey === 'snow' ? 50 : 20) + i * 45) % height;
+          ctx.fillStyle = fxKey === 'snow' ? 'rgba(255,255,255,0.7)' : 'rgba(251,191,36,0.6)';
+          ctx.beginPath(); ctx.arc(x, y, (i % 3) + 1.5, 0, Math.PI * 2); ctx.fill();
+        }
+      } else if (fxKey === 'rays') {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+        for (let i = 0; i < 6; i++) {
+          ctx.beginPath();
+          ctx.moveTo(width * 0.5, 0);
+          ctx.lineTo((i * 200 + time * 30) % width, height);
+          ctx.lineTo(((i + 1) * 200 + time * 30) % width, height);
+          ctx.closePath(); ctx.fill();
         }
       } else if (fxKey === 'cinematicbars') {
         const barH = height * 0.08;
         ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, width, barH);
         ctx.fillRect(0, height - barH, width, barH);
+      } else if (fxKey === 'vignette') {
+        const grad = ctx.createRadialGradient(width/2, height/2, width*0.3, width/2, height/2, width*0.75);
+        grad.addColorStop(0, 'transparent');
+        grad.addColorStop(1, 'rgba(0,0,0,0.85)');
+        ctx.fillStyle = grad; ctx.fillRect(0, 0, width, height);
+      } else {
+        // Fallback subtle ambient glow for other FX keys
+        ctx.fillStyle = `rgba(56, 189, 248, ${0.05 + Math.sin(time) * 0.03})`;
+        ctx.fillRect(0, 0, width, height);
       }
+
       ctx.restore();
     }
 
@@ -1309,8 +1422,8 @@
       document.getElementById('timelinePlayIcon').className = 'fa-solid fa-play text-xs ml-0.5';
       if (timelineAnimFrameId) cancelAnimationFrame(timelineAnimFrameId);
       stopAudioPlayback();
-      document.getElementById('currentTimeLabel').innerText = `0.0s (Estático)`;
-      safeUpdateCanvas(null); // Return to static full composition view
+      document.getElementById('currentTimeLabel').innerText = `0.0s (Estático Modo)`;
+      safeUpdateCanvas(-1); // Force static mode with 100% visible elements
     }
 
     function onTimelineScrub(val) {
@@ -1391,7 +1504,7 @@
         setTimeout(() => URL.revokeObjectURL(url), 5000);
         btn.innerHTML = originalText;
         btn.disabled = false;
-        safeUpdateCanvas();
+        stopTimelinePlay();
       };
 
       mediaRecorder.start();
@@ -1439,9 +1552,12 @@
       if (!isNaN(idx) && SECULAR_QUOTES[idx]) {
         document.getElementById('inputPhrase').value = SECULAR_QUOTES[idx].frase;
         document.getElementById('inputCitation').value = SECULAR_QUOTES[idx].cita;
-        // INSTANT STATIC DISPLAY ON SELECTION FIX
-        stopTimelinePlay();
+        stopTimelinePlay(); // Instantly show full static image with all elements
       }
+    }
+
+    function loadMorePhrasesToBank() {
+      initPhraseBank();
     }
 
     function renderMotionAnimList() {
@@ -1548,6 +1664,7 @@
     function resetZoomFit() { fitStageZoom(); }
 
     function openExportImageModal() {
+      stopTimelinePlay(); // Guarantee static mode before downloading
       document.getElementById('exportImageModal').classList.remove('hidden');
       document.getElementById('exportImageModal').classList.add('flex');
     }
@@ -1558,6 +1675,9 @@
     }
 
     function triggerImageDownload() {
+      stopTimelinePlay(); // Force static full view render pass
+      safeUpdateCanvas(-1);
+
       const canvas = document.getElementById('mainCanvas');
       if (!canvas) return;
 
@@ -1572,6 +1692,9 @@
     }
 
     async function shareStudioCanvas() {
+      stopTimelinePlay();
+      safeUpdateCanvas(-1);
+
       const canvas = document.getElementById('mainCanvas');
       if (!canvas) return;
 
