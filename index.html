@@ -620,6 +620,28 @@
 
   <!-- JAVASCRIPT ENGINE -->
   <script>
+    // HELPER FUNCTIONS
+    function drawRoundedRect(ctx, x, y, width, height, radius) {
+      if (width < 2 * radius) radius = width / 2;
+      if (height < 2 * radius) radius = height / 2;
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.arcTo(x + width, y, x + width, y + height, radius);
+      ctx.arcTo(x + width, y + height, x, y + height, radius);
+      ctx.arcTo(x, y + height, x, y, radius);
+      ctx.arcTo(x, y, x + width, y, radius);
+      ctx.closePath();
+    }
+
+    function hexToRgba(hex, alpha = 1) {
+      if (!hex) return `rgba(56, 189, 248, ${alpha})`;
+      let c = hex.replace('#', '');
+      if (c.length === 3) c = c.split('').map(x => x + x).join('');
+      const num = parseInt(c, 16);
+      if (isNaN(num)) return `rgba(56, 189, 248, ${alpha})`;
+      return `rgba(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}, ${alpha})`;
+    }
+
     // SECULAR QUOTES DATABASE (50 QUOTES)
     const SECULAR_QUOTES = [
       { frase: "EL ÉXITO ES LA SUMA DE PEQUEÑOS ESFUERZOS REPETIDOS DÍA TRAS DÍA.", cita: "Robert Collier" },
@@ -676,26 +698,26 @@
 
     // ALL 20 PROCEDURAL CODE BACKGROUNDS LIST
     const PROCEDURAL_BG_LIST = [
-      { id: 'proc_aurora', title: '1. Aurora Boreal' },
-      { id: 'proc_clouds', title: '2. Nubes Místicas' },
-      { id: 'proc_stars', title: '3. Lluvia de Estrellas' },
-      { id: 'proc_fireflies', title: '4. Luciérnagas' },
-      { id: 'proc_cross_glow', title: '5. Resplandor Divino' },
-      { id: 'proc_waves', title: '6. Ondas de Paz' },
-      { id: 'proc_nebula', title: '7. Nebulosa Espiritual' },
-      { id: 'proc_sunbeams', title: '8. Rayos del Amanecer' },
-      { id: 'proc_bokeh', title: '9. Esferas Bokeh' },
-      { id: 'proc_golden_dust', title: '10. Polvo de Oro' },
-      { id: 'proc_geometric', title: '11. Malla Geométrica' },
-      { id: 'proc_supernova', title: '12. Supernova' },
-      { id: 'proc_tunnel', title: '13. Anillos Infinitos' },
-      { id: 'proc_petals_flow', title: '14. Torbellino Pétalos' },
-      { id: 'proc_halo', title: '15. Halo de Gloria' },
-      { id: 'proc_water_ripples', title: '16. Ondas de Agua' },
-      { id: 'proc_prism', title: '17. Prisma Celestial' },
-      { id: 'proc_constellations', title: '18. Constelaciones' },
-      { id: 'proc_ember_rise', title: '19. Chispas de Fuego' },
-      { id: 'proc_soft_smoke', title: '20. Incienso Místico' }
+      { id: 'video_proc_aurora', title: '1. Aurora Boreal' },
+      { id: 'video_proc_clouds', title: '2. Nubes Místicas' },
+      { id: 'video_proc_stars', title: '3. Lluvia de Estrellas' },
+      { id: 'video_proc_fireflies', title: '4. Luciérnagas' },
+      { id: 'video_proc_cross_glow', title: '5. Resplandor Divino' },
+      { id: 'video_proc_waves', title: '6. Ondas de Paz' },
+      { id: 'video_proc_nebula', title: '7. Nebulosa Espiritual' },
+      { id: 'video_proc_sunbeams', title: '8. Rayos del Amanecer' },
+      { id: 'video_proc_bokeh', title: '9. Esferas Bokeh' },
+      { id: 'video_proc_golden_dust', title: '10. Polvo de Oro' },
+      { id: 'video_proc_geometric', title: '11. Malla Geométrica' },
+      { id: 'video_proc_supernova', title: '12. Supernova' },
+      { id: 'video_proc_tunnel', title: '13. Anillos Infinitos' },
+      { id: 'video_proc_petals_flow', title: '14. Torbellino Pétalos' },
+      { id: 'video_proc_halo', title: '15. Halo de Gloria' },
+      { id: 'video_proc_water_ripples', title: '16. Ondas de Agua' },
+      { id: 'video_proc_prism', title: '17. Prisma Celestial' },
+      { id: 'video_proc_constellations', title: '18. Constelaciones' },
+      { id: 'video_proc_ember_rise', title: '19. Chispas de Fuego' },
+      { id: 'video_proc_soft_smoke', title: '20. Incienso Místico' }
     ];
 
     // FREE ROYALTY-FREE REAL MP4 STOCK VIDEOS LIBRARY
@@ -731,7 +753,7 @@
       { id: 'none', title: 'Sin Transición (Estático Fijo)' }
     ];
 
-    // 20 FULLY FUNCTIONAL PARTICLE FX OVERLAYS
+    // 28 FULLY FUNCTIONAL PARTICLE FX OVERLAYS
     const FX_OVERLAYS_LIST = [
       { id: 'none', title: 'Sin Efectos FX' },
       { id: 'sparkles', title: '1. Destellos y Estrellas' },
@@ -753,7 +775,15 @@
       { id: 'glitch', title: '17. Resplandor Neón Contorno' },
       { id: 'water_ripples', title: '18. Ondas de Agua FX' },
       { id: 'sunbeams_fx', title: '19. Rayos de Sol Cálidos' },
-      { id: 'nebula_fx', title: '20. Nebulosa Espiritual Overlay' }
+      { id: 'nebula_fx', title: '20. Nebulosa Espiritual Overlay' },
+      { id: 'stars_twinkle', title: '21. Estrellas Titilantes' },
+      { id: 'ember_sparks', title: '22. Chispas Incandescentes' },
+      { id: 'digital_waves', title: '23. Ondas Digitales Cyan' },
+      { id: 'prism_refraction', title: '24. Refracción Prisma' },
+      { id: 'constellations_fx', title: '25. Malla de Constelaciones' },
+      { id: 'golden_glow', title: '26. Aura Dorada Soft' },
+      { id: 'film_grain', title: '27. Grano de Película Retro' },
+      { id: 'holy_light', title: '28. Haz de Luz Celestial' }
     ];
 
     // APP GLOBAL STATE
@@ -770,6 +800,7 @@
     let isTimelinePlaying = false;
     let timelineAnimFrameId = null;
     let timelineStartTime = null;
+    let bgAnimFrameId = null;
 
     let activeAudioTrack = null;
     let audioPreviewEl = null;
@@ -778,7 +809,6 @@
     // INITIALIZATION
     window.onload = function() {
       try {
-        // Restore aspect ratio from localStorage or default to 4:5
         const savedRatio = localStorage.getItem('studiocraft_ratio') || '4:5';
         const ratioSelect = document.getElementById('selectRatio');
         if (ratioSelect) ratioSelect.value = savedRatio;
@@ -787,14 +817,26 @@
         renderMotionAnimList();
         renderFxOverlayList();
         setBgMode('videos');
-        stopTimelinePlay(); // Force initial full static composition
+        stopTimelinePlay(); // Force initial static composition mode
         safeUpdateCanvas();
         fitStageZoom();
+        startContinuousBgLoop();
         window.addEventListener('resize', fitStageZoom);
       } catch (e) {
         console.error("Initialization error:", e);
       }
     };
+
+    function startContinuousBgLoop() {
+      if (bgAnimFrameId) cancelAnimationFrame(bgAnimFrameId);
+      function loop() {
+        if (!isTimelinePlaying) {
+          safeUpdateCanvas(-1);
+        }
+        bgAnimFrameId = requestAnimationFrame(loop);
+      }
+      bgAnimFrameId = requestAnimationFrame(loop);
+    }
 
     function updateFontSizeLabel(type, val) {
       const lbl = document.getElementById(`label${type}Size`);
@@ -842,7 +884,6 @@
         const stampTitleSize = parseInt(document.getElementById('sliderStampTitleSize').value, 10);
         const stampGap = parseInt(document.getElementById('sliderStampGap').value, 10);
 
-        // Advanced Frame Customization Controls
         const cardLineColor = document.getElementById('pickerCardLineColor').value || '#38bdf8';
         const cardLineOpacity = parseInt(document.getElementById('sliderLineOpacity').value, 10) / 100;
         const cardOpacity = parseInt(document.getElementById('sliderCardOpacity').value, 10) / 100;
@@ -863,12 +904,12 @@
       }
     }
 
-    // MAIN CANVAS RENDER ENGINE WITH GUARANTEED 16:9 & ALL RATIOS LAYOUT
+    // MAIN CANVAS RENDER ENGINE WITH PERFECT LAYOUT GUARANTEES
     function drawStudioCanvasCard(canvas, opts) {
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      // 1. DYNAMIC CANVAS DIMENSIONS & ASPECT RATIOS (DEFAULT 4:5)
+      // 1. DYNAMIC CANVAS DIMENSIONS
       let targetW = 1080, targetH = 1350; // Default 4:5
       if (opts.ratio === '9:16') { targetW = 1080; targetH = 1920; }
       else if (opts.ratio === '1:1') { targetW = 1080; targetH = 1080; }
@@ -885,7 +926,9 @@
         else box.style.aspectRatio = '4 / 5';
       }
 
-      const time = opts.time || 0;
+      const realTime = Date.now() / 1000;
+      const time = opts.isStaticMode ? 3.0 : (opts.time || 0);
+      const bgTime = opts.isStaticMode ? realTime : time;
       const dur = opts.duration || 15;
 
       // Animation progress parameters
@@ -917,23 +960,19 @@
 
       // 2. DRAW BACKGROUND (PROCEDURAL / IMAGE / MP4 LOOP VIDEO)
       if (opts.bgKey.startsWith('video_proc_')) {
-        drawProceduralBg(ctx, targetW, targetH, opts.bgKey, time);
+        drawProceduralBg(ctx, targetW, targetH, opts.bgKey, bgTime);
       } else if (opts.bgKey === 'user_custom' && userCustomBgImg) {
         drawCoverImage(ctx, userCustomBgImg, targetW, targetH);
-        ctx.fillStyle = 'rgba(0,0,0,0.45)';
-        ctx.fillRect(0, 0, targetW, targetH);
+        ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fillRect(0, 0, targetW, targetH);
       } else if (opts.bgKey === 'user_custom_video' && userCustomBgVideo) {
         drawCoverImage(ctx, userCustomBgVideo, targetW, targetH);
-        ctx.fillStyle = 'rgba(0,0,0,0.40)';
-        ctx.fillRect(0, 0, targetW, targetH);
+        ctx.fillStyle = 'rgba(0,0,0,0.40)'; ctx.fillRect(0, 0, targetW, targetH);
       } else if (opts.bgKey.startsWith('stock_photo_') && window.stockPhotoImgs && window.stockPhotoImgs[opts.bgKey]) {
         drawCoverImage(ctx, window.stockPhotoImgs[opts.bgKey], targetW, targetH);
-        ctx.fillStyle = 'rgba(0,0,0,0.52)';
-        ctx.fillRect(0, 0, targetW, targetH);
+        ctx.fillStyle = 'rgba(0,0,0,0.52)'; ctx.fillRect(0, 0, targetW, targetH);
       } else if (opts.bgKey.startsWith('stock_video_') && window.stockVideoElements && window.stockVideoElements[opts.bgKey]) {
         drawCoverImage(ctx, window.stockVideoElements[opts.bgKey], targetW, targetH);
-        ctx.fillStyle = 'rgba(0,0,0,0.45)';
-        ctx.fillRect(0, 0, targetW, targetH);
+        ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fillRect(0, 0, targetW, targetH);
       } else {
         const grad = ctx.createLinearGradient(0, 0, 0, targetH);
         grad.addColorStop(0, '#0f172a'); grad.addColorStop(1, '#1e293b');
@@ -941,24 +980,23 @@
       }
 
       // 3. DRAW PARTICLE OVERLAY
-      drawFxParticleOverlay(ctx, targetW, targetH, opts.fxKey, time);
+      drawFxParticleOverlay(ctx, targetW, targetH, opts.fxKey, bgTime);
 
-      // 4. ACCURATE LAYOUT COORDINATE COMPUTATION FOR 16:9, 9:16 AND ALL RATIOS
-      let topPadding = opts.ratio === '16:9' ? 50 : (opts.ratio === '9:16' ? 140 : 70);
-      let bottomPadding = opts.ratio === '16:9' ? 50 : (opts.ratio === '9:16' ? 140 : 70);
+      // 4. LAYOUT POSITION CALCULATIONS
+      let topPadding = opts.ratio === '16:9' ? 45 : (opts.ratio === '9:16' ? 140 : 65);
+      let bottomPadding = opts.ratio === '16:9' ? 45 : (opts.ratio === '9:16' ? 140 : 65);
 
       let logoY = topPadding + (opts.logoScale || 18);
       let handleY = targetH - bottomPadding - (opts.handleSize || 22) / 2;
       let stampY = handleY - (opts.showStamp ? (opts.stampGap || 65) : 0);
 
-      // Compute Frame/Container Bounds (Must wrap ALL elements cleanly from above logo to below handle/stamp)
       let cardTop = topPadding - 15;
       let cardBottom = handleY + (opts.handleSize || 22) + 15;
       let cardWidth = opts.ratio === '16:9' ? targetW - 320 : (opts.ratio === '9:16' ? targetW - 140 : targetW - 120);
       let cardLeft = (targetW - cardWidth) / 2;
       let cardHeight = cardBottom - cardTop;
 
-      // 5. RENDER CUSTOMIZABLE LINE FRAME / CONTAINER CARD
+      // 5. RENDER MARCO / CONTAINER CARD
       if (opts.showContainer && pCard > 0.01) {
         ctx.save();
         ctx.globalAlpha = pCard;
@@ -967,96 +1005,58 @@
         const lineWidth = opts.cardLineWidth || 3;
         const radius = opts.cardRadius || 28;
 
+        ctx.fillStyle = `rgba(15, 23, 42, ${opts.cardOpacity})`;
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = lineWidth;
+
         if (opts.shapeStyle === 'glass') {
-          ctx.fillStyle = `rgba(15, 23, 42, ${opts.cardOpacity})`;
-          ctx.strokeStyle = lineColor;
-          ctx.lineWidth = lineWidth;
-          ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
-          ctx.shadowBlur = 24;
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.7)'; ctx.shadowBlur = 24;
           drawRoundedRect(ctx, cardLeft, cardTop, cardWidth, cardHeight, radius);
           ctx.fill(); ctx.stroke();
         } else if (opts.shapeStyle === 'minimal_dark') {
           ctx.fillStyle = `rgba(5, 8, 16, ${Math.min(0.98, opts.cardOpacity + 0.25)})`;
-          ctx.strokeStyle = lineColor;
-          ctx.lineWidth = lineWidth;
           drawRoundedRect(ctx, cardLeft, cardTop, cardWidth, cardHeight, radius);
           ctx.fill(); ctx.stroke();
         } else if (opts.shapeStyle === 'line_thin') {
-          ctx.fillStyle = `rgba(15, 23, 42, ${opts.cardOpacity})`;
-          ctx.strokeStyle = lineColor;
-          ctx.lineWidth = lineWidth;
           drawRoundedRect(ctx, cardLeft, cardTop, cardWidth, cardHeight, 0);
           ctx.fill(); ctx.stroke();
         } else if (opts.shapeStyle === 'line_double') {
-          ctx.fillStyle = `rgba(15, 23, 42, ${opts.cardOpacity})`;
-          ctx.strokeStyle = lineColor;
-          ctx.lineWidth = lineWidth;
           drawRoundedRect(ctx, cardLeft, cardTop, cardWidth, cardHeight, 12);
           ctx.fill(); ctx.stroke();
-          // Inner Double Line
           ctx.strokeStyle = hexToRgba(opts.cardLineColor, opts.cardLineOpacity * 0.6);
           ctx.lineWidth = Math.max(1, lineWidth * 0.6);
           drawRoundedRect(ctx, cardLeft + 8, cardTop + 8, cardWidth - 16, cardHeight - 16, 8);
           ctx.stroke();
-        } else if (opts.shapeStyle === 'line_rounded') {
-          ctx.fillStyle = `rgba(15, 23, 42, ${opts.cardOpacity})`;
-          ctx.strokeStyle = lineColor;
-          ctx.lineWidth = lineWidth;
-          drawRoundedRect(ctx, cardLeft, cardTop, cardWidth, cardHeight, radius);
-          ctx.fill(); ctx.stroke();
         } else if (opts.shapeStyle === 'neon_glow') {
-          ctx.fillStyle = `rgba(15, 23, 42, ${opts.cardOpacity})`;
-          ctx.strokeStyle = lineColor;
-          ctx.lineWidth = lineWidth + 1;
-          ctx.shadowColor = opts.cardLineColor;
-          ctx.shadowBlur = 22;
+          ctx.lineWidth = lineWidth + 1; ctx.shadowColor = opts.cardLineColor; ctx.shadowBlur = 22;
           drawRoundedRect(ctx, cardLeft, cardTop, cardWidth, cardHeight, radius);
           ctx.fill(); ctx.stroke();
         } else if (opts.shapeStyle === 'gold_border') {
           ctx.fillStyle = `rgba(20, 15, 5, ${opts.cardOpacity})`;
-          ctx.strokeStyle = lineColor;
-          ctx.lineWidth = lineWidth;
-          ctx.shadowColor = 'rgba(251, 191, 36, 0.4)';
-          ctx.shadowBlur = 18;
+          ctx.shadowColor = 'rgba(251, 191, 36, 0.4)'; ctx.shadowBlur = 18;
           drawRoundedRect(ctx, cardLeft, cardTop, cardWidth, cardHeight, radius);
           ctx.fill(); ctx.stroke();
         } else if (opts.shapeStyle === 'dashed_border') {
-          ctx.fillStyle = `rgba(15, 23, 42, ${opts.cardOpacity})`;
-          ctx.strokeStyle = lineColor;
-          ctx.lineWidth = lineWidth;
           ctx.setLineDash([12, 8]);
           drawRoundedRect(ctx, cardLeft, cardTop, cardWidth, cardHeight, radius);
           ctx.fill(); ctx.stroke();
           ctx.setLineDash([]);
         } else if (opts.shapeStyle === 'corner_ornaments') {
-          ctx.fillStyle = `rgba(15, 23, 42, ${opts.cardOpacity})`;
-          ctx.strokeStyle = lineColor;
-          ctx.lineWidth = lineWidth;
           drawRoundedRect(ctx, cardLeft, cardTop, cardWidth, cardHeight, 8);
           ctx.fill(); ctx.stroke();
-          // Corner Bracket Accents
-          const clen = 35;
-          ctx.lineWidth = lineWidth + 2;
-          // Top Left
+          const clen = 35; ctx.lineWidth = lineWidth + 2;
           ctx.beginPath(); ctx.moveTo(cardLeft - 6, cardTop + clen); ctx.lineTo(cardLeft - 6, cardTop - 6); ctx.lineTo(cardLeft + clen, cardTop - 6); ctx.stroke();
-          // Top Right
           ctx.beginPath(); ctx.moveTo(cardLeft + cardWidth - clen, cardTop - 6); ctx.lineTo(cardLeft + cardWidth + 6, cardTop - 6); ctx.lineTo(cardLeft + cardWidth + 6, cardTop + clen); ctx.stroke();
-          // Bottom Left
           ctx.beginPath(); ctx.moveTo(cardLeft - 6, cardTop + cardHeight - clen); ctx.lineTo(cardLeft - 6, cardTop + cardHeight + 6); ctx.lineTo(cardLeft + clen, cardTop + cardHeight + 6); ctx.stroke();
-          // Bottom Right
           ctx.beginPath(); ctx.moveTo(cardLeft + cardWidth - clen, cardTop + cardHeight + 6); ctx.lineTo(cardLeft + cardWidth + 6, cardTop + cardHeight + 6); ctx.lineTo(cardLeft + cardWidth + 6, cardTop + cardHeight - clen); ctx.stroke();
-        } else if (opts.shapeStyle === 'vintage_frame') {
-          ctx.fillStyle = `rgba(15, 23, 42, ${opts.cardOpacity})`;
-          ctx.strokeStyle = lineColor;
-          ctx.lineWidth = lineWidth;
+        } else {
+          // vintage_frame
           drawRoundedRect(ctx, cardLeft, cardTop, cardWidth, cardHeight, 14);
           ctx.fill(); ctx.stroke();
-          // Vintage Inner Border
           ctx.lineWidth = 1.5;
           drawRoundedRect(ctx, cardLeft + 12, cardTop + 12, cardWidth - 24, cardHeight - 24, 10);
           ctx.stroke();
         }
-
         ctx.restore();
       }
 
@@ -1087,7 +1087,7 @@
         ctx.restore();
       }
 
-      // 7. RENDER MAIN PHRASE & CITATION WITH PERFECT 16:9 AND MULTI-RATIO AUTO-WRAP
+      // 7. RENDER MAIN PHRASE & CITATION
       if (opts.phrase && pPhrase > 0.01) {
         ctx.save();
         ctx.globalAlpha = pPhrase;
@@ -1106,7 +1106,6 @@
 
         const words = opts.phrase.toUpperCase().split(' ');
 
-        // Auto-wrap function helper
         function getWrappedLines(fSize) {
           ctx.font = `700 ${fSize}px "${opts.fontPhrase}", sans-serif`;
           let lines = [], curLine = '';
@@ -1127,7 +1126,6 @@
         let citSize = opts.citationSizeOverride > 0 ? opts.citationSizeOverride : Math.round(fontSize * 0.44);
         let totalHeight = (lines.length * fontSize * 1.25) + (opts.citation ? (citSize * 1.5) : 0);
 
-        // Iteratively scale down font size if total height exceeds vertical space or a single word exceeds maxWidth
         while ((totalHeight > availableVSpace || words.some(w => ctx.measureText(w).width > maxWidth)) && fontSize > 16) {
           fontSize -= 2;
           citSize = opts.citationSizeOverride > 0 ? opts.citationSizeOverride : Math.round(fontSize * 0.44);
@@ -1150,13 +1148,127 @@
           ctx.shadowBlur = 6;
           ctx.fillText(`— ${opts.citation}`, targetW / 2, startY + (lines.length * lineHeight) + (citSize * 0.8));
         }
-
         ctx.restore();
       }
 
-      // 8. RENDER STAMP
-// ... existing code ?
-    // VISUAL REAL STOCK MP4 VIDEO GALLERY WITH PREVIEW MODAL & LOCAL LOADER
+      // 8. RENDER CAMPAIGN STAMP
+      if (opts.showStamp && pStamp > 0.01) {
+        ctx.save();
+        ctx.globalAlpha = pStamp;
+        ctx.textAlign = 'center';
+
+        const stampTitle = opts.stampText || 'SUMMIT2026';
+        const stampSub = opts.stampSub || 'INNOVACIÓN Y TECNOLOGÍA';
+        const titleSize = opts.stampTitleSize || 42;
+
+        ctx.font = `900 ${titleSize}px "Montserrat", sans-serif`;
+        ctx.fillStyle = '#00838f';
+        ctx.shadowColor = 'rgba(0, 131, 143, 0.8)';
+        ctx.shadowBlur = 12;
+        ctx.fillText(stampTitle.toUpperCase(), targetW / 2, stampY);
+
+        if (stampSub) {
+          const subSize = Math.max(10, Math.round(titleSize * 0.28));
+          ctx.font = `800 ${subSize}px "Montserrat", sans-serif`;
+          ctx.fillStyle = '#ffffff';
+          ctx.shadowColor = 'rgba(0,0,0,0.8)';
+          ctx.shadowBlur = 4;
+          ctx.fillText(stampSub.toUpperCase(), targetW / 2, stampY + subSize * 1.3);
+        }
+        ctx.restore();
+      }
+
+      // 9. RENDER USER HANDLE
+      if (opts.handle && pHandle > 0.01) {
+        ctx.save();
+        ctx.globalAlpha = pHandle;
+        ctx.textAlign = 'center';
+        const handleSize = opts.handleSize || 22;
+        ctx.font = `600 ${handleSize}px "Montserrat", sans-serif`;
+        ctx.fillStyle = '#cbd5e1';
+        ctx.shadowColor = 'rgba(0,0,0,0.9)';
+        ctx.shadowBlur = 6;
+        ctx.fillText(opts.handle, targetW / 2, handleY);
+        ctx.restore();
+      }
+    }
+
+    // BACKGROUND TAB MODES & GRID SWITCHER
+    function setBgMode(mode) {
+      activeBgMode = mode;
+      const bPhotos = document.getElementById('btnBgModePhotos');
+      const bVideos = document.getElementById('btnBgModeVideos');
+      const bCode = document.getElementById('btnBgModeCode');
+
+      bPhotos.className = `flex-1 py-1.5 rounded ${mode === 'photos' ? 'bg-cyan-600 text-white font-bold' : 'text-slate-400 hover:text-white'}`;
+      bVideos.className = `flex-1 py-1.5 rounded ${mode === 'videos' ? 'bg-cyan-600 text-white font-bold' : 'text-slate-400 hover:text-white'}`;
+      bCode.className = `flex-1 py-1.5 rounded ${mode === 'code' ? 'bg-cyan-600 text-white font-bold' : 'text-slate-400 hover:text-white'}`;
+
+      const searchBox = document.getElementById('mediaSearchBox');
+      const searchLabel = document.getElementById('mediaSearchLabel');
+      const pillsBox = document.getElementById('videoCategoryPills');
+
+      if (mode === 'photos') {
+        searchBox.classList.remove('hidden');
+        searchLabel.innerText = 'Buscador de Fotos de Stock';
+        pillsBox.classList.add('hidden');
+      } else if (mode === 'videos') {
+        searchBox.classList.remove('hidden');
+        searchLabel.innerText = 'Buscador de Videos de Stock';
+        pillsBox.classList.remove('hidden');
+      } else {
+        searchBox.classList.add('hidden');
+      }
+
+      renderBgGrid();
+    }
+
+    function triggerMediaSearch() {
+      renderBgGrid();
+    }
+
+    function setVideoCategory(cat, btn) {
+      document.querySelectorAll('.video-pill').forEach(b => b.classList.replace('bg-cyan-600', 'bg-slate-900'));
+      btn.classList.replace('bg-slate-900', 'bg-cyan-600');
+      document.getElementById('mediaSearchInput').value = cat;
+      renderBgGrid();
+    }
+
+    function renderBgGrid() {
+      const container = document.getElementById('bgThumbnailGridContainer');
+      container.innerHTML = '';
+
+      if (activeBgMode === 'code') {
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-2 gap-2';
+
+        PROCEDURAL_BG_LIST.forEach(bg => {
+          const card = document.createElement('div');
+          card.className = `p-1.5 rounded-lg border text-left flex flex-col gap-1 transition cursor-pointer bg-slate-900 ${selectedBgKey === bg.id ? 'border-cyan-400 ring-2 ring-cyan-500/50' : 'border-slate-800 hover:border-slate-700'}`;
+
+          const cvs = document.createElement('canvas');
+          cvs.width = 120; cvs.height = 70;
+          cvs.className = 'w-full h-16 rounded bg-slate-950 object-cover';
+          const tCtx = cvs.getContext('2d');
+          drawProceduralBg(tCtx, 120, 70, bg.id, Date.now() / 1000);
+
+          const lbl = document.createElement('span');
+          lbl.className = 'text-[10px] font-bold text-white truncate';
+          lbl.innerText = bg.title;
+
+          card.appendChild(cvs); card.appendChild(lbl);
+          card.onclick = () => { selectedBgKey = bg.id; safeUpdateCanvas(); renderBgGrid(); };
+          grid.appendChild(card);
+        });
+        container.appendChild(grid);
+      } else if (activeBgMode === 'videos') {
+        searchStockVideos();
+      } else {
+        searchPhotos();
+      }
+    }
+
+    // REAL MP4 STOCK VIDEOS GALLERY WITH MODAL PREVIEW & LOCAL LOADER
     function searchStockVideos() {
       const query = document.getElementById('mediaSearchInput').value.toLowerCase().trim();
       const container = document.getElementById('bgThumbnailGridContainer');
@@ -1186,13 +1298,9 @@
         const card = document.createElement('div');
         card.className = `p-1 rounded-lg border text-left flex flex-col gap-1 transition overflow-hidden bg-slate-900 group cursor-pointer ${selectedBgKey === key ? 'border-cyan-400 ring-2 ring-cyan-500/50' : 'border-slate-800 hover:border-slate-700'}`;
         
-        // Video Preview Card
         const previewVideo = document.createElement('video');
         previewVideo.src = v.url;
-        previewVideo.muted = true;
-        previewVideo.loop = true;
-        previewVideo.playsInline = true;
-        previewVideo.autoplay = true;
+        previewVideo.muted = true; previewVideo.loop = true; previewVideo.playsInline = true; previewVideo.autoplay = true;
         previewVideo.className = 'w-full h-20 rounded bg-slate-950 object-cover pointer-events-none';
         previewVideo.play().catch(e => {});
 
@@ -1218,7 +1326,7 @@
       container.appendChild(grid);
     }
 
-    // VIDEO PREVIEW MODAL & LOCAL BLOB LOADER ENGINE
+    // VIDEO PREVIEW MODAL ENGINE
     function openVideoPreviewModal(v) {
       pendingModalVideo = v;
       document.getElementById('modalVideoTitle').innerText = v.title;
@@ -1228,16 +1336,14 @@
       player.play().catch(e => {});
 
       const modal = document.getElementById('videoPreviewModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
+      modal.classList.remove('hidden'); modal.classList.add('flex');
     }
 
     function closeVideoPreviewModal() {
       const player = document.getElementById('modalVideoPlayer');
       if (player) { player.pause(); player.src = ''; }
       const modal = document.getElementById('videoPreviewModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
+      modal.classList.add('hidden'); modal.classList.remove('flex');
     }
 
     async function confirmUseVideoFromModal() {
@@ -1245,7 +1351,7 @@
       const btn = document.getElementById('btnModalUseVideo');
       const origHTML = btn.innerHTML;
       btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Guardando copia local...`;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Cargando video...`;
 
       try {
         const response = await fetch(pendingModalVideo.url);
@@ -1255,9 +1361,7 @@
         const vid = document.createElement('video');
         vid.crossOrigin = 'anonymous';
         vid.src = localBlobUrl;
-        vid.loop = true;
-        vid.muted = true;
-        vid.playsInline = true;
+        vid.loop = true; vid.muted = true; vid.playsInline = true;
 
         await new Promise((resolve) => {
           vid.onloadeddata = () => { vid.play().catch(e=>{}); resolve(); };
@@ -1271,7 +1375,7 @@
         closeVideoPreviewModal();
         safeUpdateCanvas();
       } catch (err) {
-        console.error("Error creating local video copy:", err);
+        console.error("Error loading local video copy:", err);
         const vid = document.createElement('video');
         vid.crossOrigin = 'anonymous';
         vid.src = pendingModalVideo.url;
@@ -1559,7 +1663,7 @@
       ctx.restore();
     }
 
-    // COMPLETE & GUARANTEED PARTICLE OVERLAY RENDER ENGINE
+    // ALL 28 PARTICLE OVERLAY RENDER ENGINES
     function drawFxParticleOverlay(ctx, width, height, fxKey, time) {
       if (!fxKey || fxKey === 'none') return;
       ctx.save();
@@ -1587,8 +1691,8 @@
           ctx.fillStyle = fxKey === 'snow' ? 'rgba(255,255,255,0.75)' : 'rgba(251,191,36,0.65)';
           ctx.beginPath(); ctx.arc(x, y, (i % 3) + 1.8, 0, Math.PI * 2); ctx.fill();
         }
-      } else if (fxKey === 'rays' || fxKey === 'sunbeams_fx') {
-        ctx.fillStyle = fxKey === 'sunbeams_fx' ? 'rgba(251, 191, 36, 0.12)' : 'rgba(255, 255, 255, 0.09)';
+      } else if (fxKey === 'rays' || fxKey === 'sunbeams_fx' || fxKey === 'holy_light') {
+        ctx.fillStyle = fxKey === 'sunbeams_fx' ? 'rgba(251, 191, 36, 0.12)' : (fxKey === 'holy_light' ? 'rgba(255,255,255,0.18)' : 'rgba(255, 255, 255, 0.09)');
         for (let i = 0; i < 7; i++) {
           ctx.beginPath(); ctx.moveTo(width * 0.5, 0);
           ctx.lineTo((i * 180 + time * 25) % width, height);
@@ -1596,8 +1700,7 @@
           ctx.fill();
         }
       } else if (fxKey === 'rain') {
-        ctx.strokeStyle = 'rgba(186, 230, 253, 0.45)';
-        ctx.lineWidth = 1.2;
+        ctx.strokeStyle = 'rgba(186, 230, 253, 0.45)'; ctx.lineWidth = 1.2;
         for (let i = 0; i < 50; i++) {
           const x = (i * 97) % width;
           const y = (time * 280 + i * 30) % height;
@@ -1608,9 +1711,7 @@
           const x = (i * 110 + time * 35) % width;
           const y = (i * 85 + Math.sin(time + i) * 20) % height;
           ctx.fillStyle = 'rgba(244, 114, 182, 0.5)';
-          ctx.beginPath();
-          ctx.ellipse(x, y, 9, 4.5, time + i, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.beginPath(); ctx.ellipse(x, y, 9, 4.5, time + i, 0, Math.PI * 2); ctx.fill();
         }
       } else if (fxKey === 'fog') {
         for (let i = 0; i < 5; i++) {
@@ -1619,15 +1720,15 @@
           ctx.arc(width/2 + Math.sin(time * 0.8 + i) * 60, height * 0.6 + Math.cos(time + i) * 30, 160 + i * 40, 0, Math.PI * 2);
           ctx.fill();
         }
-      } else if (fxKey === 'fireflies') {
+      } else if (fxKey === 'fireflies' || fxKey === 'ember_sparks') {
         for (let i = 0; i < 25; i++) {
           const x = (i * 111 + Math.sin(time + i) * 35) % width;
           const y = (i * 83 + Math.cos(time * 0.8 + i) * 35) % height;
-          ctx.fillStyle = 'rgba(251, 191, 36, 0.8)';
-          ctx.shadowColor = '#fbbf24'; ctx.shadowBlur = 12;
+          ctx.fillStyle = fxKey === 'ember_sparks' ? 'rgba(249, 115, 22, 0.8)' : 'rgba(251, 191, 36, 0.8)';
+          ctx.shadowColor = fxKey === 'ember_sparks' ? '#f97316' : '#fbbf24'; ctx.shadowBlur = 12;
           ctx.beginPath(); ctx.arc(x, y, 3.2, 0, Math.PI * 2); ctx.fill();
         }
-      } else if (fxKey === 'lensflare') {
+      } else if (fxKey === 'lensflare' || fxKey === 'prism_refraction') {
         const lx = width * 0.3 + Math.sin(time * 0.5) * 80;
         const ly = height * 0.25 + Math.cos(time * 0.5) * 40;
         const grad = ctx.createRadialGradient(lx, ly, 5, lx, ly, 180);
@@ -1635,9 +1736,9 @@
         grad.addColorStop(0.3, 'rgba(56, 189, 248, 0.3)');
         grad.addColorStop(1, 'transparent');
         ctx.fillStyle = grad; ctx.fillRect(0, 0, width, height);
-      } else if (fxKey === 'bokeh') {
+      } else if (fxKey === 'bokeh' || fxKey === 'golden_glow') {
         for (let i = 0; i < 16; i++) {
-          ctx.fillStyle = `rgba(56, 189, 248, ${0.12 + (i % 4) * 0.05})`;
+          ctx.fillStyle = fxKey === 'golden_glow' ? `rgba(251, 191, 36, ${0.12 + (i % 4) * 0.04})` : `rgba(56, 189, 248, ${0.12 + (i % 4) * 0.05})`;
           ctx.beginPath();
           ctx.arc((i * 140) % width, (height - (time * 25 + i * 55) % height), 25 + (i % 5) * 15, 0, Math.PI * 2);
           ctx.fill();
@@ -1657,7 +1758,7 @@
         grad.addColorStop(0.5, `rgba(236, 72, 153, ${0.12 + Math.cos(time) * 0.06})`);
         grad.addColorStop(1, 'transparent');
         ctx.fillStyle = grad; ctx.fillRect(0, 0, width, height);
-      } else if (fxKey === 'matrices') {
+      } else if (fxKey === 'matrices' || fxKey === 'digital_waves') {
         ctx.fillStyle = 'rgba(56, 189, 248, 0.8)';
         for (let i = 0; i < 30; i++) {
           const x = (i * 65) % width;
@@ -1675,18 +1776,27 @@
         ctx.fillRect(0, height - barH, width, barH);
       } else if (fxKey === 'glitch') {
         ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
-        ctx.lineWidth = 4;
-        ctx.shadowColor = '#38bdf8';
-        ctx.shadowBlur = 16 + Math.sin(time * 5) * 8;
+        ctx.lineWidth = 4; ctx.shadowColor = '#38bdf8'; ctx.shadowBlur = 16 + Math.sin(time * 5) * 8;
         ctx.strokeRect(15, 15, width - 30, height - 30);
       } else if (fxKey === 'water_ripples') {
         ctx.strokeStyle = 'rgba(14, 165, 233, 0.35)'; ctx.lineWidth = 2;
         for (let i = 0; i < 5; i++) {
-          ctx.beginPath();
-          ctx.arc(width/2, height/2, (time * 45 + i * 65) % (width * 0.65), 0, Math.PI * 2);
-          ctx.stroke();
+          ctx.beginPath(); ctx.arc(width/2, height/2, (time * 45 + i * 65) % (width * 0.65), 0, Math.PI * 2); ctx.stroke();
         }
-      } else if (fxKey === 'nebula_fx') {
+      } else if (fxKey === 'stars_twinkle' || fxKey === 'constellations_fx') {
+        ctx.fillStyle = '#38bdf8';
+        for (let i = 0; i < 20; i++) {
+          let px = (i * 120 + 40) % width; let py = (i * 90 + 50) % height;
+          ctx.beginPath(); ctx.arc(px, py, 2.5 + Math.sin(time * 3 + i) * 1.5, 0, Math.PI * 2); ctx.fill();
+        }
+      } else if (fxKey === 'film_grain') {
+        ctx.fillStyle = 'rgba(255,255,255,0.04)';
+        for (let i = 0; i < 100; i++) {
+          let rx = Math.random() * width; let ry = Math.random() * height;
+          ctx.fillRect(rx, ry, 2, 2);
+        }
+      } else {
+        // nebula_fx
         const grad = ctx.createRadialGradient(width/2, height/2, 20, width/2, height/2, width*0.6);
         grad.addColorStop(0, `rgba(168, 85, 247, ${0.25 + Math.sin(time) * 0.08})`);
         grad.addColorStop(1, 'transparent');
