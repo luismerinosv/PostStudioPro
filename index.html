@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StudioCraft Motion Pro - Graphic, Banner & Video Status Studio</title>
+  <title>StudioCraft Motion Pro - Creador Gráfico & Editor de Video Status</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome 6 CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Google Fonts Loader -->
+  <!-- Google Fonts Loader (25+ Fonts) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Anton&family=Bebas+Neue&family=Caveat:wght@600;700&family=Cinzel:wght@700;900&family=Cormorant+Garamond:ital,wght@0,700;1,600&family=Inter:wght@300;400;600;800&family=Lora:ital,wght@0,600;1,500&family=Merriweather:ital,wght@0,700;1,400&family=Montserrat:ital,wght@0,700;0,900;1,500;1,600&family=Oswald:wght@600&family=Outfit:wght@600;700;900&family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,600&family=Poppins:wght@400;500;600;700;900&family=Quicksand:wght@600;700&family=Righteous&family=Satisfy&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Alex+Brush&family=Anton&family=Bebas+Neue&family=Caveat:wght@600;700&family=Cinzel:wght@700;900&family=Cormorant+Garamond:ital,wght@0,700;1,600&family=Courgette&family=Dancing+Script:wght@700&family=Great+Vibes&family=Inter:wght@300;400;600;800&family=Italianno&family=Lora:ital,wght@0,600;1,500&family=Merriweather:ital,wght@0,700;1,400&family=Montserrat:ital,wght@0,700;0,900;1,500;1,600&family=Oswald:wght@600&family=Outfit:wght@600;700;900&family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,600&family=Poppins:wght@400;600;800;900&family=Quicksand:wght@600;700&family=Righteous&family=Sacramento&family=Satisfy&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 
-  <!-- fix-webm-duration CDN for WebM Video Metadata Injection -->
+  <!-- fix-webm-duration CDN for WebM Video Metadata Header Injection -->
   <script src="https://cdn.jsdelivr.net/npm/fix-webm-duration@1.0.5/fix-webm-duration.js"></script>
 
   <script>
@@ -26,7 +26,6 @@
           colors: {
             brand: {
               50: '#f0f6ff',
-              400: '#38bdf8',
               500: '#00838f',
               600: '#006064',
               900: '#0f172a'
@@ -39,100 +38,90 @@
 
   <style>
     /* Custom Scrollbars */
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00838f;
+    }
 
     .canvas-stage-bg {
-      background-color: #080c14;
+      background-color: #0b0f19;
       background-image: 
         radial-gradient(#1e293b 1px, transparent 1px),
-        radial-gradient(#1e293b 1px, #080c14 1px);
+        radial-gradient(#1e293b 1px, #0b0f19 1px);
       background-size: 24px 24px;
       background-position: 0 0, 12px 12px;
     }
 
     .sidebar-tab.active {
-      background-color: rgba(0, 131, 143, 0.25);
+      background-color: rgba(0, 131, 143, 0.2);
       color: #38bdf8;
       border-left: 3px solid #00838f;
     }
 
-    .glass-panel {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(12px);
+    .bg-preview-canvas {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
     }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans h-screen flex flex-col overflow-hidden selection:bg-cyan-600 selection:text-white">
 
-  <!-- TOAST NOTIFICATION CONTAINER -->
-  <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
-
-  <!-- TOP HEADER / STUDIO CONTROL BAR -->
-  <header class="h-14 bg-slate-900 border-b border-slate-800 px-4 flex items-center justify-between shrink-0 z-30 shadow-lg">
-    <!-- Brand Title -->
+  <!-- TOP HEADER / ACTION BAR -->
+  <header class="h-14 bg-slate-900 border-b border-slate-800 px-4 flex items-center justify-between shrink-0 z-30 shadow-md">
+    <!-- Brand / Isotype -->
     <div class="flex items-center space-x-3">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-600 to-teal-400 flex items-center justify-center text-white font-black shadow-md shadow-cyan-500/20">
-        <i class="fa-solid fa-clapperboard text-sm"></i>
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-600 to-teal-400 flex items-center justify-center text-white font-black shadow-md shadow-cyan-500/20">
+        <i class="fa-solid fa-clapperboard text-xs"></i>
       </div>
       <div>
-        <h1 class="font-extrabold text-sm tracking-tight text-white leading-none">StudioCraft Motion Pro</h1>
-        <p class="text-[10px] text-slate-400 font-medium">Graphic, Banner & Motion Video Studio</p>
+        <h1 class="font-extrabold text-xs sm:text-sm tracking-tight text-white leading-none">StudioCraft Motion Pro</h1>
+        <p class="text-[9px] text-slate-400 font-medium hidden sm:block">Graphic, Post, Reel & Motion Studio</p>
       </div>
     </div>
 
-    <!-- Format Aspect Ratio Selector -->
-    <div class="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-3 py-1 rounded-lg">
+    <!-- Format & Aspect Ratio Switcher (16:9 Added!) -->
+    <div class="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-2.5 py-1 rounded-lg">
       <i class="fa-solid fa-vector-square text-cyan-400 text-xs"></i>
-      <span class="text-xs font-semibold text-slate-400">Formato:</span>
+      <span class="text-xs font-semibold text-slate-400 hidden sm:inline">Formato:</span>
       <select id="selectRatio" class="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer" onchange="handleRatioChange()">
-        <option value="4:5" selected>4:5 Feed Post (1080 × 1350)</option>
+        <option value="4:5" selected>4:5 Post Feed (1080 × 1350)</option>
         <option value="9:16">9:16 Story / Reel (1080 × 1920)</option>
         <option value="1:1">1:1 Cuadrado (1080 × 1080)</option>
-        <option value="16:9">16:9 Banner Header (1920 × 1080)</option>
+        <option value="16:9">16:9 Banner Horizontal (1920 × 1080)</option>
       </select>
     </div>
 
-    <!-- Stage Zoom Controls & History -->
-    <div class="flex items-center space-x-3">
-      <!-- Undo / Redo -->
-      <div class="flex items-center space-x-1 bg-slate-800 rounded-lg p-0.5 border border-slate-700">
-        <button onclick="undo()" class="p-1.5 hover:bg-slate-700 rounded text-slate-300 hover:text-white transition" title="Deshacer (Ctrl+Z)"><i class="fa-solid fa-rotate-left text-xs"></i></button>
-        <button onclick="redo()" class="p-1.5 hover:bg-slate-700 rounded text-slate-300 hover:text-white transition" title="Rehacer (Ctrl+Y)"><i class="fa-solid fa-rotate-right text-xs"></i></button>
-      </div>
-
-      <!-- Zoom -->
-      <div class="flex items-center space-x-1 bg-slate-800 rounded-lg p-1 border border-slate-700">
-        <span class="text-[11px] text-slate-400 font-semibold px-1">Zoom:</span>
-        <button onclick="adjustZoom(-0.1)" class="px-1.5 py-0.5 hover:bg-slate-700 rounded text-xs text-slate-300"><i class="fa-solid fa-minus"></i></button>
-        <span id="zoomLabel" class="text-xs font-mono font-bold text-cyan-400 w-10 text-center">100%</span>
-        <button onclick="adjustZoom(0.1)" class="px-1.5 py-0.5 hover:bg-slate-700 rounded text-xs text-slate-300"><i class="fa-solid fa-plus"></i></button>
-        <button onclick="resetZoomFit()" class="px-2 py-0.5 bg-slate-700 hover:bg-slate-600 rounded text-[10px] font-bold text-slate-200">Ajustar</button>
-      </div>
+    <!-- Stage Zoom Controls -->
+    <div class="flex items-center space-x-2 hidden md:flex">
+      <span class="text-xs text-slate-400 font-semibold">Zoom:</span>
+      <button onclick="adjustZoom(-0.1)" class="p-1.5 hover:bg-slate-800 rounded text-xs text-slate-300"><i class="fa-solid fa-minus"></i></button>
+      <span id="zoomLabel" class="text-xs font-mono font-bold text-cyan-400 w-12 text-center">100%</span>
+      <button onclick="adjustZoom(0.1)" class="p-1.5 hover:bg-slate-800 rounded text-xs text-slate-300"><i class="fa-solid fa-plus"></i></button>
+      <button onclick="resetZoomFit()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-[10px] font-bold text-slate-200">Ajustar</button>
     </div>
 
-    <!-- Action Buttons -->
+    <!-- Export & Share Action Buttons -->
     <div class="flex items-center space-x-2">
-      <!-- JSON Save / Load -->
-      <button onclick="exportProjectJSON()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-slate-300 transition flex items-center gap-1.5" title="Guardar Proyecto en Archivo JSON">
-        <i class="fa-solid fa-floppy-disk text-amber-400"></i> Guardar
+      <button onclick="shareStudioCanvas()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-slate-200 transition flex items-center gap-1.5">
+        <i class="fa-solid fa-share-nodes text-cyan-400"></i> <span class="hidden sm:inline">Compartir</span>
       </button>
-      <button onclick="document.getElementById('inputLoadJSON').click()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-slate-300 transition flex items-center gap-1.5" title="Cargar Proyecto JSON">
-        <i class="fa-solid fa-folder-open text-blue-400"></i> Cargar
+      <button onclick="openExportImageModal()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-slate-200 transition flex items-center gap-1.5">
+        <i class="fa-solid fa-image text-emerald-400"></i> <span class="hidden sm:inline">Imagen HD</span>
       </button>
-      <input type="file" id="inputLoadJSON" accept=".json" class="hidden" onchange="importProjectJSON(event)">
-
-      <!-- Share & Downloads -->
-      <button onclick="shareStudioCanvas()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-slate-200 transition flex items-center gap-1.5">
-        <i class="fa-solid fa-share-nodes text-cyan-400"></i> Compartir
-      </button>
-      <button onclick="openExportImageModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-slate-200 transition flex items-center gap-1.5">
-        <i class="fa-solid fa-image text-emerald-400"></i> Imagen HD
-      </button>
-      <button id="btnExportVideo" onclick="generarVideoAnimado()" class="px-4 py-1.5 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 rounded-lg text-xs font-extrabold text-white shadow-md shadow-cyan-500/20 transition flex items-center gap-1.5">
-        <i class="fa-solid fa-film"></i> Exportar Video Status
+      <button id="btnExportVideo" onclick="generarVideoAnimado()" class="px-3 py-1.5 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 rounded-lg text-xs font-extrabold text-white shadow-md shadow-cyan-500/20 transition flex items-center gap-1.5">
+        <i class="fa-solid fa-film"></i> Exportar Video
       </button>
     </div>
   </header>
@@ -140,339 +129,371 @@
   <!-- MAIN APP WORKSPACE -->
   <div class="flex flex-1 h-full overflow-hidden">
 
-    <!-- LEFT VERTICAL ICON SIDEBAR (10 TABS) -->
-    <aside class="w-16 bg-slate-900 border-r border-slate-800 flex flex-col items-center py-2 space-y-2 shrink-0 z-20 overflow-y-auto">
-      <button data-tab="tab-templates" onclick="switchSidebarTab('tab-templates')" class="sidebar-tab active w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
-        <i class="fa-solid fa-layer-group text-sm mb-0.5"></i>
-        <span>Plantillas</span>
-      </button>
-      <button data-tab="tab-text" onclick="switchSidebarTab('tab-text')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
-        <i class="fa-solid fa-font text-sm mb-0.5"></i>
-        <span>Texto</span>
-      </button>
-      <button data-tab="tab-quotes" onclick="switchSidebarTab('tab-quotes')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
-        <i class="fa-solid fa-quote-left text-sm mb-0.5"></i>
+    <!-- LEFT VERTICAL ICON SIDEBAR -->
+    <aside class="w-16 bg-slate-900 border-r border-slate-800 flex flex-col items-center py-3 space-y-2.5 shrink-0 z-20 overflow-y-auto">
+      <button data-tab="tab-quotes" onclick="switchSidebarTab('tab-quotes')" class="sidebar-tab active w-12 h-12 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-quote-left text-base mb-0.5"></i>
         <span>Frases</span>
       </button>
-      <button data-tab="tab-shapes" onclick="switchSidebarTab('tab-shapes')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
-        <i class="fa-solid fa-shapes text-sm mb-0.5"></i>
+      <button data-tab="tab-text" onclick="switchSidebarTab('tab-text')" class="sidebar-tab w-12 h-12 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-font text-base mb-0.5"></i>
+        <span>Texto</span>
+      </button>
+      <button data-tab="tab-shapes" onclick="switchSidebarTab('tab-shapes')" class="sidebar-tab w-12 h-12 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-shapes text-base mb-0.5"></i>
         <span>Formas</span>
       </button>
-      <button data-tab="tab-photos" onclick="switchSidebarTab('tab-photos')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
-        <i class="fa-solid fa-images text-sm mb-0.5"></i>
-        <span>Fotos</span>
+      <button data-tab="tab-stamp" onclick="switchSidebarTab('tab-stamp')" class="sidebar-tab w-12 h-12 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-certificate text-base mb-0.5"></i>
+        <span>Sello</span>
       </button>
-      <button data-tab="tab-motion" onclick="switchSidebarTab('tab-motion')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
-        <i class="fa-solid fa-wand-magic-sparkles text-sm mb-0.5"></i>
-        <span>Animación</span>
+      <button data-tab="tab-logo" onclick="switchSidebarTab('tab-logo')" class="sidebar-tab w-12 h-12 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-shield-halved text-base mb-0.5"></i>
+        <span>Logo</span>
       </button>
-      <button data-tab="tab-fx" onclick="switchSidebarTab('tab-fx')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
-        <i class="fa-solid fa-meteor text-sm mb-0.5"></i>
-        <span>Efectos</span>
-      </button>
-      <button data-tab="tab-background" onclick="switchSidebarTab('tab-background')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
-        <i class="fa-solid fa-fill-drip text-sm mb-0.5"></i>
+      <button data-tab="tab-background" onclick="switchSidebarTab('tab-background')" class="sidebar-tab w-12 h-12 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-photo-film text-base mb-0.5"></i>
         <span>Fondo</span>
       </button>
-      <button data-tab="tab-audio" onclick="switchSidebarTab('tab-audio')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
-        <i class="fa-solid fa-music text-sm mb-0.5"></i>
-        <span>Música</span>
+      <button data-tab="tab-motion" onclick="switchSidebarTab('tab-motion')" class="sidebar-tab w-12 h-12 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-wand-magic-sparkles text-base mb-0.5"></i>
+        <span>Animación</span>
       </button>
-      <button data-tab="tab-branding" onclick="switchSidebarTab('tab-branding')" class="sidebar-tab w-12 h-11 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
-        <i class="fa-solid fa-certificate text-sm mb-0.5"></i>
-        <span>Sello/Logo</span>
+      <button data-tab="tab-fx" onclick="switchSidebarTab('tab-fx')" class="sidebar-tab w-12 h-12 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-meteor text-base mb-0.5"></i>
+        <span>Efectos</span>
+      </button>
+      <button data-tab="tab-audio" onclick="switchSidebarTab('tab-audio')" class="sidebar-tab w-12 h-12 rounded-xl flex flex-col items-center justify-center text-[10px] font-semibold text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-music text-base mb-0.5"></i>
+        <span>Música</span>
       </button>
     </aside>
 
     <!-- SIDEBAR EXPANDABLE CONTROL SUBPANEL -->
     <div class="w-80 bg-slate-900/95 border-r border-slate-800 flex flex-col shrink-0 overflow-y-auto p-4 space-y-4 z-10">
       
-      <!-- PANEL 1: PLANTILLAS RÁPIDAS (TEMPLATES) -->
-      <div id="tab-templates" class="tab-panel space-y-3">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Plantillas Prediseñadas</h2>
-        <div class="grid grid-cols-1 gap-2">
-          <button onclick="loadPresetTemplate('corporate')" class="p-3 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-xl text-left transition space-y-1">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-cyan-400 block">Corporativo / Tecnología</span>
-            <div class="text-xs font-bold text-white">Tech Summit 2026</div>
-            <p class="text-[10px] text-slate-400">Aurora Boreal, fuente Montserrat y sello de innovación.</p>
-          </button>
-          <button onclick="loadPresetTemplate('minimal')" class="p-3 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-xl text-left transition space-y-1">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 block">Editorial / Filosofía</span>
-            <div class="text-xs font-bold text-white">Reflexión de Liderazgo</div>
-            <p class="text-[10px] text-slate-400">Fondo degradado oscuro con fuente Playfair Display y cita Lora.</p>
-          </button>
-          <button onclick="loadPresetTemplate('neon')" class="p-3 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-xl text-left transition space-y-1">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 block">Evento / Motivación</span>
-            <div class="text-xs font-bold text-white">Crecimiento Constante</div>
-            <p class="text-[10px] text-slate-400">Malla geométrica neón, fuente Bebas Neue y destellos FX.</p>
-          </button>
-        </div>
-      </div>
-
-      <!-- PANEL 2: TEXTO Y CONTENIDO -->
-      <div id="tab-text" class="tab-panel hidden space-y-3">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Configuración de Texto</h2>
-        
-        <div>
-          <label class="text-[10px] font-semibold text-slate-400 block mb-1">Frase Principal</label>
-          <textarea id="inputPhrase" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="pushHistoryState(); safeUpdateCanvas()">EL ÉXITO ES LA SUMA DE PEQUEÑOS ESFUERZOS REPETIDOS DÍA TRAS DÍA.</textarea>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Fuente Frase</label>
-            <select id="selectFontPhrase" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-xs text-white focus:outline-none" onchange="pushHistoryState(); safeUpdateCanvas()">
-              <option value="Montserrat" selected>Montserrat</option>
-              <option value="Bebas Neue">Bebas Neue</option>
-              <option value="Playfair Display">Playfair Display</option>
-              <option value="Cinzel">Cinzel</option>
-              <option value="Oswald">Oswald</option>
-              <option value="Outfit">Outfit</option>
-              <option value="Poppins">Poppins</option>
-              <option value="Pacifico">Pacifico</option>
-              <option value="Anton">Anton</option>
-              <option value="Caveat">Caveat</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Color Frase</label>
-            <input type="color" id="colorPhrase" value="#ffffff" class="w-full h-8 bg-slate-800 border border-slate-700 rounded-lg p-0.5 cursor-pointer" oninput="safeUpdateCanvas()">
-          </div>
-        </div>
-
-        <div>
-          <label class="text-[10px] font-semibold text-slate-400 block mb-1">Cita / Autor / Referencia</label>
-          <input type="text" id="inputCitation" value="Robert Collier" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="pushHistoryState(); safeUpdateCanvas()">
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Fuente Cita</label>
-            <select id="selectFontCitation" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-xs text-white focus:outline-none" onchange="pushHistoryState(); safeUpdateCanvas()">
-              <option value="Lora" selected>Lora</option>
-              <option value="Merriweather">Merriweather</option>
-              <option value="Quicksand">Quicksand</option>
-              <option value="Montserrat">Montserrat</option>
-              <option value="Poppins">Poppins</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Color Cita</label>
-            <input type="color" id="colorCitation" value="#38bdf8" class="w-full h-8 bg-slate-800 border border-slate-700 rounded-lg p-0.5 cursor-pointer" oninput="safeUpdateCanvas()">
-          </div>
-        </div>
-
-        <div>
-          <label class="text-[10px] font-semibold text-slate-400 block mb-1">Usuario / Handle (@redes)</label>
-          <input type="text" id="inputHandle" value="@studiocraft.pro" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="pushHistoryState(); safeUpdateCanvas()">
-        </div>
-      </div>
-
-      <!-- PANEL 3: BANCO DE FRASES (40+) -->
-      <div id="tab-quotes" class="tab-panel hidden space-y-3">
+      <!-- PANEL 1: BANCO DE FRASES SECULARES -->
+      <div id="tab-quotes" class="tab-panel space-y-3">
         <div class="flex items-center justify-between pb-2 border-b border-slate-800">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200">Banco de Frases Seculares</h2>
-          <span id="phraseBankCount" class="text-[10px] font-mono text-cyan-400 font-bold">15 de 40</span>
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200">Banco de Frases</h2>
+          <span id="phraseBankCount" class="text-[10px] font-mono text-cyan-400 font-bold">15 frases</span>
         </div>
-        <p class="text-[11px] text-slate-400">Selecciona citas inspiradoras de motivación, liderazgo y tecnología:</p>
+        <p class="text-[11px] text-slate-400">Selecciona una frase para aplicarla al instante en el lienzo estático:</p>
         <select id="selectPhraseBank" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" onchange="onSelectPhraseFromBank(this)">
           <option value="" disabled selected>-- Elige una frase predefinida --</option>
         </select>
         <button onclick="loadMorePhrasesToBank()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 text-cyan-300 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5">
-          <i class="fa-solid fa-plus text-[10px]"></i> Cargar 15 frases más
+          <i class="fa-solid fa-plus text-[10px]"></i> Mostrar 15 frases más
         </button>
       </div>
 
-      <!-- PANEL 4: FORMAS Y MARCOS (SHAPES) -->
-      <div id="tab-shapes" class="tab-panel hidden space-y-3">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Formas Vectoriales & Marcos</h2>
+      <!-- PANEL 2: CONTENIDO Y FUENTES DE TEXTO (25+ FONTS + MANUAL SIZERS) -->
+      <div id="tab-text" class="tab-panel hidden space-y-4">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Texto y Tipografías</h2>
         
-        <div>
-          <label class="text-[10px] font-semibold text-slate-400 block mb-1">Estilo de Marco / Separador</label>
-          <select id="selectShapeStyle" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none" onchange="pushHistoryState(); safeUpdateCanvas()">
-            <option value="none" selected>Sin Formas (Limpio)</option>
-            <option value="frame_thin">Marco Fino Elegante</option>
-            <option value="frame_double">Marco Doble Dorado/Neón</option>
-            <option value="divider_line">Línea Separadora Inferior</option>
-            <option value="box_glass">Tarjeta Translúcida de Cristal</option>
-          </select>
+        <!-- Main Phrase -->
+        <div class="space-y-1.5">
+          <label class="text-[10px] font-semibold text-slate-400 block">Frase Principal</label>
+          <textarea id="inputPhrase" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()">EL ÉXITO ES LA SUMA DE PEQUEÑOS ESFUERZOS REPETIDOS DÍA TRAS DÍA.</textarea>
+
+          <div class="flex gap-2">
+            <div class="flex-1">
+              <label class="text-[9px] text-slate-400 block mb-0.5">Fuente Frase</label>
+              <select id="selectFontPhrase" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-xs text-white focus:outline-none" onchange="safeUpdateCanvas()">
+                <option value="Montserrat" selected>Montserrat</option>
+                <option value="Bebas Neue">Bebas Neue</option>
+                <option value="Playfair Display">Playfair Display</option>
+                <option value="Cinzel">Cinzel</option>
+                <option value="Oswald">Oswald</option>
+                <option value="Outfit">Outfit</option>
+                <option value="Poppins">Poppins</option>
+                <option value="Pacifico">Pacifico</option>
+                <option value="Anton">Anton</option>
+                <option value="Syne">Syne (Ultra Bold)</option>
+                <option value="Righteous">Righteous</option>
+                <option value="Abril Fatface">Abril Fatface</option>
+                <option value="Cormorant Garamond">Cormorant Garamond</option>
+                <option value="Dancing Script">Dancing Script</option>
+                <option value="Great Vibes">Great Vibes</option>
+                <option value="Courgette">Courgette</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Manual Size Override Sliders -->
+          <div class="space-y-1 pt-1">
+            <div class="flex justify-between text-[10px]">
+              <span class="text-slate-400">Tamaño Frase Manual:</span>
+              <span id="labelPhraseSize" class="text-cyan-400 font-bold font-mono">Auto</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <input type="range" id="sliderPhraseSize" min="0" max="110" value="0" class="flex-1 accent-cyan-500" oninput="updateFontSizeLabel('Phrase', this.value); safeUpdateCanvas();">
+              <button onclick="resetFontSize('Phrase')" class="text-[9px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-300">Auto</button>
+            </div>
+          </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Color de Forma</label>
-            <input type="color" id="colorShape" value="#00838f" class="w-full h-8 bg-slate-800 border border-slate-700 rounded-lg p-0.5 cursor-pointer" oninput="safeUpdateCanvas()">
+        <!-- Citation / Author -->
+        <div class="space-y-1.5 pt-2 border-t border-slate-800">
+          <label class="text-[10px] font-semibold text-slate-400 block">Cita / Autor / Referencia</label>
+          <input type="text" id="inputCitation" value="Robert Collier" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()">
+
+          <div class="flex gap-2">
+            <div class="flex-1">
+              <label class="text-[9px] text-slate-400 block mb-0.5">Fuente Cita</label>
+              <select id="selectFontCitation" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-xs text-white focus:outline-none" onchange="safeUpdateCanvas()">
+                <option value="Lora" selected>Lora</option>
+                <option value="Merriweather">Merriweather</option>
+                <option value="Quicksand">Quicksand</option>
+                <option value="Montserrat">Montserrat</option>
+                <option value="Poppins">Poppins</option>
+                <option value="Caveat">Caveat</option>
+                <option value="Sacramento">Sacramento</option>
+                <option value="Satisfy">Satisfy</option>
+                <option value="Italianno">Italianno</option>
+                <option value="Alex Brush">Alex Brush</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Opacidad</label>
-            <input type="range" id="rangeShapeOpacity" min="0.1" max="1.0" step="0.05" value="0.6" class="w-full accent-cyan-500 cursor-pointer" oninput="safeUpdateCanvas()">
+
+          <div class="space-y-1 pt-1">
+            <div class="flex justify-between text-[10px]">
+              <span class="text-slate-400">Tamaño Cita Manual:</span>
+              <span id="labelCitationSize" class="text-cyan-400 font-bold font-mono">Auto</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <input type="range" id="sliderCitationSize" min="0" max="60" value="0" class="flex-1 accent-cyan-500" oninput="updateFontSizeLabel('Citation', this.value); safeUpdateCanvas();">
+              <button onclick="resetFontSize('Citation')" class="text-[9px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-300">Auto</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Handle / User -->
+        <div class="space-y-1.5 pt-2 border-t border-slate-800">
+          <label class="text-[10px] font-semibold text-slate-400 block">Usuario / Pie de Imagen (@handle)</label>
+          <input type="text" id="inputHandle" value="@studiocraft.pro" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()">
+          
+          <div class="space-y-1">
+            <div class="flex justify-between text-[10px]">
+              <span class="text-slate-400">Tamaño Handle:</span>
+              <span id="labelHandleSize" class="text-cyan-400 font-bold font-mono">22px</span>
+            </div>
+            <input type="range" id="sliderHandleSize" min="12" max="42" value="22" class="w-full accent-cyan-500" oninput="document.getElementById('labelHandleSize').innerText=this.value+'px'; safeUpdateCanvas();">
           </div>
         </div>
       </div>
 
-      <!-- PANEL 5: BUSCADOR DE FOTOS UN SPLASH/PICSUM -->
-      <div id="tab-photos" class="tab-panel hidden space-y-4">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Buscador de Fotos de Stock</h2>
+      <!-- PANEL 3: FORMAS VECTORIALES Y TARJETA CONTENEDORA DE CONTENIDO -->
+      <div id="tab-shapes" class="tab-panel hidden space-y-4">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Formas & Tarjeta Contenedora</h2>
 
-        <!-- Stock Photo Search Input + Explicit Search Button -->
-        <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/80 space-y-2">
-          <label class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block">Buscar Imágenes por Palabra Clave</label>
+        <!-- Container Box Toggle -->
+        <label class="flex items-center space-x-2 cursor-pointer p-2.5 bg-slate-800/90 rounded-xl border border-cyan-500/30">
+          <input type="checkbox" id="chkShowContainerCard" checked class="rounded accent-cyan-500 w-4 h-4 cursor-pointer" onchange="safeUpdateCanvas();">
+          <div>
+            <span class="text-xs font-bold text-white block">Activar Tarjeta Contenedora</span>
+            <span class="text-[9px] text-slate-400">Cubre y enmarca del logo superior al sello</span>
+          </div>
+        </label>
+
+        <!-- Container Box Styles -->
+        <div class="space-y-2">
+          <label class="text-[10px] font-semibold text-slate-400 block">Estilo de Tarjeta / Forma Vectorial</label>
+          <select id="selectShapeStyle" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none" onchange="safeUpdateCanvas()">
+            <option value="glass" selected>Glassmorphism (Cristal Esmerilado)</option>
+            <option value="minimal_dark">Negro Profundo Semi-transparente</option>
+            <option value="neon_cyan">Borde Neón Turquesa / Cyan</option>
+            <option value="gold_border">Borde Dorado Elegante</option>
+            <option value="gradient_ribbon">Listones Gradiente con Sombra</option>
+            <option value="outline_clean">Marco de Contorno Fino</option>
+          </select>
+        </div>
+
+        <!-- Container Opacity & Padding -->
+        <div class="space-y-2 pt-2 border-t border-slate-800">
+          <div class="space-y-1">
+            <div class="flex justify-between text-[10px]">
+              <span class="text-slate-400">Opacidad del Fondo:</span>
+              <span id="labelCardOpacity" class="text-cyan-400 font-mono font-bold">55%</span>
+            </div>
+            <input type="range" id="sliderCardOpacity" min="0" max="100" value="55" class="w-full accent-cyan-500" oninput="document.getElementById('labelCardOpacity').innerText=this.value+'%'; safeUpdateCanvas();">
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-[10px]">
+              <span class="text-slate-400">Radio de Bordes:</span>
+              <span id="labelCardRadius" class="text-cyan-400 font-mono font-bold">28px</span>
+            </div>
+            <input type="range" id="sliderCardRadius" min="0" max="60" value="28" class="w-full accent-cyan-500" oninput="document.getElementById('labelCardRadius').innerText=this.value+'px'; safeUpdateCanvas();">
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 4: SELLO DE CAMPAÑA (CAMPAIGN STAMP WITH SEPARATION FIX) -->
+      <div id="tab-stamp" class="tab-panel hidden space-y-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Sello de Campaña</h2>
+        
+        <label class="flex items-center space-x-2 cursor-pointer p-2 bg-slate-800/80 rounded-lg border border-slate-700">
+          <input type="checkbox" id="chkShowStamp" checked class="rounded accent-cyan-500 w-4 h-4 cursor-pointer" onchange="toggleStampInputs(); safeUpdateCanvas();">
+          <span class="text-xs font-bold text-white">Activar Sello de Campaña</span>
+        </label>
+
+        <div id="stampInputsContainer" class="space-y-3 pt-1">
+          <div>
+            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Título del Sello (ej. SUMMIT2026)</label>
+            <input type="text" id="inputStampText" value="SUMMIT2026" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()">
+          </div>
+          <div>
+            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Subtítulo del Sello (ej. INNOVACIÓN Y TECNOLOGÍA)</label>
+            <input type="text" id="inputStampSub" value="INNOVACIÓN Y TECNOLOGÍA" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()">
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-[10px]">
+              <span class="text-slate-400">Tamaño Título Sello:</span>
+              <span id="labelStampTitleSize" class="text-cyan-400 font-bold font-mono">42px</span>
+            </div>
+            <input type="range" id="sliderStampTitleSize" min="20" max="65" value="42" class="w-full accent-cyan-500" oninput="document.getElementById('labelStampTitleSize').innerText=this.value+'px'; safeUpdateCanvas();">
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-[10px]">
+              <span class="text-slate-400">Separación con respecto al usuario:</span>
+              <span id="labelStampGap" class="text-cyan-400 font-bold font-mono">65px</span>
+            </div>
+            <input type="range" id="sliderStampGap" min="30" max="120" value="65" class="w-full accent-cyan-500" oninput="document.getElementById('labelStampGap').innerText=this.value+'px'; safeUpdateCanvas();">
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 5: LOGO Y MARCA (SIZE REDUCED FIX) -->
+      <div id="tab-logo" class="tab-panel hidden space-y-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Personalización de Logo</h2>
+
+        <label class="flex items-center space-x-2 cursor-pointer p-2 bg-slate-800/80 rounded-lg border border-slate-700">
+          <input type="checkbox" id="chkShowLogo" checked class="rounded accent-cyan-500 w-4 h-4 cursor-pointer" onchange="safeUpdateCanvas();">
+          <span class="text-xs font-bold text-white">Mostrar Logo en la Imagen / Video</span>
+        </label>
+
+        <div>
+          <label class="text-[10px] font-semibold text-slate-400 block mb-1">Estilo de Logo</label>
+          <select id="selectLogo" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none" onchange="handleLogoSelectChange()">
+            <option value="turquesa" selected>Isotipo Turquesa Estilizado</option>
+            <option value="blanco">Isotipo Blanco Minimalista</option>
+            <option value="negro">Isotipo Negro</option>
+            <option value="custom">Subir mi propio Logo Personalizado (PNG/JPG)</option>
+          </select>
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex justify-between text-[10px]">
+            <span class="text-slate-400">Tamaño del Logo:</span>
+            <span id="labelLogoScale" class="text-cyan-400 font-bold font-mono">18px</span>
+          </div>
+          <input type="range" id="sliderLogoScale" min="10" max="45" value="18" class="w-full accent-cyan-500" oninput="document.getElementById('labelLogoScale').innerText=this.value+'px'; safeUpdateCanvas();">
+        </div>
+
+        <div id="customLogoUploadWrapper" class="hidden">
+          <label class="text-[10px] font-semibold text-slate-400 block mb-1">Subir Logo PNG Transparente</label>
+          <input type="file" id="inputCustomLogo" accept="image/*" class="w-full text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer" onchange="handleUserLogoUpload(event)">
+        </div>
+      </div>
+
+      <!-- PANEL 6: FONDO, STOCK PHOTOS Y STOCK VIDEOS LOOP -->
+      <div id="tab-background" class="tab-panel hidden space-y-4">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Fondos & Medios de Stock</h2>
+
+        <!-- Mode Switcher Tabs: Fotos vs Videos vs Fondos Animados -->
+        <div class="flex bg-slate-800 p-1 rounded-lg text-[10px] font-bold">
+          <button id="btnBgModePhotos" onclick="setBgMode('photos')" class="flex-1 py-1 rounded bg-cyan-600 text-white">Fotos</button>
+          <button id="btnBgModeVideos" onclick="setBgMode('videos')" class="flex-1 py-1 rounded text-slate-400 hover:text-white">Videos Loop</button>
+          <button id="btnBgModeCode" onclick="setBgMode('code')" class="flex-1 py-1 rounded text-slate-400 hover:text-white">Código (20)</button>
+        </div>
+
+        <!-- Photo Search Engine -->
+        <div id="bgPhotoSearchBox" class="bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/80 space-y-2">
+          <label class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block">Buscador de Fotos de Stock</label>
           <div class="flex gap-1.5">
-            <input type="text" id="photoSearchInput" value="tecnologia, ciudad, futuro" placeholder="ej. arquitectura, neon, naturaleza..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500" onkeyup="if(event.key==='Enter') searchPhotos()">
-            <button onclick="searchPhotos()" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 font-bold text-xs text-white rounded-lg transition flex items-center gap-1 shrink-0">
-              <i class="fa-solid fa-magnifying-glass"></i> Buscar Fotos
+            <input type="text" id="photoSearchInput" value="tecnologia, ciudad, abstracto" placeholder="ej. arquitectura, neon..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-cyan-500" onkeyup="if(event.key==='Enter') searchPhotos()">
+            <button onclick="searchPhotos()" class="px-2.5 py-1 bg-cyan-600 hover:bg-cyan-500 font-bold text-xs text-white rounded-lg transition shrink-0">
+              <i class="fa-solid fa-magnifying-glass"></i>
             </button>
           </div>
         </div>
 
-        <!-- Custom Upload -->
+        <!-- Custom Upload Input -->
         <div>
-          <label class="text-[10px] font-semibold text-slate-400 block mb-1">Subir Foto Local</label>
-          <input type="file" id="inputCustomBg" accept="image/*" class="w-full text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer" onchange="handleUserBgUpload(event)">
+          <label class="text-[10px] font-semibold text-slate-400 block mb-1">Subir Imagen o Video Propio</label>
+          <input type="file" id="inputCustomBg" accept="image/*,video/*" class="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer" onchange="handleUserBgUpload(event)">
         </div>
 
-        <!-- Photos Thumbnails Container -->
-        <div class="space-y-2">
+        <!-- Media Grid Container -->
+        <div class="space-y-1.5">
           <div class="flex items-center justify-between">
-            <label class="text-[10px] font-bold text-slate-300 uppercase">Galería de Fotos de Stock</label>
-            <button onclick="searchPhotos()" class="text-[10px] text-cyan-400 hover:underline">Recargar</button>
+            <label id="bgGridTitle" class="text-[10px] font-bold text-slate-300 uppercase">Galería de Fondos</label>
           </div>
-          <div id="photoGridContainer" class="grid grid-cols-3 gap-1.5 max-h-72 overflow-y-auto p-1 bg-slate-950 border border-slate-800 rounded-lg"></div>
+          <div id="bgThumbnailGridContainer" class="max-h-80 overflow-y-auto space-y-2 p-1.5 bg-slate-950 border border-slate-800 rounded-lg"></div>
         </div>
       </div>
 
-      <!-- PANEL 6: TRANSICIONES DE ENTRADA (MOTION 18) -->
+      <!-- PANEL 7: ANIMACIONES SECUENCIALES Y TIEMPO RETENIDO -->
       <div id="tab-motion" class="tab-panel hidden space-y-3">
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Transiciones de Entrada (18)</h2>
-        <div id="motionAnimList" class="space-y-1.5 max-h-96 overflow-y-auto pr-1"></div>
+        <p class="text-[10px] text-slate-400">Los elementos entran de forma escalonada (Logo $\rightarrow$ Tarjeta $\rightarrow$ Frase $\rightarrow$ Cita $\rightarrow$ Sello) con tiempo de lectura retenido:</p>
+        
+        <div class="space-y-1 bg-slate-800/80 p-2 rounded-lg border border-slate-700">
+          <div class="flex justify-between text-[10px]">
+            <span class="text-slate-300">Tiempo de Lectura Retenido (Hold):</span>
+            <span id="labelHoldTime" class="text-cyan-400 font-bold font-mono">6.0s</span>
+          </div>
+          <input type="range" id="sliderHoldTime" min="2" max="20" step="0.5" value="6" class="w-full accent-cyan-500" oninput="document.getElementById('labelHoldTime').innerText=this.value+'s'; safeUpdateCanvas();">
+        </div>
+
+        <div id="motionAnimList" class="space-y-1.5 max-h-80 overflow-y-auto pr-1"></div>
       </div>
 
-      <!-- PANEL 7: EFECTOS Y OVERLAYS DE PARTÍCULAS (28) -->
+      <!-- PANEL 8: EFECTOS Y OVERLAYS DE PARTÍCULAS (28 TOTAL) -->
       <div id="tab-fx" class="tab-panel hidden space-y-3">
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Efectos y Partículas FX (28)</h2>
         <div id="fxOverlayList" class="space-y-1.5 max-h-96 overflow-y-auto pr-1"></div>
       </div>
 
-      <!-- PANEL 8: MOTOR DE FONDOS (20 PROCEDURALES + DEGRADADOS) -->
-      <div id="tab-background" class="tab-panel hidden space-y-4">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Fondos Procedurales & Degradados</h2>
-
-        <!-- Procedural Code Backgrounds List -->
-        <div>
-          <label class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block mb-1.5">20 Fondos Animados por Código Canvas</label>
-          <div id="proceduralBgGrid" class="grid grid-cols-2 gap-1.5 max-h-56 overflow-y-auto p-1 bg-slate-950 border border-slate-800 rounded-lg"></div>
-        </div>
-
-        <!-- Two-Color Editable Gradient Generator -->
-        <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/80 space-y-2">
-          <label class="text-[10px] font-bold text-amber-400 uppercase tracking-wider block">Generador de Degradado Elegante</label>
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="text-[9px] text-slate-400 block">Color 1</label>
-              <input type="color" id="colorGrad1" value="#0f172a" class="w-full h-7 bg-slate-900 border border-slate-700 rounded p-0.5 cursor-pointer" oninput="selectGradientMode()">
-            </div>
-            <div>
-              <label class="text-[9px] text-slate-400 block">Color 2</label>
-              <input type="color" id="colorGrad2" value="#1e293b" class="w-full h-7 bg-slate-900 border border-slate-700 rounded p-0.5 cursor-pointer" oninput="selectGradientMode()">
-            </div>
-          </div>
-          <button onclick="selectGradientMode()" class="w-full py-1.5 bg-slate-700 hover:bg-slate-600 font-bold text-xs text-white rounded-lg transition">Aplicar Degradado</button>
-        </div>
-      </div>
-
-      <!-- PANEL 9: BUSCADOR DE MÚSICA ITUNES & AUDIO MIXER -->
+      <!-- PANEL 9: ITUNES MUSIC SEARCH & AUDIO MIXER -->
       <div id="tab-audio" class="tab-panel hidden space-y-3">
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Música & Audio Instrumental</h2>
 
-        <!-- Search Bar -->
-        <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/80 space-y-2">
+        <div class="bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/80 space-y-2">
           <label class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block">Buscador iTunes en Tiempo Real</label>
           <div class="flex gap-1.5">
-            <input type="text" id="musicSearchInput" value="ambient piano" placeholder="Escribe artista o género..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500" onkeyup="if(event.key==='Enter') searchMusic()">
-            <button onclick="searchMusic()" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 font-bold text-xs text-white rounded-lg transition flex items-center gap-1 shrink-0">
-              <i class="fa-solid fa-magnifying-glass"></i> Buscar
+            <input type="text" id="musicSearchInput" value="ambient piano" placeholder="Artista o género..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-cyan-500" onkeyup="if(event.key==='Enter') searchMusic()">
+            <button onclick="searchMusic()" class="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 font-bold text-xs text-white rounded-lg transition shrink-0">
+              <i class="fa-solid fa-magnifying-glass"></i>
             </button>
           </div>
         </div>
 
-        <!-- Category Pills -->
         <div class="flex gap-1.5 overflow-x-auto pb-1 text-[10px]">
           <button onclick="setMusicCategoryPill('ambient', this)" class="music-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold whitespace-nowrap">Ambient</button>
           <button onclick="setMusicCategoryPill('instrumental', this)" class="music-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold whitespace-nowrap">Instrumental</button>
           <button onclick="setMusicCategoryPill('piano', this)" class="music-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold whitespace-nowrap">Piano</button>
           <button onclick="setMusicCategoryPill('corporativo', this)" class="music-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold whitespace-nowrap">Corporativo</button>
           <button onclick="setMusicCategoryPill('chill', this)" class="music-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold whitespace-nowrap">Chill</button>
-          <button onclick="setMusicCategoryPill('acustico', this)" class="music-pill px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold whitespace-nowrap">Acústico</button>
         </div>
 
-        <!-- Local MP3 Upload -->
         <button onclick="document.getElementById('inputLocalMp3').click()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-slate-200 transition flex items-center justify-center gap-2">
           <i class="fa-solid fa-folder-open text-amber-400"></i> Subir MP3 Local
         </button>
         <input type="file" id="inputLocalMp3" accept="audio/*" class="hidden" onchange="handleUserMp3Upload(event)">
 
-        <!-- Active Selected Track Indicator -->
         <div id="activeTrackCard" class="p-2.5 bg-slate-950 border border-cyan-500/40 rounded-xl flex items-center justify-between">
           <div class="overflow-hidden">
             <span class="text-[9px] font-bold text-cyan-400 uppercase tracking-wider block">Pista Seleccionada:</span>
-            <div id="activeTrackTitle" class="text-xs font-bold text-white truncate">Sin Audio Seleccionado</div>
+            <div id="activeTrackTitle" class="text-xs font-bold text-white truncate">Piano Suave (Por Defecto)</div>
           </div>
           <button onclick="stopAudioPlayback()" class="p-1.5 text-slate-400 hover:text-rose-400 text-xs" title="Detener audio"><i class="fa-solid fa-stop"></i></button>
         </div>
 
-        <!-- Results List -->
-        <div id="musicSearchResultsContainer" class="space-y-1.5 max-h-60 overflow-y-auto pr-1"></div>
-      </div>
-
-      <!-- PANEL 10: BRANDING, SELLO DE CAMPAÑA & LOGO -->
-      <div id="tab-branding" class="tab-panel hidden space-y-4">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 pb-2 border-b border-slate-800">Sello de Campaña & Logo</h2>
-
-        <!-- SELLO DE CAMPAÑA CONTROLS -->
-        <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/80 space-y-3">
-          <label class="flex items-center space-x-2 cursor-pointer">
-            <input type="checkbox" id="chkShowStamp" class="rounded accent-cyan-500 w-4 h-4 cursor-pointer" onchange="toggleStampInputs(); pushHistoryState(); safeUpdateCanvas();">
-            <span class="text-xs font-bold text-white">Activar Sello / Marca de Campaña</span>
-          </label>
-
-          <div id="stampInputsContainer" class="space-y-2 pt-1">
-            <div>
-              <label class="text-[10px] font-semibold text-slate-400 block mb-1">Título del Sello (ej. SUMMIT2026)</label>
-              <input type="text" id="inputStampText" value="SUMMIT2026" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()">
-            </div>
-            <div>
-              <label class="text-[10px] font-semibold text-slate-400 block mb-1">Subtítulo del Sello (ej. INNOVACIÓN Y FUTURO)</label>
-              <input type="text" id="inputStampSub" value="INNOVACIÓN Y FUTURO" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" oninput="safeUpdateCanvas()">
-            </div>
-            <div>
-              <label class="text-[10px] font-semibold text-slate-400 block mb-1">Color de Resplandor Sello</label>
-              <input type="color" id="colorStampGlow" value="#00838f" class="w-full h-7 bg-slate-900 border border-slate-700 rounded p-0.5 cursor-pointer" oninput="safeUpdateCanvas()">
-            </div>
-          </div>
-        </div>
-
-        <!-- LOGO CONTROLS -->
-        <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700/80 space-y-3">
-          <label class="flex items-center space-x-2 cursor-pointer">
-            <input type="checkbox" id="chkShowLogo" checked class="rounded accent-cyan-500 w-4 h-4 cursor-pointer" onchange="pushHistoryState(); safeUpdateCanvas();">
-            <span class="text-xs font-bold text-white">Mostrar Logo Isotipo</span>
-          </label>
-
-          <div>
-            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Estilo de Logo</label>
-            <select id="selectLogo" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none" onchange="handleLogoSelectChange()">
-              <option value="blanco" selected>Isotipo Texto Blanco</option>
-              <option value="negro">Isotipo Texto Negro</option>
-              <option value="turquesa">Isotipo Turquesa StudioCraft</option>
-              <option value="custom">Subir Logo Personalizado (PNG/JPG)</option>
-            </select>
-          </div>
-
-          <div id="customLogoUploadWrapper" class="hidden">
-            <label class="text-[10px] font-semibold text-slate-400 block mb-1">Subir Archivo de Logo Transparente</label>
-            <input type="file" id="inputCustomLogo" accept="image/*" class="w-full text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-900 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer" onchange="handleUserLogoUpload(event)">
-          </div>
-        </div>
+        <div id="musicSearchResultsContainer" class="space-y-1.5 max-h-56 overflow-y-auto pr-1"></div>
       </div>
 
     </div>
@@ -480,33 +501,30 @@
     <!-- MAIN CENTER STAGE AREA -->
     <main class="flex-1 canvas-stage-bg relative overflow-hidden flex flex-col items-center justify-between p-4">
       
-      <!-- Center Canvas Container Wrapper -->
+      <!-- Center Canvas Container -->
       <div id="canvasViewportWrapper" class="flex-1 flex items-center justify-center w-full relative overflow-hidden">
-        <div id="canvasContainerBox" class="relative shadow-2xl rounded-xl overflow-hidden border border-slate-800 transition-all duration-200">
+        <div id="canvasContainerBox" class="relative shadow-2xl rounded-lg overflow-hidden border border-slate-800 transition-all duration-200">
           <canvas id="mainCanvas"></canvas>
         </div>
       </div>
 
       <!-- BOTTOM ANIMATION TIMELINE PLAYBACK BAR -->
-      <div class="w-full max-w-3xl glass-panel border border-slate-800 rounded-2xl p-2.5 px-4 flex items-center space-x-4 shadow-2xl z-10 shrink-0">
-        <!-- Play / Stop Toggle -->
+      <div class="w-full max-w-3xl bg-slate-900/90 backdrop-blur border border-slate-800 rounded-2xl p-2.5 px-4 flex items-center space-x-4 shadow-2xl z-10 shrink-0">
         <button id="btnTimelinePlay" onclick="toggleTimelinePlay()" class="w-9 h-9 rounded-full bg-cyan-600 hover:bg-cyan-500 text-white flex items-center justify-center transition shadow-md shadow-cyan-500/30 shrink-0">
           <i id="timelinePlayIcon" class="fa-solid fa-play text-xs ml-0.5"></i>
         </button>
 
-        <!-- Time Scrubbing Slider -->
         <div class="flex-1 space-y-1">
           <div class="flex justify-between text-[10px] font-mono text-slate-400 font-bold">
-            <span id="currentTimeLabel">0.0s</span>
+            <span id="currentTimeLabel">0.0s (Estático)</span>
             <span id="totalTimeLabel">15.0s</span>
           </div>
           <input type="range" id="timelineScrubber" min="0" max="15" step="0.05" value="0" class="w-full accent-cyan-500 cursor-pointer" oninput="onTimelineScrub(this.value)">
         </div>
 
-        <!-- Duration Selector -->
         <div class="flex items-center space-x-1.5 shrink-0">
           <span class="text-xs text-slate-400 font-semibold">Duración:</span>
-          <select id="selectDuration" class="bg-slate-800 border border-slate-700 text-xs font-bold text-white rounded-lg p-1.5 focus:outline-none cursor-pointer" onchange="onDurationChange()">
+          <select id="selectDuration" class="bg-slate-800 border border-slate-700 text-xs font-bold text-white rounded-lg p-1.5 focus:outline-none" onchange="onDurationChange()">
             <option value="5">5s</option>
             <option value="10">10s</option>
             <option value="15" selected>15s</option>
@@ -530,9 +548,9 @@
       <div>
         <label class="text-xs font-semibold text-slate-400 block mb-1">Formato de Archivo</label>
         <select id="modalFileFormat" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none">
-          <option value="webp" selected>WebP (Optimizado - Mínimo Tamaño)</option>
-          <option value="png">PNG (Calidad Máxima Transparente)</option>
-          <option value="jpg">JPG (Estándar Alta Legibilidad)</option>
+          <option value="webp" selected>WebP (Optimizado)</option>
+          <option value="png">PNG (Máxima Calidad Transparente)</option>
+          <option value="jpg">JPG (Estándar)</option>
         </select>
       </div>
 
@@ -545,7 +563,7 @@
 
   <!-- JAVASCRIPT ENGINE -->
   <script>
-    // SECULAR QUOTES DATABASE (40+)
+    // SECULAR QUOTES DATABASE
     const SECULAR_QUOTES = [
       { frase: "EL ÉXITO ES LA SUMA DE PEQUEÑOS ESFUERZOS REPETIDOS DÍA TRAS DÍA.", cita: "Robert Collier" },
       { frase: "LA SIMPLICIDAD ES LA MÁXIMA SOFISTICACIÓN EN TODO LO QUE CREAMOS.", cita: "Leonardo da Vinci" },
@@ -566,30 +584,10 @@
       { frase: "EL CAMBIO ES INEVITABLE; EL PROGRESO ES UNA ELECCIÓN.", cita: "Liderazgo Moderno" },
       { frase: "SÉ EL CAMBIO QUE QUIERES VER EN EL MUNDO.", cita: "Mahatma Gandhi" },
       { frase: "LA CALIDAD NO ES UN ACTO, ES UN HÁBITO CONSTANTE.", cita: "Aristóteles" },
-      { frase: "CADA GRAN LOGRO FUE ALGUNA VEZ CONSIDERADO IMPOSIBLE.", cita: "Pensamiento Estratégico" },
-      { frase: "LA ÚNICA LIMITACIÓN EN NUESTRA REALIZACIÓN DEL MAÑANA SERÁN NUESTRAS DUDAS DE HOY.", cita: "Franklin D. Roosevelt" },
-      { frase: "HAZ LO QUE PUEDAS, CON LO QUE TENGAS, DONDE ESTÉS.", cita: "Theodore Roosevelt" },
-      { frase: "LA MEJOR FORMA DE EMPEZAR ES DEJAR DE HABLAR Y EMPEZAR A HACER.", cita: "Walt Disney" },
-      { frase: "TU TIEMPO ES LIMITADO, ASÍ QUE NO LO MALGASTES VIVIENDO LA VIDA DE OTRO.", cita: "Steve Jobs" },
-      { frase: "LA MOTIVACIÓN NOS IMPULSA A EMPEZAR, EL HÁBITO NOS PERMITE CONTINUAR.", cita: "Jim Ryun" },
-      { frase: "CADA PROBLEMA ES UN REGALO; SIN PROBLEMAS NO CRECERÍAMOS.", cita: "Tony Robbins" },
-      { frase: "EL CORAJE ES LA EXCELENCIA BAJO PRESIÓN.", cita: "Ernest Hemingway" },
-      { frase: "APRENDE DE CADA EXPERIENCIA Y ADAPTA TU CAMINO.", cita: "Estrategia Tecnológica" },
-      { frase: "EL FUTURO PERTENECE A QUIENES CREEN EN LA BELLEZA DE SUS SUEÑOS.", cita: "Eleanor Roosevelt" },
-      { frase: "LA PERSEVERANCIA ES EL CEMENTO DEL ÉXITO A LARGO PLAZO.", cita: "Proverbio Secular" },
-      { frase: "NO BUSQUES EL MOMENTO PERFECTO, TOMA EL MOMENTO Y HAZLO PERFECTO.", cita: "Mentalidad Ganadora" },
-      { frase: "LA EXCELENCIA NO ES UN DESTINO, ES UN VIAJE DE MEJORA CONTINUA.", cita: "KAIZEN" },
-      { frase: "LO QUE HACES HOY PUEDE MEJORAR TODOS TUS MAÑANAS.", cita: "Ralph Marston" },
-      { frase: "LA MENTE QUE SE ABRE A UNA NUEVA IDEA NUNCA VUELVE A SU TAMAÑO ORIGINAL.", cita: "Albert Einstein" },
-      { frase: "SI QUIERES IR RÁPIDO, VE SOLO. SI QUIERES IR LEJOS, VE ACOMPAÑADO.", cita: "Proverbio Africano" },
-      { frase: "EL MEJOR MOMENTO PARA PLANTAR UN ÁRBOL FUE HACE 20 AÑOS. EL SEGUNDO MEJOR MOMENTO ES HOY.", cita: "Proverbio Chino" },
-      { frase: "LA RUTA AL ÉXITO ESTÁ SIEMPRE EN CONSTRUCCIÓN.", cita: "Lily Tomlin" },
-      { frase: "HAZ DE CADA DÍA TU OBRA MAESTRA.", cita: "John Wooden" },
-      { frase: "NADA ES IMPOSIBLE, LA MISMA PALABRA DICE 'SOY POSIBLE'.", cita: "Audrey Hepburn" },
-      { frase: "EL LIDERAZGO ES LA CAPACIDAD DE TRANSFORMAR LA VISIÓN EN REALIDAD.", cita: "Warren Bennis" }
+      { frase: "CADA GRAN LOGRO FUE ALGUNA VEZ CONSIDERADO IMPOSIBLE.", cita: "Pensamiento Estratégico" }
     ];
 
-    // 18 MOTION ENTRANCE ANIMATIONS
+    // ANIMATIONS LIST
     const ANIMATIONS_LIST = [
       { id: 'slide', title: 'Deslizar desde abajo (Slide Up)' },
       { id: 'slideLeft', title: 'Deslizar desde la izquierda' },
@@ -597,21 +595,14 @@
       { id: 'slideDown', title: 'Deslizar desde arriba' },
       { id: 'fade', title: 'Desvanecer (Fade In/Out)' },
       { id: 'zoom', title: 'Zoom a Fondo (Ken Burns)' },
-      { id: 'zoomText', title: 'Zoom In/Out General' },
-      { id: 'sequential', title: 'Aparición Escalonada' },
-      { id: 'typewriter', title: 'Máquina de Escribir' },
+      { id: 'sequential', title: 'Aparición Escalonada Secuencial' },
       { id: 'bounce', title: 'Rebote Elástico Suave' },
-      { id: 'rotate', title: 'Rotación Elegante' },
       { id: 'blur', title: 'Desenfoque a Claridad' },
       { id: 'flipX', title: 'Giro 3D Flotante' },
-      { id: 'curtain', title: 'Apertura de Cortina' },
-      { id: 'shimmer', title: 'Destello Luminoso' },
-      { id: 'wave', title: 'Ondulación Suave' },
-      { id: 'spiral', title: 'Espiral Sutil' },
-      { id: 'none', title: 'Sin Transición (Estático)' }
+      { id: 'none', title: 'Sin Transición (Estático Fijo)' }
     ];
 
-    // 28 PARTICLE & FX OVERLAYS
+    // 28 PARTICLE FX LIST
     const FX_OVERLAYS_LIST = [
       { id: 'none', title: 'Sin Efectos FX' },
       { id: 'sparkles', title: 'Destellos y Estrellas' },
@@ -625,11 +616,11 @@
       { id: 'fireflies', title: 'Luciérnagas Nocturnas' },
       { id: 'lensflare', title: 'Destellos de Lente' },
       { id: 'bokeh', title: 'Esferas Bokeh' },
-      { id: 'aurora', title: 'Aurora Boreal' },
-      { id: 'lightleaks', title: 'Fugas de Luz' },
-      { id: 'matrices', title: 'Lluvia de Estrellas Caídas' },
+      { id: 'aurora', title: 'Aurora Boreal Overlay' },
+      { id: 'lightleaks', title: 'Fugas de Luz Warm' },
+      { id: 'matrices', title: 'Lluvia de Estrellas' },
       { id: 'vignette', title: 'Viñeta Cinematográfica' },
-      { id: 'cinematicbars', title: 'Franjas Anamórficas' },
+      { id: 'cinematicbars', title: 'Franjas Anamórficas Top/Bottom' },
       { id: 'glitch', title: 'Resplandor Neón Contorno' },
       { id: 'proc_aurora_overlay', title: 'Aurora Overlay Transparente' },
       { id: 'proc_waves_overlay', title: 'Océano de Ondas Overlay' },
@@ -643,7 +634,7 @@
       { id: 'proc_ember_rise_overlay', title: 'Chispas de Fuego Overlay' }
     ];
 
-    // 20 PROCEDURAL CANVAS BACKGROUNDS
+    // 20 PROCEDURAL BACKGROUNDS LIST
     const PROCEDURAL_BG_LIST = [
       { id: 'proc_aurora', title: '1. Aurora Boreal' },
       { id: 'proc_clouds', title: '2. Nubes Místicas' },
@@ -667,27 +658,30 @@
       { id: 'proc_soft_smoke', title: '20. Incienso Místico' }
     ];
 
-    // GLOBAL APP STATE
+    // STOCK VIDEOS DEMO LIST
+    const STOCK_VIDEOS_LIST = [
+      { id: 'vid_abstract_neon', title: 'Partículas Neón Abstractas', url: 'https://assets.mixkit.co/videos/preview/mixkit-abstract-fast-flowing-neon-lines-17581-large.mp4' },
+      { id: 'vid_ocean_waves', title: 'Océano Nocturno Suave', url: 'https://assets.mixkit.co/videos/preview/mixkit-dramatic-dark-clouds-over-a-calm-ocean-43015-large.mp4' },
+      { id: 'vid_stars_space', title: 'Espacio Estelar en Movimiento', url: 'https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-background-1610-large.mp4' }
+    ];
+
+    // APP GLOBAL STATE
     let currentZoom = 1.0;
     let selectedBgKey = 'video_proc_aurora';
     let selectedAnimationKey = 'slide';
     let selectedFxKey = 'none';
-    let userCustomBgImg = null;
-    let userCustomLogoImg = null;
-    let currentPhraseBankIndex = 0;
+    let activeBgMode = 'photos'; // 'photos', 'videos', 'code'
 
-    // Timeline Playback State
+    let userCustomBgImg = null;
+    let userCustomBgVideo = null;
+    let userCustomLogoImg = null;
+
     let isTimelinePlaying = false;
     let timelineAnimFrameId = null;
     let timelineStartTime = null;
 
-    // Audio State
     let activeAudioTrack = null;
     let audioPreviewEl = null;
-
-    // Undo / Redo History Stack
-    let historyStack = [];
-    let historyIndex = -1;
 
     // INITIALIZATION
     window.onload = function() {
@@ -695,9 +689,7 @@
         initPhraseBank();
         renderMotionAnimList();
         renderFxOverlayList();
-        renderProceduralBgGrid();
-        searchPhotos(); // Initial photos query
-        pushHistoryState();
+        setBgMode('photos');
         safeUpdateCanvas();
         fitStageZoom();
         window.addEventListener('resize', fitStageZoom);
@@ -706,162 +698,91 @@
       }
     };
 
-    // TOAST NOTIFICATIONS (replaces alert)
-    function showToast(msg, type = 'info') {
-      const container = document.getElementById('toastContainer');
-      if (!container) return;
-      const toast = document.createElement('div');
-      toast.className = `px-4 py-2.5 rounded-xl shadow-2xl text-xs font-bold text-white transition-all transform duration-300 pointer-events-auto flex items-center gap-2 ${type === 'error' ? 'bg-rose-600' : (type === 'success' ? 'bg-emerald-600' : 'bg-cyan-600')}`;
-      toast.innerHTML = `<i class="fa-solid ${type === 'error' ? 'fa-circle-exclamation' : (type === 'success' ? 'fa-circle-check' : 'fa-circle-info')}"></i> ${msg}`;
-      container.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
-    }
-
-    // UNDO / REDO HISTORY SYSTEM
-    function pushHistoryState() {
-      try {
-        const state = {
-          phrase: document.getElementById('inputPhrase').value,
-          fontPhrase: document.getElementById('selectFontPhrase').value,
-          colorPhrase: document.getElementById('colorPhrase').value,
-          citation: document.getElementById('inputCitation').value,
-          fontCitation: document.getElementById('selectFontCitation').value,
-          colorCitation: document.getElementById('colorCitation').value,
-          handle: document.getElementById('inputHandle').value,
-          showStamp: document.getElementById('chkShowStamp').checked,
-          stampText: document.getElementById('inputStampText').value,
-          stampSub: document.getElementById('inputStampSub').value,
-          showLogo: document.getElementById('chkShowLogo').checked,
-          logoStyle: document.getElementById('selectLogo').value,
-          shapeStyle: document.getElementById('selectShapeStyle').value,
-          colorShape: document.getElementById('colorShape').value,
-          bgKey: selectedBgKey,
-          animKey: selectedAnimationKey,
-          fxKey: selectedFxKey,
-          ratio: document.getElementById('selectRatio').value
-        };
-
-        if (historyIndex < historyStack.length - 1) {
-          historyStack = historyStack.slice(0, historyIndex + 1);
-        }
-        historyStack.push(JSON.stringify(state));
-        historyIndex = historyStack.length - 1;
-      } catch (e) {
-        console.warn("Error pushing history state:", e);
+    // UPDATE FONT SIZE OVERRIDE LABELS
+    function updateFontSizeLabel(type, val) {
+      const lbl = document.getElementById(`label${type}Size`);
+      if (!lbl) return;
+      if (parseInt(val, 10) === 0) {
+        lbl.innerText = 'Auto';
+      } else {
+        lbl.innerText = `${val}px`;
       }
     }
 
-    function undo() {
-      if (historyIndex > 0) {
-        historyIndex--;
-        restoreHistoryState(historyStack[historyIndex]);
-      }
+    function resetFontSize(type) {
+      const slider = document.getElementById(`slider${type}Size`);
+      if (slider) slider.value = 0;
+      updateFontSizeLabel(type, 0);
+      safeUpdateCanvas();
     }
 
-    function redo() {
-      if (historyIndex < historyStack.length - 1) {
-        historyIndex++;
-        restoreHistoryState(historyStack[historyIndex]);
-      }
-    }
-
-    function restoreHistoryState(jsonStr) {
-      if (!jsonStr) return;
-      try {
-        const state = JSON.parse(jsonStr);
-        document.getElementById('inputPhrase').value = state.phrase || '';
-        document.getElementById('selectFontPhrase').value = state.fontPhrase || 'Montserrat';
-        document.getElementById('colorPhrase').value = state.colorPhrase || '#ffffff';
-        document.getElementById('inputCitation').value = state.citation || '';
-        document.getElementById('selectFontCitation').value = state.fontCitation || 'Lora';
-        document.getElementById('colorCitation').value = state.colorCitation || '#38bdf8';
-        document.getElementById('inputHandle').value = state.handle || '';
-        document.getElementById('chkShowStamp').checked = !!state.showStamp;
-        document.getElementById('inputStampText').value = state.stampText || 'SUMMIT2026';
-        document.getElementById('inputStampSub').value = state.stampSub || 'INNOVACIÓN Y FUTURO';
-        document.getElementById('chkShowLogo').checked = !!state.showLogo;
-        document.getElementById('selectLogo').value = state.logoStyle || 'blanco';
-        document.getElementById('selectShapeStyle').value = state.shapeStyle || 'none';
-        document.getElementById('colorShape').value = state.colorShape || '#00838f';
-        document.getElementById('selectRatio').value = state.ratio || '4:5';
-
-        selectedBgKey = state.bgKey || 'video_proc_aurora';
-        selectedAnimationKey = state.animKey || 'slide';
-        selectedFxKey = state.fxKey || 'none';
-
-        toggleStampInputs();
-        handleLogoSelectChange();
-        fitStageZoom();
-        safeUpdateCanvas();
-      } catch (e) {
-        console.error("Error restoring history state:", e);
-      }
-    }
-
-    // SAFE CANVAS UPDATE ENGINE
+    // SAFE CANVAS RENDER DISPATCHER
     function safeUpdateCanvas(currentTimeSec = null) {
       try {
         const canvas = document.getElementById('mainCanvas');
         if (!canvas) return;
 
         const duration = parseFloat(document.getElementById('selectDuration').value) || 15;
-        const time = currentTimeSec !== null ? currentTimeSec : parseFloat(document.getElementById('timelineScrubber').value) || 0;
+        // If not playing, default to static fully rendered composition
+        const isStaticMode = !isTimelinePlaying && currentTimeSec === null;
+        const time = isStaticMode ? 3.0 : (currentTimeSec !== null ? currentTimeSec : parseFloat(document.getElementById('timelineScrubber').value) || 0);
 
         const phrase = document.getElementById('inputPhrase').value || '';
         const citation = document.getElementById('inputCitation').value || '';
         const fontPhrase = document.getElementById('selectFontPhrase').value;
         const fontCitation = document.getElementById('selectFontCitation').value;
-        const colorPhrase = document.getElementById('colorPhrase').value;
-        const colorCitation = document.getElementById('colorCitation').value;
         const handle = document.getElementById('inputHandle').value || '';
-
         const logoStyle = document.getElementById('selectLogo').value;
         const showLogo = document.getElementById('chkShowLogo').checked;
 
         const showStamp = document.getElementById('chkShowStamp').checked;
         const stampText = document.getElementById('inputStampText').value || '';
         const stampSub = document.getElementById('inputStampSub').value || '';
-        const stampGlow = document.getElementById('colorStampGlow').value || '#00838f';
-
-        const shapeStyle = document.getElementById('selectShapeStyle').value;
-        const colorShape = document.getElementById('colorShape').value;
-        const shapeOpacity = parseFloat(document.getElementById('rangeShapeOpacity').value) || 0.6;
 
         const ratio = document.getElementById('selectRatio').value;
+        const showContainer = document.getElementById('chkShowContainerCard').checked;
+        const shapeStyle = document.getElementById('selectShapeStyle').value;
+
+        // Manual Size Overrides
+        const phraseSizeOverride = parseInt(document.getElementById('sliderPhraseSize').value, 10);
+        const citationSizeOverride = parseInt(document.getElementById('sliderCitationSize').value, 10);
+        const handleSize = parseInt(document.getElementById('sliderHandleSize').value, 10);
+        const logoScale = parseInt(document.getElementById('sliderLogoScale').value, 10);
+        const stampTitleSize = parseInt(document.getElementById('sliderStampTitleSize').value, 10);
+        const stampGap = parseInt(document.getElementById('sliderStampGap').value, 10);
+
+        const cardOpacity = parseInt(document.getElementById('sliderCardOpacity').value, 10) / 100;
+        const cardRadius = parseInt(document.getElementById('sliderCardRadius').value, 10);
+        const holdTime = parseFloat(document.getElementById('sliderHoldTime').value) || 6;
 
         drawStudioCanvasCard(canvas, {
-          phrase, citation, fontPhrase, fontCitation, colorPhrase, colorCitation, handle,
-          logoStyle, showLogo,
-          showStamp, stampText, stampSub, stampGlow,
-          shapeStyle, colorShape, shapeOpacity,
-          ratio,
-          bgKey: selectedBgKey,
-          animKey: selectedAnimationKey,
-          fxKey: selectedFxKey,
-          time, duration
+          phrase, citation, fontPhrase, fontCitation, handle,
+          logoStyle, showLogo, logoScale,
+          showStamp, stampText, stampSub, stampTitleSize, stampGap,
+          ratio, showContainer, shapeStyle, cardOpacity, cardRadius,
+          phraseSizeOverride, citationSizeOverride, handleSize,
+          bgKey: selectedBgKey, animKey: selectedAnimationKey, fxKey: selectedFxKey,
+          time, duration, holdTime, isStaticMode
         });
       } catch (e) {
-        console.error("Error during safeUpdateCanvas:", e);
+        console.error("Canvas draw error:", e);
       }
     }
 
-    // STAGE CANVAS RENDERING ENGINE
+    // MAIN STUDIO CANVAS RENDERING ENGINE
     function drawStudioCanvasCard(canvas, opts) {
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      // 1. Dimensions based on Aspect Ratio
-      canvas.width = 1080;
-      let targetHeight = 1350; // 4:5
-      if (opts.ratio === '9:16') targetHeight = 1920;
-      if (opts.ratio === '1:1') targetHeight = 1080;
-      if (opts.ratio === '16:9') { canvas.width = 1920; targetHeight = 1080; }
-      canvas.height = targetHeight;
+      // 1. DIMENSIONS & RATIOS (16:9 BANNER INCLUDED)
+      let targetW = 1080, targetH = 1350; // 4:5
+      if (opts.ratio === '9:16') { targetW = 1080; targetH = 1920; }
+      else if (opts.ratio === '1:1') { targetW = 1080; targetH = 1080; }
+      else if (opts.ratio === '16:9') { targetW = 1920; targetH = 1080; } // Horizontal Banner
 
-      // Update CSS Box aspect ratio
+      canvas.width = targetW;
+      canvas.height = targetH;
+
       const box = document.getElementById('canvasContainerBox');
       if (box) {
         if (opts.ratio === '9:16') box.style.aspectRatio = '9 / 16';
@@ -873,152 +794,162 @@
       const time = opts.time || 0;
       const dur = opts.duration || 15;
 
-      // Transition Interpolation
-      const inDur = 1.5;
-      const outDur = 1.5;
-      let inProgress = Math.min(1.0, time / inDur);
-      let outProgress = time > (dur - outDur) ? Math.min(1.0, (time - (dur - outDur)) / outDur) : 0;
-      const pIn = 1 - Math.pow(1 - inProgress, 3);
-      const pOut = 1 - Math.pow(1 - outProgress, 3);
-      const netAlpha = Math.max(0, pIn * (1 - pOut));
+      // 2. TIMING & SEQUENTIAL PROGRESSIONS
+      let pLogo = 1.0, pCard = 1.0, pPhrase = 1.0, pCitation = 1.0, pStamp = 1.0, pHandle = 1.0;
 
-      // 2. Render Background
+      if (!opts.isStaticMode && opts.animKey !== 'none') {
+        const tLogo = Math.max(0, Math.min(1.0, (time - 0.0) / 0.8));
+        const tCard = Math.max(0, Math.min(1.0, (time - 0.2) / 0.8));
+        const tPhrase = Math.max(0, Math.min(1.0, (time - 0.5) / 1.0));
+        const tCitation = Math.max(0, Math.min(1.0, (time - 0.8) / 0.8));
+        const tStamp = Math.max(0, Math.min(1.0, (time - 1.1) / 0.8));
+        const tHandle = Math.max(0, Math.min(1.0, (time - 1.3) / 0.8));
+
+        // Ease Out Cubic
+        pLogo = 1 - Math.pow(1 - tLogo, 3);
+        pCard = 1 - Math.pow(1 - tCard, 3);
+        pPhrase = 1 - Math.pow(1 - tPhrase, 3);
+        pCitation = 1 - Math.pow(1 - tCitation, 3);
+        pStamp = 1 - Math.pow(1 - tStamp, 3);
+        pHandle = 1 - Math.pow(1 - tHandle, 3);
+
+        // Soft Exit after hold duration
+        const exitStart = Math.min(dur - 1.2, 1.5 + opts.holdTime);
+        if (time > exitStart) {
+          const exitProgress = Math.min(1.0, (time - exitStart) / 1.2);
+          const softExit = 1 - Math.pow(exitProgress, 2);
+          pLogo *= softExit; pCard *= softExit; pPhrase *= softExit;
+          pCitation *= softExit; pStamp *= softExit; pHandle *= softExit;
+        }
+      }
+
+      // 3. DRAW BACKGROUND
       if (opts.bgKey.startsWith('video_proc_')) {
-        drawProceduralBg(ctx, canvas.width, canvas.height, opts.bgKey, time);
+        drawProceduralBg(ctx, targetW, targetH, opts.bgKey, time);
       } else if (opts.bgKey === 'user_custom' && userCustomBgImg) {
-        drawCoverImage(ctx, userCustomBgImg, canvas.width, canvas.height);
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        drawCoverImage(ctx, userCustomBgImg, targetW, targetH);
+        ctx.fillStyle = 'rgba(0,0,0,0.45)';
+        ctx.fillRect(0, 0, targetW, targetH);
+      } else if (opts.bgKey === 'user_custom_video' && userCustomBgVideo) {
+        drawCoverImage(ctx, userCustomBgVideo, targetW, targetH);
+        ctx.fillStyle = 'rgba(0,0,0,0.40)';
+        ctx.fillRect(0, 0, targetW, targetH);
       } else if (opts.bgKey.startsWith('stock_photo_') && window.stockPhotoImgs && window.stockPhotoImgs[opts.bgKey]) {
-        drawCoverImage(ctx, window.stockPhotoImgs[opts.bgKey], canvas.width, canvas.height);
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.50)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      } else if (opts.bgKey === 'custom_gradient') {
-        const g1 = document.getElementById('colorGrad1').value;
-        const g2 = document.getElementById('colorGrad2').value;
-        const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-        grad.addColorStop(0, g1);
-        grad.addColorStop(1, g2);
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        drawCoverImage(ctx, window.stockPhotoImgs[opts.bgKey], targetW, targetH);
+        ctx.fillStyle = 'rgba(0,0,0,0.52)';
+        ctx.fillRect(0, 0, targetW, targetH);
+      } else if (opts.bgKey.startsWith('stock_video_') && window.stockVideoElements && window.stockVideoElements[opts.bgKey]) {
+        const vEl = window.stockVideoElements[opts.bgKey];
+        drawCoverImage(ctx, vEl, targetW, targetH);
+        ctx.fillStyle = 'rgba(0,0,0,0.45)';
+        ctx.fillRect(0, 0, targetW, targetH);
       } else {
-        const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        grad.addColorStop(0, '#0f172a');
-        grad.addColorStop(1, '#1e293b');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const grad = ctx.createLinearGradient(0, 0, 0, targetH);
+        grad.addColorStop(0, '#0f172a'); grad.addColorStop(1, '#1e293b');
+        ctx.fillStyle = grad; ctx.fillRect(0, 0, targetW, targetH);
       }
 
-      // Vignette Gradient Overlays
-      const topGrad = ctx.createLinearGradient(0, 0, 0, 260);
-      topGrad.addColorStop(0, 'rgba(0, 0, 0, 0.75)');
-      topGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = topGrad;
-      ctx.fillRect(0, 0, canvas.width, 260);
+      // 4. DRAW FX OVERLAY
+      drawFxParticleOverlay(ctx, targetW, targetH, opts.fxKey, time);
 
-      const botGrad = ctx.createLinearGradient(0, canvas.height - 320, 0, canvas.height);
-      botGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
-      botGrad.addColorStop(1, 'rgba(0, 0, 0, 0.80)');
-      ctx.fillStyle = botGrad;
-      ctx.fillRect(0, canvas.height - 320, canvas.width, 320);
+      // 5. MARGIN & POSITIONS CALCULATION (RATIO ADAPTIVE)
+      let topMargin = opts.ratio === '9:16' ? 220 : (opts.ratio === '16:9' ? 80 : 110);
+      let bottomMargin = opts.ratio === '9:16' ? 260 : (opts.ratio === '16:9' ? 90 : 120);
 
-      // 3. Render Shapes / Frames
-      drawCanvasShapeFrame(ctx, canvas.width, canvas.height, opts.shapeStyle, opts.colorShape, opts.shapeOpacity);
+      let logoY = topMargin;
+      let handleY = targetH - bottomMargin;
+      let stampY = handleY - opts.stampGap;
 
-      // 4. Render FX Overlay
-      drawFxParticleOverlay(ctx, canvas.width, canvas.height, opts.fxKey, time);
+      // Container Card Bounds Calculation
+      let cardTop = logoY - 25;
+      let cardBottom = stampY + 45;
+      let cardWidth = opts.ratio === '16:9' ? targetW * 0.75 : targetW - 160;
+      let cardLeft = (targetW - cardWidth) / 2;
+      let cardHeight = Math.max(300, cardBottom - cardTop);
 
-      // Motion Offsets
-      let logoAlpha = netAlpha, phraseAlpha = netAlpha, handleAlpha = netAlpha;
-      let phraseYOffset = (1 - pIn) * 60 - (pOut * 40);
-      let phraseXOffset = 0;
-
-      if (opts.animKey === 'slideLeft') {
-        phraseXOffset = (1 - pIn) * (-250) + (pOut * 250);
-      } else if (opts.animKey === 'none') {
-        logoAlpha = phraseAlpha = handleAlpha = 1.0;
-        phraseYOffset = phraseXOffset = 0;
-      }
-
-      // 5. Render Logo
-      let logoY = opts.ratio === '9:16' ? 200 : (opts.ratio === '16:9' ? 80 : 110);
-      if (opts.showLogo) {
+      // 6. RENDER CONTAINER CARD (TARJETA CONTENEDORA DE CONTENIDO)
+      if (opts.showContainer && pCard > 0.01) {
         ctx.save();
-        ctx.globalAlpha = logoAlpha;
-        if (opts.logoStyle === 'custom' && userCustomLogoImg) {
-          const lw = 150;
-          const lh = lw * (userCustomLogoImg.height / userCustomLogoImg.width || 1);
-          ctx.drawImage(userCustomLogoImg, (canvas.width - lw) / 2, logoY, lw, lh);
-        } else {
-          const fillCol = opts.logoStyle === 'negro' ? '#000000' : (opts.logoStyle === 'turquesa' ? '#00838f' : '#ffffff');
-          ctx.beginPath();
-          ctx.arc(canvas.width / 2, logoY + 22, 22, 0, Math.PI * 2);
-          ctx.fillStyle = fillCol;
-          ctx.shadowColor = 'rgba(0,131,143,0.6)';
+        ctx.globalAlpha = pCard;
+
+        if (opts.shapeStyle === 'glass') {
+          ctx.fillStyle = `rgba(15, 23, 42, ${opts.cardOpacity})`;
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
+          ctx.lineWidth = 2;
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+          ctx.shadowBlur = 24;
+        } else if (opts.shapeStyle === 'minimal_dark') {
+          ctx.fillStyle = `rgba(5, 8, 16, ${Math.min(0.95, opts.cardOpacity + 0.2)})`;
+          ctx.strokeStyle = 'rgba(51, 65, 85, 0.5)';
+          ctx.lineWidth = 1;
+        } else if (opts.shapeStyle === 'neon_cyan') {
+          ctx.fillStyle = `rgba(15, 23, 42, ${opts.cardOpacity})`;
+          ctx.strokeStyle = '#38bdf8';
+          ctx.lineWidth = 3;
+          ctx.shadowColor = '#00838f';
+          ctx.shadowBlur = 18;
+        } else if (opts.shapeStyle === 'gold_border') {
+          ctx.fillStyle = `rgba(20, 15, 5, ${opts.cardOpacity})`;
+          ctx.strokeStyle = '#fbbf24';
+          ctx.lineWidth = 2.5;
+          ctx.shadowColor = 'rgba(251, 191, 36, 0.4)';
           ctx.shadowBlur = 12;
+        } else {
+          ctx.fillStyle = `rgba(15, 23, 42, ${opts.cardOpacity})`;
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+          ctx.lineWidth = 1.5;
+        }
+
+        drawRoundedRect(ctx, cardLeft, cardTop, cardWidth, cardHeight, opts.cardRadius);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 7. RENDER LOGO (REDUCED SIZE FIX)
+      if (opts.showLogo && pLogo > 0.01) {
+        ctx.save();
+        ctx.globalAlpha = pLogo;
+        const radius = opts.logoScale || 18;
+
+        if (opts.logoStyle === 'custom' && userCustomLogoImg) {
+          const lw = radius * 4;
+          const lh = lw * (userCustomLogoImg.height / userCustomLogoImg.width || 1);
+          ctx.drawImage(userCustomLogoImg, (targetW - lw) / 2, logoY, lw, lh);
+        } else {
+          const fillCol = opts.logoStyle === 'negro' ? '#000000' : (opts.logoStyle === 'blanco' ? '#ffffff' : '#00838f');
+          ctx.beginPath();
+          ctx.arc(targetW / 2, logoY + radius, radius, 0, Math.PI * 2);
+          ctx.fillStyle = fillCol;
+          ctx.shadowColor = 'rgba(0,131,143,0.5)';
+          ctx.shadowBlur = 8;
           ctx.fill();
 
-          ctx.font = '900 11px "Montserrat", sans-serif';
-          ctx.fillStyle = opts.logoStyle === 'negro' ? '#ffffff' : '#0f172a';
+          ctx.font = `900 ${Math.max(9, Math.round(radius * 0.55))}px "Montserrat", sans-serif`;
+          ctx.fillStyle = opts.logoStyle === 'blanco' ? '#0f172a' : '#ffffff';
           ctx.textAlign = 'center';
-          ctx.fillText('PRO', canvas.width / 2, logoY + 26);
+          ctx.fillText('PRO', targetW / 2, logoY + radius + (radius * 0.2));
         }
         ctx.restore();
       }
 
-      // 6. Render Handle
-      let handleY = canvas.height - (opts.ratio === '9:16' ? 280 : (opts.ratio === '16:9' ? 80 : 90));
-      let stampY = handleY - 60;
-
-      if (opts.handle && handleAlpha > 0.01) {
+      // 8. RENDER MAIN PHRASE & CITATION
+      if (opts.phrase && pPhrase > 0.01) {
         ctx.save();
-        ctx.globalAlpha = handleAlpha;
-        ctx.font = '600 22px "Montserrat", sans-serif';
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
+        ctx.globalAlpha = pPhrase;
         ctx.textAlign = 'center';
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
-        ctx.shadowBlur = 8;
-        ctx.fillText(opts.handle, canvas.width / 2, handleY);
-        ctx.restore();
-      }
-
-      // 7. Render Campaign Stamp (Sello de Campaña)
-      if (opts.showStamp && opts.stampText) {
-        ctx.save();
-        ctx.globalAlpha = netAlpha;
-        ctx.textAlign = 'center';
-
-        ctx.font = '900 44px "Montserrat", "Outfit", sans-serif';
         ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = opts.stampGlow || '#00838f';
-        ctx.shadowBlur = 18;
-        ctx.fillText(opts.stampText.toUpperCase(), canvas.width / 2, stampY);
-
-        if (opts.stampSub) {
-          ctx.font = '700 15px "Montserrat", sans-serif';
-          ctx.fillStyle = '#38bdf8';
-          ctx.shadowBlur = 8;
-          ctx.fillText(opts.stampSub.toUpperCase(), canvas.width / 2, stampY + 24);
-        }
-        ctx.restore();
-      }
-
-      // 8. Render Main Phrase & Citation
-      if (opts.phrase && phraseAlpha > 0.01) {
-        ctx.save();
-        ctx.globalAlpha = phraseAlpha;
-        ctx.textAlign = 'center';
-        ctx.fillStyle = opts.colorPhrase || '#ffffff';
         ctx.shadowColor = 'rgba(0, 0, 0, 0.95)';
-        ctx.shadowBlur = 16;
+        ctx.shadowBlur = 12;
 
-        const fontSize = Math.max(32, Math.min(66, Math.round(1080 / Math.sqrt(opts.phrase.length + 10))));
+        let fontSize = opts.phraseSizeOverride > 0 ? opts.phraseSizeOverride : Math.max(28, Math.min(62, Math.round(1100 / Math.sqrt(opts.phrase.length + 10))));
+        if (opts.ratio === '16:9') fontSize *= 0.85;
+
         ctx.font = `700 ${fontSize}px "${opts.fontPhrase}", sans-serif`;
 
-        const maxWidth = canvas.width - 240;
+        const maxWidth = cardWidth - 80;
         const words = opts.phrase.toUpperCase().split(' ');
-        let lines = [];
-        let curLine = '';
+        let lines = [], curLine = '';
 
         words.forEach(w => {
           let test = curLine + w + ' ';
@@ -1031,68 +962,162 @@
         });
         lines.push(curLine.trim());
 
-        const lineHeight = fontSize * 1.25;
-        let startY = (canvas.height / 2) - ((lines.length * lineHeight) / 2) + phraseYOffset;
+        const lineHeight = fontSize * 1.22;
+        let startY = (cardTop + (cardHeight / 2)) - ((lines.length * lineHeight) / 2) - 10;
 
         lines.forEach((l, idx) => {
-          ctx.fillText(l, (canvas.width / 2) + phraseXOffset, startY + (idx * lineHeight));
+          ctx.fillText(l, targetW / 2, startY + (idx * lineHeight));
         });
 
         // Citation
-        if (opts.citation) {
-          ctx.font = `italic 600 28px "${opts.fontCitation}", serif`;
-          ctx.fillStyle = opts.colorCitation || '#38bdf8';
-          ctx.shadowBlur = 8;
-          ctx.fillText(`— ${opts.citation}`, canvas.width / 2, startY + (lines.length * lineHeight) + 36);
+        if (opts.citation && pCitation > 0.01) {
+          let citSize = opts.citationSizeOverride > 0 ? opts.citationSizeOverride : Math.round(fontSize * 0.48);
+          ctx.font = `italic 600 ${citSize}px "${opts.fontCitation}", serif`;
+          ctx.fillStyle = '#e2e8f0';
+          ctx.shadowBlur = 6;
+          ctx.fillText(`— ${opts.citation}`, targetW / 2, startY + (lines.length * lineHeight) + (citSize * 0.9));
         }
 
         ctx.restore();
       }
-    }
 
-    // DRAW CANVAS SHAPE / FRAME
-    function drawCanvasShapeFrame(ctx, w, h, style, color, opacity) {
-      if (!style || style === 'none') return;
-      ctx.save();
-      ctx.globalAlpha = opacity;
-      ctx.strokeStyle = color;
+      // 9. RENDER CAMPAIGN STAMP
+      if (opts.showStamp && opts.stampText && pStamp > 0.01) {
+        ctx.save();
+        ctx.globalAlpha = pStamp;
+        ctx.textAlign = 'center';
 
-      if (style === 'frame_thin') {
-        ctx.lineWidth = 4;
-        ctx.strokeRect(40, 40, w - 80, h - 80);
-      } else if (style === 'frame_double') {
-        ctx.lineWidth = 3;
-        ctx.strokeRect(35, 35, w - 70, h - 70);
-        ctx.strokeRect(45, 45, w - 90, h - 90);
-      } else if (style === 'divider_line') {
-        ctx.lineWidth = 4;
-        ctx.beginPath();
-        ctx.moveTo(w * 0.3, h - 160);
-        ctx.lineTo(w * 0.7, h - 160);
-        ctx.stroke();
-      } else if (style === 'box_glass') {
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.5)';
-        ctx.roundRect ? ctx.roundRect(80, 180, w - 160, h - 360, 24) : ctx.fillRect(80, 180, w - 160, h - 360);
-        ctx.fill();
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        const titleSize = opts.stampTitleSize || 42;
+        ctx.font = `900 ${titleSize}px "Montserrat", "Outfit", sans-serif`;
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = '#00838f';
+        ctx.shadowBlur = 14;
+        ctx.fillText(opts.stampText.toUpperCase(), targetW / 2, stampY);
+
+        if (opts.stampSub) {
+          ctx.font = `700 ${Math.round(titleSize * 0.36)}px "Montserrat", sans-serif`;
+          ctx.fillStyle = '#38bdf8';
+          ctx.shadowBlur = 6;
+          ctx.fillText(opts.stampSub.toUpperCase(), targetW / 2, stampY + (titleSize * 0.48));
+        }
+        ctx.restore();
       }
-      ctx.restore();
+
+      // 10. RENDER HANDLE / USER (@usuario)
+      if (opts.handle && pHandle > 0.01) {
+        ctx.save();
+        ctx.globalAlpha = pHandle;
+        ctx.font = `600 ${opts.handleSize || 22}px "Montserrat", sans-serif`;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
+        ctx.textAlign = 'center';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
+        ctx.shadowBlur = 8;
+        ctx.fillText(opts.handle, targetW / 2, handleY);
+        ctx.restore();
+      }
     }
 
-    // STOCK PHOTOS SEARCH ENGINE
+    // DRAW ROUNDED RECTANGLE HELPER
+    function drawRoundedRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    // MEDIA MODE SWITCHER (PHOTOS vs VIDEOS vs CODE)
+    function setBgMode(mode) {
+      activeBgMode = mode;
+      document.getElementById('btnBgModePhotos').className = `flex-1 py-1 rounded ${mode === 'photos' ? 'bg-cyan-600 text-white' : 'text-slate-400 hover:text-white'}`;
+      document.getElementById('btnBgModeVideos').className = `flex-1 py-1 rounded ${mode === 'videos' ? 'bg-cyan-600 text-white' : 'text-slate-400 hover:text-white'}`;
+      document.getElementById('btnBgModeCode').className = `flex-1 py-1 rounded ${mode === 'code' ? 'bg-cyan-600 text-white' : 'text-slate-400 hover:text-white'}`;
+
+      const searchBox = document.getElementById('bgPhotoSearchBox');
+      if (mode === 'photos') searchBox.classList.remove('hidden');
+      else searchBox.classList.add('hidden');
+
+      renderBgGrid();
+    }
+
+    // RENDER MEDIA & BACKGROUND GRID
+    async function renderBgGrid() {
+      const container = document.getElementById('bgThumbnailGridContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (activeBgMode === 'code') {
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-2 gap-2';
+
+        PROCEDURAL_BG_LIST.forEach(p => {
+          const key = 'video_' + p.id;
+          const card = document.createElement('button');
+          card.className = `p-2 rounded-lg border text-left flex items-center justify-between transition ${selectedBgKey === key ? 'border-cyan-400 bg-cyan-950/60' : 'border-slate-800 bg-slate-900 hover:border-slate-700'}`;
+          card.innerHTML = `<span class="text-xs font-bold text-white">${p.title}</span><i class="fa-solid fa-code text-cyan-400 text-xs"></i>`;
+          card.onclick = () => {
+            selectedBgKey = key;
+            safeUpdateCanvas();
+            renderBgGrid();
+          };
+          grid.appendChild(card);
+        });
+        container.appendChild(grid);
+      } else if (activeBgMode === 'videos') {
+        window.stockVideoElements = window.stockVideoElements || {};
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-1 gap-2';
+
+        STOCK_VIDEOS_LIST.forEach(v => {
+          const key = 'stock_video_' + v.id;
+          if (!window.stockVideoElements[key]) {
+            const vid = document.createElement('video');
+            vid.crossOrigin = 'anonymous';
+            vid.src = v.url;
+            vid.loop = true;
+            vid.muted = true;
+            vid.playsInline = true;
+            vid.play().catch(e => {});
+            window.stockVideoElements[key] = vid;
+          }
+
+          const card = document.createElement('button');
+          card.className = `p-2 rounded-lg border text-left flex items-center justify-between transition ${selectedBgKey === key ? 'border-cyan-400 bg-cyan-950/60' : 'border-slate-800 bg-slate-900 hover:border-slate-700'}`;
+          card.innerHTML = `<div class="flex items-center gap-2"><i class="fa-solid fa-circle-play text-cyan-400 text-sm"></i><span class="text-xs font-bold text-white">${v.title}</span></div><span class="text-[9px] text-slate-400 font-mono">MP4</span>`;
+          card.onclick = () => {
+            selectedBgKey = key;
+            safeUpdateCanvas();
+            renderBgGrid();
+          };
+          grid.appendChild(card);
+        });
+        container.appendChild(grid);
+      } else {
+        searchPhotos();
+      }
+    }
+
+    // STOCK PHOTO SEARCH ENGINE
     async function searchPhotos() {
-      const query = document.getElementById('photoSearchInput').value.trim() || 'tech,nature,city';
-      const container = document.getElementById('photoGridContainer');
-      container.innerHTML = `<div class="col-span-3 p-4 text-center text-xs text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Cargando imágenes de stock...</div>`;
+      const query = document.getElementById('photoSearchInput').value.trim() || 'tech,nature';
+      const container = document.getElementById('bgThumbnailGridContainer');
+      container.innerHTML = `<div class="p-3 text-center text-xs text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Buscando fotos de stock...</div>`;
 
       window.stockPhotoImgs = {};
       const keywords = query.split(',').map(s => s.trim());
       const ts = Date.now();
 
       container.innerHTML = '';
+      const photoGrid = document.createElement('div');
+      photoGrid.className = 'grid grid-cols-3 gap-1.5';
 
-      for (let i = 1; i <= 15; i++) {
+      for (let i = 1; i <= 12; i++) {
         const kw = keywords[i % keywords.length];
         const photoUrl = `https://picsum.photos/seed/studiocraft_${kw}_${i}_${ts}/600/800`;
         const photoKey = `stock_photo_${i}`;
@@ -1100,56 +1125,29 @@
         const img = new Image();
         img.crossOrigin = 'anonymous';
         img.src = photoUrl;
-        img.onload = () => {
-          window.stockPhotoImgs[photoKey] = img;
-        };
+        img.onload = () => { window.stockPhotoImgs[photoKey] = img; };
 
         const thumb = document.createElement('div');
-        thumb.className = `aspect-square rounded-lg border bg-slate-900 cursor-pointer overflow-hidden relative transition hover:border-cyan-400 ${selectedBgKey === photoKey ? 'border-cyan-400 ring-2 ring-cyan-500/50' : 'border-slate-800'}`;
+        thumb.className = `aspect-square rounded-lg border bg-slate-900 cursor-pointer overflow-hidden relative transition ${selectedBgKey === photoKey ? 'border-cyan-400 ring-2 ring-cyan-500/50' : 'border-slate-800 hover:border-slate-700'}`;
         thumb.style.backgroundImage = `url('${photoUrl}')`;
         thumb.style.backgroundSize = 'cover';
 
         thumb.onclick = () => {
           selectedBgKey = photoKey;
-          pushHistoryState();
           safeUpdateCanvas();
-          searchPhotos();
+          renderBgGrid();
         };
 
-        container.appendChild(thumb);
+        photoGrid.appendChild(thumb);
       }
+      container.appendChild(photoGrid);
     }
 
-    // PROCEDURAL BG GRID RENDERER
-    function renderProceduralBgGrid() {
-      const container = document.getElementById('proceduralBgGrid');
-      container.innerHTML = '';
-      PROCEDURAL_BG_LIST.forEach(p => {
-        const key = 'video_' + p.id;
-        const card = document.createElement('button');
-        card.className = `p-1.5 rounded-lg border text-left flex flex-col justify-between aspect-square transition ${selectedBgKey === key ? 'border-cyan-400 bg-cyan-950/60' : 'border-slate-800 bg-slate-900 hover:border-slate-700'}`;
-        card.innerHTML = `<span class="text-[9px] font-bold text-white truncate">${p.title}</span><span class="text-[8px] text-cyan-400 font-mono">CÓDIGO</span>`;
-        card.onclick = () => {
-          selectedBgKey = key;
-          pushHistoryState();
-          safeUpdateCanvas();
-          renderProceduralBgGrid();
-        };
-        container.appendChild(card);
-      });
-    }
-
-    function selectGradientMode() {
-      selectedBgKey = 'custom_gradient';
-      pushHistoryState();
-      safeUpdateCanvas();
-    }
-
-    // ITUNES MUSIC SEARCH & AUDIO MIXER
+    // ITUNES MUSIC SEARCH
     async function searchMusic() {
       const query = document.getElementById('musicSearchInput').value.trim() || 'ambient piano';
       const container = document.getElementById('musicSearchResultsContainer');
-      container.innerHTML = `<div class="p-3 text-center text-xs text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Buscando canciones en iTunes...</div>`;
+      container.innerHTML = `<div class="p-3 text-center text-xs text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Buscando canciones...</div>`;
 
       try {
         const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=15`);
@@ -1162,64 +1160,55 @@
             item.className = 'p-2 bg-slate-950 border border-slate-800 rounded-lg flex items-center justify-between gap-2 hover:border-slate-700 transition';
             item.innerHTML = `
               <div class="flex items-center gap-2 overflow-hidden">
-                <img src="${track.artworkUrl60 || track.artworkUrl100}" class="w-8 h-8 rounded object-cover shrink-0">
+                <img src="${track.artworkUrl60}" class="w-8 h-8 rounded object-cover shrink-0">
                 <div class="overflow-hidden">
                   <div class="text-xs font-bold text-white truncate">${track.trackName}</div>
                   <div class="text-[10px] text-slate-400 truncate">${track.artistName}</div>
                 </div>
               </div>
               <div class="flex items-center gap-1 shrink-0">
-                <button onclick="previewAudioTrack('${track.previewUrl}')" class="p-1.5 bg-slate-800 hover:bg-slate-700 rounded text-xs text-cyan-400" title="Escuchar"><i class="fa-solid fa-play"></i></button>
-                <button onclick="selectMusicTrack('${track.trackName.replace(/'/g, "")} - ${track.artistName.replace(/'/g, "")}', '${track.previewUrl}')" class="px-2 py-1 bg-cyan-600 hover:bg-cyan-500 rounded text-[10px] font-bold text-white">Usar</button>
+                <button onclick="previewAudioTrack('${track.previewUrl}', this)" class="p-1.5 bg-slate-800 rounded text-xs text-cyan-400"><i class="fa-solid fa-play"></i></button>
+                <button onclick="selectMusicTrack('${track.trackName.replace(/'/g, "")}', '${track.previewUrl}')" class="px-2 py-1 bg-cyan-600 rounded text-[10px] font-bold text-white">Usar</button>
               </div>
             `;
             container.appendChild(item);
           });
-        } else {
-          container.innerHTML = `<div class="p-3 text-center text-xs text-slate-400">No se encontraron pistas para "${query}".</div>`;
         }
-      } catch (err) {
-        console.error("iTunes Music search error:", err);
-        container.innerHTML = `<div class="p-3 text-center text-xs text-rose-400">Error de conexión al buscar en iTunes.</div>`;
+      } catch (e) {
+        container.innerHTML = `<div class="p-3 text-center text-xs text-rose-400">Error al conectar con iTunes.</div>`;
       }
     }
 
-    function setMusicCategoryPill(category, btn) {
+    function setMusicCategoryPill(cat, btn) {
       document.querySelectorAll('.music-pill').forEach(b => b.classList.remove('bg-cyan-600', 'text-white'));
       btn.classList.add('bg-cyan-600', 'text-white');
-      document.getElementById('musicSearchInput').value = category;
+      document.getElementById('musicSearchInput').value = cat;
       searchMusic();
     }
 
     function previewAudioTrack(url) {
       stopAudioPlayback();
       audioPreviewEl = new Audio(url);
-      audioPreviewEl.play().catch(e => console.log(e));
+      audioPreviewEl.play();
     }
 
     function selectMusicTrack(title, url) {
       stopAudioPlayback();
       activeAudioTrack = { title, url };
       document.getElementById('activeTrackTitle').innerText = title;
-      showToast(`Música seleccionada: ${title}`, 'success');
     }
 
     function handleUserMp3Upload(e) {
       const file = e.target.files[0];
       if (file) {
         stopAudioPlayback();
-        const url = URL.createObjectURL(file);
-        activeAudioTrack = { title: file.name, url };
+        activeAudioTrack = { title: file.name, url: URL.createObjectURL(file) };
         document.getElementById('activeTrackTitle').innerText = file.name;
-        showToast(`MP3 subido: ${file.name}`, 'success');
       }
     }
 
     function stopAudioPlayback() {
-      if (audioPreviewEl) {
-        audioPreviewEl.pause();
-        audioPreviewEl = null;
-      }
+      if (audioPreviewEl) { audioPreviewEl.pause(); audioPreviewEl = null; }
     }
 
     // PROCEDURAL CANVAS BACKGROUND ALGORITHMS (20)
@@ -1237,28 +1226,24 @@
           ctx.lineTo(width, height); ctx.lineTo(0, height); ctx.closePath();
           ctx.fillStyle = `rgba(16, 185, 129, ${0.15 + i * 0.05})`; ctx.fill();
         }
-      } else if (type === 'video_proc_stars') {
+      } else {
         ctx.fillStyle = '#050814'; ctx.fillRect(0, 0, width, height);
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 40; i++) {
           const x = (i * 137) % width;
           const y = (time * 30 + i * 70) % height;
           ctx.fillStyle = `rgba(255, 255, 255, ${0.3 + 0.7 * Math.abs(Math.sin(time + i))})`;
           ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI * 2); ctx.fill();
         }
-      } else {
-        const grad = ctx.createLinearGradient(0, 0, width, height);
-        grad.addColorStop(0, '#090d16'); grad.addColorStop(1, '#1e293b');
-        ctx.fillStyle = grad; ctx.fillRect(0, 0, width, height);
       }
       ctx.restore();
     }
 
-    // PARTICLE OVERLAY ENGINE (28)
+    // PARTICLE FX ENGINE
     function drawFxParticleOverlay(ctx, width, height, fxKey, time) {
       if (!fxKey || fxKey === 'none') return;
       ctx.save();
       if (fxKey === 'sparkles') {
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 25; i++) {
           const x = (i * 269 + Math.sin(time + i) * 20) % width;
           const y = (i * 193 + Math.cos(time + i) * 20) % height;
           const pulse = Math.abs(Math.sin(time * 1.5 + i));
@@ -1275,14 +1260,14 @@
     }
 
     function drawCoverImage(ctx, img, targetW, targetH) {
-      if (!img || !img.width) return;
-      const scale = Math.max(targetW / img.width, targetH / img.height);
-      const w = img.width * scale;
-      const h = img.height * scale;
+      if (!img) return;
+      const scale = Math.max(targetW / (img.width || targetW), targetH / (img.height || targetH));
+      const w = (img.width || targetW) * scale;
+      const h = (img.height || targetH) * scale;
       ctx.drawImage(img, (targetW - w) / 2, (targetH - h) / 2, w, h);
     }
 
-    // TIMELINE PLAYBACK CONTROLLER
+    // TIMELINE CONTROLLER
     function toggleTimelinePlay() {
       if (isTimelinePlaying) stopTimelinePlay();
       else startTimelinePlay();
@@ -1299,7 +1284,7 @@
         stopAudioPlayback();
         audioPreviewEl = new Audio(activeAudioTrack.url);
         audioPreviewEl.currentTime = parseFloat(scrubber.value) || 0;
-        audioPreviewEl.play().catch(e => console.log(e));
+        audioPreviewEl.play().catch(e => {});
       }
 
       timelineStartTime = performance.now() - (parseFloat(scrubber.value) * 1000);
@@ -1324,6 +1309,8 @@
       document.getElementById('timelinePlayIcon').className = 'fa-solid fa-play text-xs ml-0.5';
       if (timelineAnimFrameId) cancelAnimationFrame(timelineAnimFrameId);
       stopAudioPlayback();
+      document.getElementById('currentTimeLabel').innerText = `0.0s (Estático)`;
+      safeUpdateCanvas(null); // Return to static full composition view
     }
 
     function onTimelineScrub(val) {
@@ -1332,24 +1319,22 @@
     }
 
     function onDurationChange() {
-      const duration = document.getElementById('selectDuration').value;
-      document.getElementById('timelineScrubber').max = duration;
-      document.getElementById('totalTimeLabel').innerText = `${duration}.0s`;
+      const dur = document.getElementById('selectDuration').value;
+      document.getElementById('timelineScrubber').max = dur;
+      document.getElementById('totalTimeLabel').innerText = `${dur}.0s`;
       safeUpdateCanvas();
     }
 
-    // VIDEO EXPORT WITH MEDIARECORDER & FIX-WEBM-DURATION
+    // EXPORT VIDEO STATUS (MEDIA RECORDER + FIX-WEBM-DURATION)
     async function generarVideoAnimado() {
       stopTimelinePlay();
       const canvas = document.getElementById('mainCanvas');
       const btn = document.getElementById('btnExportVideo');
-
       if (!canvas) return;
 
       const durationSec = parseFloat(document.getElementById('selectDuration').value) || 15;
       const durationMs = durationSec * 1000;
       const originalText = btn.innerHTML;
-
       btn.disabled = true;
 
       const canvasStream = canvas.captureStream(30);
@@ -1370,44 +1355,31 @@
           source.connect(audioCtx.destination);
 
           const audioTrack = dest.stream.getAudioTracks()[0];
-          if (audioTrack) {
-            finalStream = new MediaStream([canvasStream.getVideoTracks()[0], audioTrack]);
-          }
+          if (audioTrack) finalStream = new MediaStream([canvasStream.getVideoTracks()[0], audioTrack]);
           await audioPreviewEl.play();
-        } catch (e) {
-          console.warn("Audio Context splice fallback:", e);
-        }
+        } catch (e) {}
       }
 
       let mimeType = 'video/webm;codecs=vp9,opus';
-      if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm;codecs=vp8,opus';
       if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm';
 
-      const recordedChunks = [];
+      const chunks = [];
       let mediaRecorder = new MediaRecorder(finalStream, { mimeType });
 
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data && e.data.size > 0) recordedChunks.push(e.data);
-      };
+      mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
 
       mediaRecorder.onstop = async () => {
         stopAudioPlayback();
         if (audioCtx) { try { audioCtx.close(); } catch(e){} }
 
         btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Procesando...`;
-        const rawBlob = new Blob(recordedChunks, { type: mediaRecorder.mimeType || 'video/webm' });
+        const rawBlob = new Blob(chunks, { type: mediaRecorder.mimeType || 'video/webm' });
 
         const fixedBlob = await new Promise((resolve) => {
           const fixFunc = window.ysFixWebmDuration || window.fixWebmDuration;
           if (typeof fixFunc === 'function') {
-            try {
-              fixFunc(rawBlob, durationMs, (result) => resolve(result));
-            } catch(err) {
-              resolve(rawBlob);
-            }
-          } else {
-            resolve(rawBlob);
-          }
+            try { fixFunc(rawBlob, durationMs, (res) => resolve(res)); } catch(err) { resolve(rawBlob); }
+          } else { resolve(rawBlob); }
         });
 
         const url = URL.createObjectURL(fixedBlob);
@@ -1417,16 +1389,14 @@
         a.click();
 
         setTimeout(() => URL.revokeObjectURL(url), 5000);
-
         btn.innerHTML = originalText;
         btn.disabled = false;
         safeUpdateCanvas();
-        showToast('¡Video exportado correctamente!', 'success');
       };
 
       mediaRecorder.start();
-
       let startTime = performance.now();
+
       function renderFrame(now) {
         const elapsedSec = (now - startTime) / 1000;
         const pct = Math.min(Math.round((elapsedSec / durationSec) * 100), 100);
@@ -1434,11 +1404,8 @@
         btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Grabando (${pct}%)...`;
         safeUpdateCanvas(Math.min(elapsedSec, durationSec));
 
-        if (elapsedSec < durationSec) {
-          requestAnimationFrame(renderFrame);
-        } else {
-          if (mediaRecorder.state !== 'inactive') mediaRecorder.stop();
-        }
+        if (elapsedSec < durationSec) requestAnimationFrame(renderFrame);
+        else if (mediaRecorder.state !== 'inactive') mediaRecorder.stop();
       }
       requestAnimationFrame(renderFrame);
     }
@@ -1455,36 +1422,25 @@
     }
 
     function initPhraseBank() {
-      currentPhraseBankIndex = 0;
-      loadMorePhrasesToBank();
-    }
-
-    function loadMorePhrasesToBank() {
       const select = document.getElementById('selectPhraseBank');
-      const countLabel = document.getElementById('phraseBankCount');
       if (!select) return;
-
-      currentPhraseBankIndex = Math.min(currentPhraseBankIndex + 15, SECULAR_QUOTES.length);
       select.innerHTML = '<option value="" disabled selected>-- Elige una frase predefinida --</option>';
 
-      for (let i = 0; i < currentPhraseBankIndex; i++) {
-        const item = SECULAR_QUOTES[i];
+      SECULAR_QUOTES.forEach((item, idx) => {
         const opt = document.createElement('option');
-        opt.value = i;
-        opt.innerText = `${i + 1}. "${item.frase.length > 45 ? item.frase.substring(0, 42) + '...' : item.frase}" — ${item.cita}`;
+        opt.value = idx;
+        opt.innerText = `${idx + 1}. "${item.frase.length > 42 ? item.frase.substring(0, 40) + '...' : item.frase}"`;
         select.appendChild(opt);
-      }
-
-      if (countLabel) countLabel.innerText = `${currentPhraseBankIndex} de ${SECULAR_QUOTES.length}`;
+      });
     }
 
     function onSelectPhraseFromBank(select) {
-      const index = parseInt(select.value, 10);
-      if (!isNaN(index) && SECULAR_QUOTES[index]) {
-        document.getElementById('inputPhrase').value = SECULAR_QUOTES[index].frase;
-        document.getElementById('inputCitation').value = SECULAR_QUOTES[index].cita;
-        pushHistoryState();
-        safeUpdateCanvas();
+      const idx = parseInt(select.value, 10);
+      if (!isNaN(idx) && SECULAR_QUOTES[idx]) {
+        document.getElementById('inputPhrase').value = SECULAR_QUOTES[idx].frase;
+        document.getElementById('inputCitation').value = SECULAR_QUOTES[idx].cita;
+        // INSTANT STATIC DISPLAY ON SELECTION FIX
+        stopTimelinePlay();
       }
     }
 
@@ -1495,12 +1451,7 @@
         const btn = document.createElement('button');
         btn.className = `w-full p-2 rounded-lg border text-left text-xs font-semibold transition ${selectedAnimationKey === a.id ? 'border-cyan-400 bg-cyan-950/60 text-white' : 'border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700'}`;
         btn.innerText = a.title;
-        btn.onclick = () => {
-          selectedAnimationKey = a.id;
-          pushHistoryState();
-          renderMotionAnimList();
-          safeUpdateCanvas();
-        };
+        btn.onclick = () => { selectedAnimationKey = a.id; renderMotionAnimList(); safeUpdateCanvas(); };
         container.appendChild(btn);
       });
     }
@@ -1512,12 +1463,7 @@
         const btn = document.createElement('button');
         btn.className = `w-full p-2 rounded-lg border text-left text-xs font-semibold transition ${selectedFxKey === f.id ? 'border-cyan-400 bg-cyan-950/60 text-white' : 'border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700'}`;
         btn.innerText = f.title;
-        btn.onclick = () => {
-          selectedFxKey = f.id;
-          pushHistoryState();
-          renderFxOverlayList();
-          safeUpdateCanvas();
-        };
+        btn.onclick = () => { selectedFxKey = f.id; renderFxOverlayList(); safeUpdateCanvas(); };
         container.appendChild(btn);
       });
     }
@@ -1525,10 +1471,7 @@
     function toggleStampInputs() {
       const chk = document.getElementById('chkShowStamp');
       const container = document.getElementById('stampInputsContainer');
-      if (chk && container) {
-        if (chk.checked) container.classList.remove('hidden');
-        else container.classList.add('hidden');
-      }
+      if (chk && container) container.style.display = chk.checked ? 'block' : 'none';
     }
 
     function handleLogoSelectChange() {
@@ -1536,7 +1479,6 @@
       const wrapper = document.getElementById('customLogoUploadWrapper');
       if (val === 'custom') wrapper.classList.remove('hidden');
       else wrapper.classList.add('hidden');
-      pushHistoryState();
       safeUpdateCanvas();
     }
 
@@ -1552,19 +1494,22 @@
     function handleUserBgUpload(e) {
       const file = e.target.files[0];
       if (file) {
-        const img = new Image();
-        img.onload = () => {
-          userCustomBgImg = img;
-          selectedBgKey = 'user_custom';
-          pushHistoryState();
-          safeUpdateCanvas();
-        };
-        img.src = URL.createObjectURL(file);
+        if (file.type.startsWith('video/')) {
+          const vid = document.createElement('video');
+          vid.crossOrigin = 'anonymous';
+          vid.src = URL.createObjectURL(file);
+          vid.loop = true; vid.muted = true; vid.play();
+          userCustomBgVideo = vid;
+          selectedBgKey = 'user_custom_video';
+        } else {
+          const img = new Image();
+          img.onload = () => { userCustomBgImg = img; selectedBgKey = 'user_custom'; safeUpdateCanvas(); };
+          img.src = URL.createObjectURL(file);
+        }
       }
     }
 
     function handleRatioChange() {
-      pushHistoryState();
       fitStageZoom();
       safeUpdateCanvas();
     }
@@ -1574,7 +1519,7 @@
       const box = document.getElementById('canvasContainerBox');
       if (!wrapper || !box) return;
 
-      const pad = 40;
+      const pad = 30;
       const maxW = wrapper.clientWidth - pad;
       const maxH = wrapper.clientHeight - pad;
 
@@ -1600,103 +1545,8 @@
       document.getElementById('zoomLabel').innerText = `${Math.round(currentZoom * 100)}%`;
     }
 
-    function resetZoomFit() {
-      fitStageZoom();
-    }
+    function resetZoomFit() { fitStageZoom(); }
 
-    // PRESET TEMPLATES
-    function loadPresetTemplate(type) {
-      if (type === 'corporate') {
-        document.getElementById('inputPhrase').value = "LA INNOVACIÓN Y LA ESTRATEGIA TRANSFORMAN EL FUTURO.";
-        document.getElementById('selectFontPhrase').value = "Montserrat";
-        document.getElementById('colorPhrase').value = "#ffffff";
-        document.getElementById('inputCitation').value = "Tech Leadership";
-        document.getElementById('colorCitation').value = "#38bdf8";
-        document.getElementById('chkShowStamp').checked = true;
-        document.getElementById('inputStampText').value = "SUMMIT2026";
-        document.getElementById('inputStampSub').value = "INNOVACIÓN Y TECNOLOGÍA";
-        selectedBgKey = 'video_proc_aurora';
-        selectedAnimationKey = 'slide';
-        selectedFxKey = 'sparkles';
-      } else if (type === 'minimal') {
-        document.getElementById('inputPhrase').value = "LA SIMPLICIDAD ES LA MÁXIMA SOFISTICACIÓN EN TODO LO QUE HACES.";
-        document.getElementById('selectFontPhrase').value = "Playfair Display";
-        document.getElementById('colorPhrase').value = "#ffffff";
-        document.getElementById('inputCitation').value = "Leonardo da Vinci";
-        document.getElementById('colorCitation').value = "#fbbf24";
-        document.getElementById('chkShowStamp').checked = false;
-        selectedBgKey = 'custom_gradient';
-        selectedAnimationKey = 'fade';
-        selectedFxKey = 'dust';
-      } else if (type === 'neon') {
-        document.getElementById('inputPhrase').value = "EL ÉXITO ES LA SUMA DE PEQUEÑOS ESFUERZOS REPETIDOS CADA DÍA.";
-        document.getElementById('selectFontPhrase').value = "Bebas Neue";
-        document.getElementById('colorPhrase').value = "#38bdf8";
-        document.getElementById('inputCitation').value = "Constancia";
-        document.getElementById('colorCitation').value = "#ffffff";
-        document.getElementById('chkShowStamp').checked = true;
-        document.getElementById('inputStampText').value = "CRECIMIENTO";
-        document.getElementById('inputStampSub').value = "OBJETIVO CUMPLIDO";
-        selectedBgKey = 'video_proc_stars';
-        selectedAnimationKey = 'bounce';
-        selectedFxKey = 'glitch';
-      }
-      toggleStampInputs();
-      pushHistoryState();
-      safeUpdateCanvas();
-      showToast('¡Plantilla cargada exitosamente!', 'success');
-    }
-
-    // JSON PROJECT SAVE / LOAD
-    function exportProjectJSON() {
-      const state = {
-        phrase: document.getElementById('inputPhrase').value,
-        fontPhrase: document.getElementById('selectFontPhrase').value,
-        colorPhrase: document.getElementById('colorPhrase').value,
-        citation: document.getElementById('inputCitation').value,
-        fontCitation: document.getElementById('selectFontCitation').value,
-        colorCitation: document.getElementById('colorCitation').value,
-        handle: document.getElementById('inputHandle').value,
-        showStamp: document.getElementById('chkShowStamp').checked,
-        stampText: document.getElementById('inputStampText').value,
-        stampSub: document.getElementById('inputStampSub').value,
-        showLogo: document.getElementById('chkShowLogo').checked,
-        logoStyle: document.getElementById('selectLogo').value,
-        shapeStyle: document.getElementById('selectShapeStyle').value,
-        colorShape: document.getElementById('colorShape').value,
-        bgKey: selectedBgKey,
-        animKey: selectedAnimationKey,
-        fxKey: selectedFxKey,
-        ratio: document.getElementById('selectRatio').value
-      };
-
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `studiocraft-project-${Date.now()}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-      showToast('¡Proyecto JSON guardado!', 'success');
-    }
-
-    function importProjectJSON(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          try {
-            restoreHistoryState(evt.target.result);
-            showToast('¡Proyecto JSON cargado!', 'success');
-          } catch(err) {
-            showToast('Error al leer el archivo JSON.', 'error');
-          }
-        };
-        reader.readAsText(file);
-      }
-    }
-
-    // EXPORT & SHARE
     function openExportImageModal() {
       document.getElementById('exportImageModal').classList.remove('hidden');
       document.getElementById('exportImageModal').classList.add('flex');
@@ -1719,7 +1569,6 @@
       link.href = canvas.toDataURL(mime, 0.95);
       link.click();
       closeExportImageModal();
-      showToast('Imagen descargada.', 'success');
     }
 
     async function shareStudioCanvas() {
@@ -1727,8 +1576,6 @@
       if (!canvas) return;
 
       const phrase = document.getElementById('inputPhrase').value || '';
-      const citation = document.getElementById('inputCitation').value || '';
-
       try {
         const dataUrl = canvas.toDataURL('image/webp', 0.92);
         const res = await fetch(dataUrl);
@@ -1736,11 +1583,7 @@
         const file = new File([blob], 'studiocraft-post.webp', { type: 'image/webp' });
 
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            title: 'StudioCraft Graphic',
-            text: `"${phrase}" — ${citation}`,
-            files: [file]
-          });
+          await navigator.share({ title: 'StudioCraft Graphic', text: phrase, files: [file] });
           return;
         }
       } catch (e) {}
